@@ -1,7 +1,5 @@
 <template>
   <div class="404Box">Login</div>
 </template>
-<script lang="ts" setup>
-let a = 0;
-</script>
+<script lang="ts" setup></script>
 <style lang="less" scoped></style>

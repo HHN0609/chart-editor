@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 /* eslint-disable @typescript-eslint/no-var-requires */
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-// const CopyWebpackPlugin = require("copy-webpack-plugin");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 const path = require("path");
 module.exports = {
   mode: "production",
@@ -25,9 +25,9 @@ module.exports = {
   },
   plugins: [
     new MiniCssExtractPlugin(),
-    // new CopyWebpackPlugin({
-    //   patterns: [{ from: "./public", to: "./public" }],
-    // }),
+    new CopyWebpackPlugin({
+      patterns: [{ from: "./public", to: "./public" }],
+    }),
   ],
   optimization: {
     splitChunks: {

@@ -1,8 +1,7 @@
 <template>
-  <h1>{{ name }}</h1>
+  <router-view></router-view>
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
-const name = ref("ds");
+console.log("hello");
 </script>
