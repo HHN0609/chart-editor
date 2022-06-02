@@ -4,6 +4,10 @@
     ],
     "include": ["**/*.ts", "**/*.tsx"],
     "compilerOptions": {
+        "baseUrl": ".",
+        "paths": {
+            "@/*": ["src/*"]
+        },
         "outDir": "./dist",
         "allowJs": true,
         "sourceMap": true,

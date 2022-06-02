@@ -41,7 +41,7 @@ module.exports = {
   },
   resolve: {
     alias: {
-      "@": path.join(__dirname, "../src"),
+      "@": path.resolve(__dirname, "../src"),
     },
     extensions: [".ts", ".js", ".vue", ".json"],
   },
