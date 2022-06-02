@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable no-undef */
-const ESLintPlugin = require("eslint-webpack-plugin");
+// const ESLintPlugin = require("eslint-webpack-plugin");
 module.exports = {
   mode: "development",
   target: "web",
@@ -17,5 +17,5 @@ module.exports = {
       },
     ],
   },
-  plugins: [new ESLintPlugin({ extensions: ["js", "ts", "vue"] })],
+  // plugins: [new ESLintPlugin({ extensions: ["js", "ts", "vue"] })],
 };
