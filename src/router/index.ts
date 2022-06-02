@@ -1,25 +1,43 @@
 import { createRouter, createWebHashHistory } from "vue-router";
-import LoginPage from "@/views/LoginPage.vue";
-import DashBoard from "@/views/DashBoard.vue";
-import NotFound from "@/views/NotFound.vue";
-import HomePage from "@/views/HomePage.vue";
+const LoginPage = () => import("@/views/LoginPage.vue");
+const DashBoard = () => import("@/views/DashBoard.vue");
+const NotFound = () => import("@/views/NotFound.vue");
+const HomePage = () => import("@/views/HomePage.vue");
+const ProjectContainer = () => import("@/components/ProjectContainer.vue");
+const InfoContainer = () => import("@/components/InfoContainer.vue");
 export default createRouter({
   history: createWebHashHistory(),
   routes: [
     {
+      name: "Home",
+      path: "/",
+      alias: "/Home",
+      component: HomePage,
+      children: [
+        {
+          name: "MyProject",
+          path: "/Home/MyProject",
+          component: ProjectContainer,
+        },
+        {
+          name: "MyProfile",
+          path: "/Home/MyProfile",
+          component: InfoContainer,
+        },
+      ],
+    },
+    {
+      name: "Login",
       path: "/Login",
       component: LoginPage,
     },
     {
-      path: "/",
-      alias: "/Home",
-      component: HomePage,
-    },
-    {
+      name: "DashBoard",
       path: "/DashBoard",
       component: DashBoard,
     },
     {
+      name: "404",
       path: "/404",
       component: NotFound,
     },

@@ -4,7 +4,7 @@
 module.exports = {
   mode: "development",
   target: "web",
-  devtool: "source-map",
+  devtool: "eval",
   devServer: {
     hot: true,
     open: true,
