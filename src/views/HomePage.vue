@@ -2,7 +2,7 @@
   <a-layout class="home-page">
     <a-layout-sider class="sider" v-model:collapsed="collapsed" collapsible>
       <div class="logo">hi!</div>
-      <a-menu theme="dark" mode="inline" @click="switchPage">
+      <a-menu theme="dark" mode="inline" @click="switchPage" v-model:selectedKeys="selectedKeys">
         <a-menu-item key="1">
           <bar-chart-outlined />
           <span>我的项目</span>
@@ -17,6 +17,14 @@
     <a-layout class="main">
       <a-layout-header class="header">
         <strong>{{ headerTitle }}</strong>
+        <strong>
+          <a-avatar>
+            <template #icon>
+              <UserOutlined />
+            </template>
+          </a-avatar>
+          {{ user.userName }}
+        </strong>
       </a-layout-header>
       <a-layout-content class="content">
         <router-view></router-view>
@@ -27,9 +35,13 @@
 <script lang="ts" setup>
 import { UserOutlined, BarChartOutlined } from "@ant-design/icons-vue";
 import { ref } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { useRouter } from "vue-router";
+import userInfo from "../stores/userInfo";
+
+const user = userInfo();
 const router = useRouter();
 const collapsed = ref<boolean>(false);
+const selectedKeys = ref<string[]>(["1"]);
 const headerTitle = ref<string>("已创建大屏");
 
 const switchPage = (event) => {
@@ -74,6 +86,8 @@ const switchPage = (event) => {
     > .header {
       padding: 0px 20px;
       background: #fff;
+      display: flex;
+      justify-content: space-between;
     }
     > .content {
       overflow-x: hidden;

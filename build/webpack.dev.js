@@ -6,10 +6,11 @@ module.exports = {
   target: "web",
   devtool: "eval",
   devServer: {
+    port: 8081,
     hot: true,
     open: true,
     proxy: {
-      "/api": "http://localhost:9000",
+      "/api": "http://localhost:3000",
     },
   },
   module: {
