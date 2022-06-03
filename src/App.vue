@@ -5,7 +5,18 @@
 </template>
 
 <script lang="ts" setup>
-console.log("hello");
+import axios from "axios";
+import { onMounted } from "vue";
+onMounted(() => {
+  axios.get("/api/user").then(
+    (value) => {
+      console.log(value);
+    },
+    (reason) => {
+      console.log(reason);
+    }
+  );
+});
 </script>
 
 <style lang="less" scoped>

@@ -8,6 +8,9 @@ module.exports = {
   devServer: {
     hot: true,
     open: true,
+    proxy: {
+      "/api": "http://localhost:9000",
+    },
   },
   module: {
     rules: [

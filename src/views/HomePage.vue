@@ -1,18 +1,8 @@
 <template>
   <a-layout class="home-page">
-    <a-layout-sider
-      class="sider"
-      v-model:collapsed="collapsed"
-      :trigger="null"
-      collapsible
-    >
+    <a-layout-sider class="sider" v-model:collapsed="collapsed" collapsible>
       <div class="logo">hi!</div>
-      <a-menu
-        v-model:selectedKeys="selectedKeys"
-        theme="dark"
-        mode="inline"
-        @click="switchPage"
-      >
+      <a-menu theme="dark" mode="inline" @click="switchPage">
         <a-menu-item key="1">
           <bar-chart-outlined />
           <span>我的项目</span>
@@ -21,11 +11,6 @@
           <user-outlined />
           <span>我的账户</span>
         </a-menu-item>
-        <div class="trigger-btn" @click="triggerHandle">
-          <component
-            :is="collapsed ? MenuUnfoldOutlined : MenuFoldOutlined"
-          ></component>
-        </div>
       </a-menu>
     </a-layout-sider>
 
@@ -40,21 +25,13 @@
   </a-layout>
 </template>
 <script lang="ts" setup>
-import {
-  UserOutlined,
-  BarChartOutlined,
-  MenuUnfoldOutlined,
-  MenuFoldOutlined,
-} from "@ant-design/icons-vue";
+import { UserOutlined, BarChartOutlined } from "@ant-design/icons-vue";
 import { ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 const router = useRouter();
-const selectedKeys = ref<string[]>(["1"]);
 const collapsed = ref<boolean>(false);
 const headerTitle = ref<string>("已创建大屏");
-const triggerHandle = () => {
-  collapsed.value = !collapsed.value;
-};
+
 const switchPage = (event) => {
   switch (event.key) {
     case "1":
@@ -80,6 +57,7 @@ const switchPage = (event) => {
   height: inherit;
   > .sider {
     .trigger-btn {
+      overflow: hidden;
       position: absolute;
       bottom: 0px;
       width: 100%;
