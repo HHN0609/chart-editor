@@ -1,10 +1,17 @@
 import { defineStore } from "pinia";
+
+type stateType = {
+  userName: string;
+  account: string;
+  isAdmin: number;
+};
+
 export default defineStore("user", {
-  state: () => {
+  state: (): stateType => {
     return {
-      userName: "hehaonan",
+      userName: "",
       account: "",
-      isAdmin: false,
+      isAdmin: 0,
     };
   },
 });

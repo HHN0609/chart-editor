@@ -4,21 +4,7 @@
   </div>
 </template>
 
-<script lang="ts" setup>
-import axios from "axios";
-import { onMounted } from "vue";
-onMounted(() => {
-  // 先拿jwt做一次校验，有效就直接登录，无效跳转到登录页
-  axios.get("/api/user").then(
-    (value) => {
-      console.log(value);
-    },
-    (reason) => {
-      console.log(reason);
-    }
-  );
-});
-</script>
+<script lang="ts" setup></script>
 
 <style lang="less" scoped>
 .app-root {

@@ -9,9 +9,12 @@ export default createRouter({
   history: createWebHashHistory(),
   routes: [
     {
-      name: "Home",
       path: "/",
-      alias: "/Home",
+      redirect: "/Home",
+    },
+    {
+      name: "Home",
+      path: "/Home",
       component: HomePage,
       children: [
         {

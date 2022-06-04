@@ -5,11 +5,12 @@
     </div>
     <div class="tab-box">
       <a-typography-title :level="3">Welcome to Chart Editor</a-typography-title>
+
       <a-tabs v-model:activeKey="activeKey" animated>
         <a-tab-pane key="1" tab="Login">
           <a-form :model="formState" class="login-form" name="normal_login" @finish="submitForm" :label-col="{ span: 8 }" :wrapper-col="{ span: 16 }">
-            <a-form-item label="UserAccount" name="useraccount" :rules="[{ required: true, message: 'Please input your username!' }]">
-              <a-input v-model:value="formState.useraccount">
+            <a-form-item label="Account" name="account" :rules="[{ required: true, message: 'Please input your username!' }]">
+              <a-input v-model:value="formState.account">
                 <template #prefix>
                   <UserOutlined class="site-form-item-icon" />
                 </template>
@@ -36,19 +37,31 @@
 <script lang="ts" setup>
 import { ref, reactive } from "vue";
 import { UserOutlined, LockOutlined } from "@ant-design/icons-vue";
+import { postLogin } from "../apis/index";
+import { message } from "ant-design-vue";
+import router from "../router";
+
 interface FormState {
-  useraccount: string;
+  account: string;
   password: string;
 }
 const activeKey = ref("1");
 const formState = reactive<FormState>({
-  useraccount: "",
+  account: "",
   password: "",
 });
 // 登录按钮点击后触发
 const submitForm = () => {
   // 向后端发送请求
-  console.log("发送请求！");
+  postLogin("/user/login", formState.account, formState.password)
+    .then(({ data }) => {
+      message.success(data.message).then((_) => {
+        router.push({ name: "Home" });
+      });
+    })
+    .catch(({ response }) => {
+      message.error(response.data.message);
+    });
 };
 </script>
 <style lang="less" scoped>
