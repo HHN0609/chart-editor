@@ -2,7 +2,7 @@
     "exclude": [
         "node_modules"
     ],
-    "include": ["**/*.ts", "**/*.tsx"],
+    "include": ["**/*.ts", "**/*.tsx", "server/utils.js"],
     "compilerOptions": {
         "baseUrl": ".",
         "paths": {

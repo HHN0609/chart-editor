@@ -37,10 +37,11 @@
 <script lang="ts" setup>
 import { ref, reactive } from "vue";
 import { UserOutlined, LockOutlined } from "@ant-design/icons-vue";
-import { postLogin } from "../apis/index";
+import { postUserLogin } from "../apis/index";
 import { message } from "ant-design-vue";
 import router from "../router";
-
+import userInfo from "../stores/userInfo";
+const store = userInfo();
 interface FormState {
   account: string;
   password: string;
@@ -53,13 +54,19 @@ const formState = reactive<FormState>({
 // 登录按钮点击后触发
 const submitForm = () => {
   // 向后端发送请求
-  postLogin("/user/login", formState.account, formState.password)
+  postUserLogin("/user/login", formState.account, formState.password)
     .then(({ data }) => {
-      message.success(data.message).then((_) => {
+      message.success(data.message, 0.5).then((_) => {
+        store.$patch({
+          userName: data.username,
+          account: data.account,
+          isAdmin: data.isAdmin,
+        });
         router.push({ name: "Home" });
       });
     })
     .catch(({ response }) => {
+      console.log(response);
       message.error(response.data.message);
     });
 };

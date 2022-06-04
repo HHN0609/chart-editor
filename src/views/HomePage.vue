@@ -27,7 +27,12 @@
               <user-outlined />
             </template>
           </a-avatar>
-          {{ store.userName || "未登录" }}
+          <a-popover title="更多操作" trigger="hover" placement="bottomRight">
+            <template #content>
+              <a @click="logOut">退出登录</a>
+            </template>
+            <a>{{ store.userName || "未登录" }}</a>
+          </a-popover>
         </strong>
       </a-layout-header>
       <a-layout-content class="content">
@@ -38,8 +43,8 @@
 </template>
 <script lang="ts" setup>
 import { UserOutlined, BarChartOutlined, ClusterOutlined } from "@ant-design/icons-vue";
+import { message } from "ant-design-vue";
 import { onMounted, ref } from "vue";
-import { postVerify } from "../apis";
 import router from "../router";
 import userInfo from "../stores/userInfo";
 
@@ -66,15 +71,14 @@ const switchTitle = (event) => {
       break;
   }
 };
-onMounted(() => {
-  // postVerify("/user/verify")
-  //   .then((value) => {
-  //     console.log(value);
-  //   })
-  //   .catch((reason) => {
-  //     console.log(reason);
-  //   });
-});
+
+const logOut = () => {
+  message.loading("正在退出", 1).then(() => {
+    store.$reset();
+    localStorage.removeItem("token");
+    router.replace({ name: "Login" });
+  });
+};
 </script>
 <style lang="less" scoped>
 .home-page {

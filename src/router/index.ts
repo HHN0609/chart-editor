@@ -5,7 +5,7 @@ const NotFound = () => import("@/views/NotFound.vue");
 const HomePage = () => import("@/views/HomePage.vue");
 const ProjectContainer = () => import("@/components/ProjectContainer.vue");
 const InfoContainer = () => import("@/components/InfoContainer.vue");
-export default createRouter({
+const router = createRouter({
   history: createWebHashHistory(),
   routes: [
     {
@@ -46,3 +46,6 @@ export default createRouter({
     },
   ],
 });
+
+// router.beforeEach();
+export default router;
