@@ -13,8 +13,8 @@ const instance = axios.create({
 
 instance.interceptors.request.use(
   (config) => {
-    // 只有登录操作与token无关，其他请求全要带上token
-    if (config.url === "/user/login") {
+    // 只有**登录**与**注册**操作与token无关，其他请求全要带上token
+    if (config.url === "/user/login" || (config.url === "/user/info" && config.method.toLocaleLowerCase() === "post")) {
       return config;
     }
     const token = localStorage.getItem("token");

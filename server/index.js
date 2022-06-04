@@ -18,15 +18,15 @@ app.use(
  * 中间件解析、验证token
  */
 app.use((req, res, next) => {
-  console.log(req.path);
-  if(req.path === "/api/user/login" || req.path === "/api/user/register"){
+  console.log(req.method + " " + req.path);
+  if(req.path === "/api/user/login" || (req.path === "/api/user/info" && req.method.toLocaleLowerCase() === "post")){
     next();
   } else {
     if(!verifyToken(req.headers.authorization)){
-      console.log("no pass!");
+      // console.log("no pass!");
       res.status(401).send({message: "Token Invalid!"});
     } else {
-      console.log("pass!");
+      // console.log("pass!");
       next();
     }
   }
@@ -114,14 +114,28 @@ app.route("/api/user/info")
     }
     connection.query(`select name, account, is_admin from user_info where account='${account}'`, (error, results) => {
       if (error) {
-        res.send(error);
+        res.status(404).send({
+          message: error.message,
+        });
       } else { 
-        res.send(results[0]); 
+        res.status(200).send(results[0]); 
       }
     });
   })
   .post((req, res) => {
     // 注册用户
+    const { body } = req;
+    connection.query(`insert into user_info values('${body.account}', '${body.name}', '${body.password}', ${0})`, (error, result) => {
+      if (error) {
+        res.status(400).send({
+          message: error.message,
+        })
+      } else {
+        res.status(201).send({
+          message: "Success!",
+        })
+      }
+    });
   })
   .put((req, res) => {
     // 修改用户信息
