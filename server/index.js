@@ -23,10 +23,8 @@ app.use((req, res, next) => {
     next();
   } else {
     if(!verifyToken(req.headers.authorization)){
-      // console.log("no pass!");
       res.status(401).send({message: "Token Invalid!"});
     } else {
-      // console.log("pass!");
       next();
     }
   }
@@ -115,10 +113,10 @@ app.route("/api/user/info")
     connection.query(`select name, account, is_admin from user_info where account='${account}'`, (error, results) => {
       if (error) {
         res.status(404).send({
-          message: error.message,
+          message: "Mysql Error",
         });
-      } else { 
-        res.status(200).send(results[0]); 
+      } else {
+        res.status(200).send(results[0]);
       }
     });
   })
@@ -128,17 +126,35 @@ app.route("/api/user/info")
     connection.query(`insert into user_info values('${body.account}', '${body.name}', '${body.password}', ${0})`, (error, result) => {
       if (error) {
         res.status(400).send({
-          message: error.message,
+          message: "Mysql Error",
         })
       } else {
         res.status(201).send({
-          message: "Success!",
+          message: "Register Scuuessfully",
         })
       }
     });
   })
   .put((req, res) => {
     // 修改用户信息
+    const { body } = req;
+    console.log("put :", body);
+    let sql = `update user_info set name='${body.username}' where account='${body.account}';`;
+    // 区分要不要改密码
+    if (body.password && body.password !== "undefined") {
+      sql = `update user_info set name='${body.username}', pwd='${body.password}' where account='${body.account}';`;
+    }
+    connection.query(sql, (error) => {
+      if(error){
+        res.status(400).send({
+          message: "Mysql Error",
+        })
+      } else {
+        res.status(200).send({
+          message: "Update Successfully",
+        })
+      }
+    });
   })
   .delete((req, res) => {
     // 注销用户

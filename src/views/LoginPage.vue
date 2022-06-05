@@ -10,7 +10,7 @@
         <a-tab-pane key="1" tab="Login">
           <a-form :model="formState" class="login-form" name="normal_login" @finish="submitForm" :label-col="{ span: 8 }" :wrapper-col="{ span: 16 }">
             <a-form-item label="Account" name="account" :rules="[{ required: true, message: 'Please input your username!' }]">
-              <a-input v-model:value="formState.account">
+              <a-input v-model:value="formState.account" :maxlength="15">
                 <template #prefix>
                   <UserOutlined class="site-form-item-icon" />
                 </template>
@@ -18,7 +18,7 @@
             </a-form-item>
 
             <a-form-item label="Password" name="password" :rules="[{ required: true, message: 'Please input your password!' }]">
-              <a-input-password v-model:value="formState.password">
+              <a-input-password v-model:value="formState.password" :maxlength="15">
                 <template #prefix>
                   <LockOutlined class="site-form-item-icon" />
                 </template>
@@ -36,7 +36,7 @@
         <a-tab-pane key="2" tab="Register">
           <a-form :model="formState" class="login-form" name="normal_login" @finish="submitRegister" :label-col="{ span: 8 }" :wrapper-col="{ span: 16 }">
             <a-form-item label="Name" name="name" :rules="[{ required: true, message: 'Please input your username!' }]">
-              <a-input v-model:value="formState.name">
+              <a-input v-model:value="formState.name" :maxlength="15">
                 <template #prefix>
                   <UserOutlined class="site-form-item-icon" />
                 </template>
@@ -44,7 +44,7 @@
             </a-form-item>
 
             <a-form-item label="Account" name="account" :rules="[{ required: true, message: 'Please input your username!' }]">
-              <a-input v-model:value="formState.account">
+              <a-input v-model:value="formState.account" :maxlength="15">
                 <template #prefix>
                   <UserOutlined class="site-form-item-icon" />
                 </template>
@@ -52,7 +52,7 @@
             </a-form-item>
 
             <a-form-item label="Password" name="password" :rules="[{ required: true, message: 'Please input your password!' }]">
-              <a-input-password v-model:value="formState.password">
+              <a-input-password v-model:value="formState.password" :maxlength="15">
                 <template #prefix>
                   <LockOutlined class="site-form-item-icon" />
                 </template>
@@ -127,7 +127,7 @@ const submitRegister = () => {
       activeKey.value = "1";
     })
     .catch(({ response }) => {
-      message.error(response.message, 0.5);
+      message.error(response.data.message, 0.5);
     });
 };
 </script>

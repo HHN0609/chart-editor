@@ -1,8 +1,6 @@
-import axios from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 import router from "@/router";
 import { message } from "ant-design-vue";
-// import userInfo from "@/stores/userInfo";
-// const store = userInfo();
 
 const instance = axios.create({
   baseURL: "http://127.0.0.1:8081/api",
@@ -11,17 +9,27 @@ const instance = axios.create({
   responseType: "json",
 });
 
+/**
+ * 只有**登录**与**注册**操作与token无关，其他请求全要带上token
+ * @param {AxiosRequestConfig<any>} config axios的请求配置
+ * @return {boolean} true or false
+ */
+export const needToken = (config: AxiosRequestConfig<any>): boolean => {
+  if (config.url === "/user/login" || (config.url === "/user/info" && config.method === "POST")) {
+    return false;
+  }
+  return true;
+};
+
 instance.interceptors.request.use(
   (config) => {
-    // 只有**登录**与**注册**操作与token无关，其他请求全要带上token
-    if (config.url === "/user/login" || (config.url === "/user/info" && config.method.toLocaleLowerCase() === "post")) {
+    if (!needToken(config)) {
       return config;
     }
     const token = localStorage.getItem("token");
     if (!token) {
       // 没token就先登录
-      // 添加一个拦截请求
-      message.warn("Please Login").then(() => {
+      message.warn("Please Login", 0.5).then(() => {
         router.replace({ name: "Login" });
       });
       return null;
@@ -31,7 +39,8 @@ instance.interceptors.request.use(
     return config;
   },
   (error) => {
-    console.log("请求出错！");
+    console.log("请求拦截器的错误：");
+    console.log(error);
     return Promise.reject(error);
   }
 );
@@ -42,19 +51,20 @@ instance.interceptors.response.use(
       //说明是首次登录，才会返回token
       //把token存到localStorage里
       localStorage.setItem("token", response.data.token);
-      //把state里的userInfo修改
-      // store.$patch({
-      //   userName: response.data.username,
-      //   account: response.data.account,
-      //   isAdmin: response.data.isAdmin,
-      // });
     }
     return response;
   },
   (error) => {
-    message.warn("Token Expire").then(() => {
-      router.replace({ name: "Login" });
-    });
+    // Token 过期的错误在这里拦截
+    console.log("响应拦截器的错误：");
+    console.log(error);
+    if (error.response.data.message === "Token Invalid!") {
+      message.warn("Token Invalid", 0.5).then(() => {
+        router.replace({ name: "Login" });
+      });
+    } else {
+      message.warn(error.response.data.message, 0.5);
+    }
     return Promise.reject(error);
   }
 );

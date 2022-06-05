@@ -65,7 +65,7 @@ const switchTitle = (event) => {
       break;
     case "3":
       headerTitle.value = "全局管理";
-      router.push({ name: "GlobalManagement" });
+      router.push({ name: "Manage" });
       break;
     default:
       break;
@@ -73,12 +73,26 @@ const switchTitle = (event) => {
 };
 
 const logOut = () => {
-  message.loading("正在退出", 1).then(() => {
+  message.loading("正在退出", 0.5).then(() => {
     store.$reset();
     localStorage.removeItem("token");
     router.replace({ name: "Login" });
   });
 };
+
+// 刷新页面，侧边栏不变
+onMounted(() => {
+  if (router.currentRoute.value.name === "MyProject") {
+    selectedKeys.value = ["1"];
+    headerTitle.value = "已创建大屏";
+  } else if (router.currentRoute.value.name === "MyProfile") {
+    selectedKeys.value = ["2"];
+    headerTitle.value = "个人信息";
+  } else if (router.currentRoute.value.name === "Manage") {
+    selectedKeys.value = ["3"];
+    headerTitle.value = "全局管理";
+  }
+});
 </script>
 <style lang="less" scoped>
 .home-page {
@@ -109,8 +123,6 @@ const logOut = () => {
     > .content {
       overflow-x: hidden;
       overflow-y: auto;
-      display: flex;
-      flex-wrap: wrap;
     }
   }
 }

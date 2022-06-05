@@ -3,8 +3,9 @@ const LoginPage = () => import("@/views/LoginPage.vue");
 const DashBoard = () => import("@/views/DashBoard.vue");
 const NotFound = () => import("@/views/NotFound.vue");
 const HomePage = () => import("@/views/HomePage.vue");
-const ProjectContainer = () => import("@/components/ProjectContainer.vue");
-const InfoContainer = () => import("@/components/InfoContainer.vue");
+const ProjectPage = () => import("@/components/ProjectPage.vue");
+const InfoPage = () => import("@/components/InfoPage.vue");
+const ManagePage = () => import("@/components/Managepage.vue");
 const router = createRouter({
   history: createWebHashHistory(),
   routes: [
@@ -20,12 +21,17 @@ const router = createRouter({
         {
           name: "MyProject",
           path: "/Home/MyProject",
-          component: ProjectContainer,
+          component: ProjectPage,
         },
         {
           name: "MyProfile",
           path: "/Home/MyProfile",
-          component: InfoContainer,
+          component: InfoPage,
+        },
+        {
+          name: "Manage",
+          path: "/Home/Manage",
+          component: ManagePage,
         },
       ],
     },

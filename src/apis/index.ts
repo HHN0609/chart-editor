@@ -13,9 +13,10 @@ export const postUserLogin = (relativeUrl: string, account: string, password: st
 };
 
 /**
- * 用户登录的api
+ * 用户注册的api
  * @param relativeUrl 请求相对于baseUrl的地址
  * @param account 用户账号
+ * @param name 用户名
  * @param password 用户密码
  * @returns Promise
  */
@@ -43,5 +44,13 @@ export const getUserInfo = (relativeUrl: string, account?: string): Promise<Axio
     params: {
       account,
     },
+  });
+};
+
+export const putUserInfo = (relativeUrl: string, account?: string, username?: string, password?: string): Promise<AxiosResponse<any, any>> => {
+  return instance.put(relativeUrl, {
+    account,
+    username,
+    password,
   });
 };
