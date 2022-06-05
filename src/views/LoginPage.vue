@@ -82,8 +82,9 @@ import { UserOutlined, LockOutlined } from "@ant-design/icons-vue";
 import { postUserLogin, postUserRegister } from "../apis/index";
 import { message } from "ant-design-vue";
 import router from "../router";
-import userInfo from "../stores/userInfo";
-const store = userInfo();
+// import userInfo from "../stores/userInfo";
+// import pinia from "../stores/store";
+// const store = userInfo(pinia);
 interface FormState {
   account: string;
   password: string;
@@ -102,12 +103,7 @@ const submitForm = () => {
   // 向后端发送请求
   postUserLogin("/user/login", formState.account, formState.password)
     .then(({ data }) => {
-      message.success(data.message, 0.5).then((_) => {
-        store.$patch({
-          userName: data.username,
-          account: data.account,
-          isAdmin: data.isAdmin,
-        });
+      message.success(data.message, 0.5).then(() => {
         router.push({ name: "Home" });
       });
     })
@@ -124,6 +120,7 @@ const submitRegister = () => {
   postUserRegister("/user/info", formState.account, formState.name, formState.password)
     .then(() => {
       message.success("注册成功", 0.5);
+      // 切换到登录框
       activeKey.value = "1";
     })
     .catch(({ response }) => {

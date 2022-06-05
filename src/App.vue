@@ -8,8 +8,9 @@
 // import { onBeforeRouteUpdate } from "vue-router";
 import { getUserInfo } from "./apis";
 import router from "./router";
+import pinia from "./stores/store";
 import userInfo from "./stores/userInfo";
-const store = userInfo();
+const store = userInfo(pinia);
 
 // 页面刷新的时候触发的获取信息
 window.addEventListener("load", async () => {

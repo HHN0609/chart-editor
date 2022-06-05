@@ -1,7 +1,10 @@
 import axios, { AxiosRequestConfig } from "axios";
 import router from "@/router";
 import { message } from "ant-design-vue";
+import userInfo from "@/stores/userInfo";
+import pinia from "@/stores/store";
 
+const store = userInfo(pinia);
 const instance = axios.create({
   baseURL: "http://127.0.0.1:8081/api",
   timeout: 2000,
@@ -51,6 +54,11 @@ instance.interceptors.response.use(
       //说明是首次登录，才会返回token
       //把token存到localStorage里
       localStorage.setItem("token", response.data.token);
+      store.$patch({
+        userName: response.data.username,
+        account: response.data.account,
+        isAdmin: response.data.isAdmin,
+      });
     }
     return response;
   },
