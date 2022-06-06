@@ -22,9 +22,9 @@
 <script lang="ts" setup>
 import { message } from "ant-design-vue";
 import { nextTick, onMounted, reactive } from "vue";
-import { getUserInfo, putUserInfo } from "../apis";
-import router from "../router";
-import userInfo from "../stores/userInfo";
+import { getUserInfo, putUserInfo } from "@/apis";
+import router from "@/router";
+import userInfo from "@/stores/userInfo";
 const store = userInfo();
 const layout = {
   labelCol: { span: 8 },

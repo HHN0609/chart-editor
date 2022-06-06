@@ -79,9 +79,9 @@
 <script lang="ts" setup>
 import { ref, reactive } from "vue";
 import { UserOutlined, LockOutlined } from "@ant-design/icons-vue";
-import { postUserLogin, postUserRegister } from "../apis/index";
+import { postUserLogin, postUserRegister } from "@/apis/index";
 import { message } from "ant-design-vue";
-import router from "../router";
+import router from "@/router/index";
 // import userInfo from "../stores/userInfo";
 // import pinia from "../stores/store";
 // const store = userInfo(pinia);

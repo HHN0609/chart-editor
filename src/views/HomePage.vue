@@ -45,8 +45,8 @@
 import { UserOutlined, BarChartOutlined, ClusterOutlined } from "@ant-design/icons-vue";
 import { message } from "ant-design-vue";
 import { onMounted, ref } from "vue";
-import router from "../router";
-import userInfo from "../stores/userInfo";
+import router from "@/router/index";
+import userInfo from "@/stores/userInfo";
 
 const store = userInfo();
 const collapsed = ref<boolean>(false);
