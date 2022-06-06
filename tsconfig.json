@@ -1,8 +1,9 @@
 {
     "exclude": [
-        "node_modules"
+        "node_modules",
+        "server"
     ],
-    "include": ["**/*.ts", "**/*.tsx", "server/utils.js"],
+    "include": ["**/*.ts", "**/*.vue"],
     "compilerOptions": {
         "baseUrl": ".",
         "paths": {
