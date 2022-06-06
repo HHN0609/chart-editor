@@ -1,6 +1,12 @@
 <template>
   <div class="container">
-    <a-form :model="formState" v-bind="layout" class="info_form" :validate-messages="validateMessages" @finish="onFinish">
+    <a-form
+      :model="formState"
+      v-bind="layout"
+      class="info_form"
+      :validate-messages="validateMessages" 
+      @finish="onFinish"
+    >
       <a-form-item :name="['user', 'userName']" label="Name" :rules="[{ required: true }]">
         <a-input v-model:value="formState.user.userName" :maxlength="15" />
       </a-form-item>
