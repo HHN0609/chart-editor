@@ -1,6 +1,6 @@
 {
     "printWidth": 200,
     "prettier/prettier": ["error", {
-       "endOfLine":"auto"
+       "endOfLine":"igonre"
      }]
 }

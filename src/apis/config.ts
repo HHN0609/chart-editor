@@ -26,20 +26,26 @@ export const needToken = (config: AxiosRequestConfig<any>): boolean => {
 
 instance.interceptors.request.use(
   (config) => {
+    let controller = new AbortController();
+    let signal = controller.signal;
+    config.signal = signal;
+    // 根据请求的类型判断需不需要token
     if (!needToken(config)) {
       return config;
-    }
-    const token = localStorage.getItem("token");
-    if (!token) {
-      // 没token就先登录
-      message.warn("Please Login", 0.5).then(() => {
-        router.replace({ name: "Login" });
-      });
-      return null;
     } else {
-      config.headers.Authorization = token;
+      const token = localStorage.getItem("token");
+      if (!token) {
+        // 没token就先登录
+        message.warn("Please Login", 0.5).then(() => {
+          router.replace({ name: "Login" });
+        });
+        controller.abort();
+        return null;
+      } else {
+        config.headers.Authorization = token;
+        return config;
+      }
     }
-    return config;
   },
   (error) => {
     console.log("请求拦截器的错误：");
