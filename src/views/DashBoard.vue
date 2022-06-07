@@ -1,18 +1,13 @@
 <template>
   <div class="mainBox">
-    <vue-infinite-viewer :draggable="true" :zoom="10" class="viewer">
-      <div>AA</div>
-      <div class="target" ref="target">Vue Moveable</div>
-      <Moveable
-          class="moveable"
-          v-bind:target="['.target']"
-          v-bind:draggable="true"
-          v-bind:scalable="true"
-          v-bind:rotatable="true"
-          @drag="onDrag"
-          @scale="onScale"
-          @rotate="onRotate"
-      />
+    <vue-infinite-viewer
+      :draggable="true"
+      :zoom="1"
+      :rangeX="[-5000, 5000]"
+      :rangeY="[-5000, 5000]"
+      @drag="onDrag"
+      class="viewer">
+      <div class="viewport">AA</div>
     </vue-infinite-viewer>
   </div>
 </template>
@@ -20,16 +15,16 @@
 import { ref } from "vue";
 import { VueInfiniteViewer } from "vue3-infinite-viewer";
 import Moveable from "vue3-moveable";
-const target = ref(null);
-const onDrag = ({ transform }) => {
-  target.style.transform = transform;
+// const target = ref(null);
+const onDrag = (e) => {
+  console.log(e.inputEvent);
 }
-const onScale = ({ drag }) => {
-  target.style.transform = drag.transform;
-}
-const onRotate = ({ drag }) => {
-  target.style.transform = drag.transform;
-}
+// const onScale = ({ drag }) => {
+//   target.style.transform = drag.transform;
+// }
+// const onRotate = ({ drag }) => {
+//   target.style.transform = drag.transform;
+// }
 </script>
 <style lang="less" scoped>
   .mainBox {
@@ -39,6 +34,12 @@ const onRotate = ({ drag }) => {
       width: 80%;
       height: 90vh;
       overflow: hidden;
+      background:gainsboro;
+      .viewport{
+        width: 500px;
+        height: 500px;
+        background-color:aqua;
+      }
     }
   }
 </style>

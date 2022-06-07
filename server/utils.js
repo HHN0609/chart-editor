@@ -3,7 +3,7 @@ const config = require("./config");
 
 const secretkey = config.express.secretkey;
 const tokenSignOptions = {
-    expiresIn:'30s',
+    expiresIn:'3600s',
 };
 /**
  * 签发一个token

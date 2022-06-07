@@ -138,7 +138,7 @@ app.route("/api/user/info")
   .put((req, res) => {
     // 修改用户信息
     const { body } = req;
-    console.log("put :", body);
+    // console.log("put :", body);
     let sql = `update user_info set name='${body.username}' where account='${body.account}';`;
     // 区分要不要改密码
     if (body.password && body.password !== "undefined") {
