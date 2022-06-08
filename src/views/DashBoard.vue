@@ -1,5 +1,7 @@
 <template>
   <div class="mainbox">
+  <div class=".guide .Horizontal"></div>
+  <div class=".guide .Vertical"></div>
   <vue-infinite-viewer
     class="viewer"
     ref="viewer"
@@ -27,6 +29,8 @@ let viewerOptions = reactive<Partial<InfiniteViewerOptions>>({
 });
 
 const getInstance = (e) => {
+  guideHorizontal = new Guides(document.querySelector(".guide.Horizontal"));
+  guideVertical = new Guides(document.querySelector(".guide.Vertical"));
   infiniteViewer = e.currentTarget;
   infiniteViewer.scrollCenter();
   infiniteViewer.on("pinch", (e: OnPinch) => {
