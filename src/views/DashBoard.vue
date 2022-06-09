@@ -18,8 +18,22 @@
         v-bind="viewerOptions"
         @scroll.once="getInstance"
         >
-        <div class="viewport"></div>
+        <div class="viewport">
+          <div class="target1">Vue Moveable</div>
+          <VueMoveable
+            ref="moveable"
+            className="moveable"
+            v-bind:target="['.target1']"
+            v-bind:draggable="true"
+            v-bind:scalable="true"
+            v-bind:rotatable="true"
+            @drag="onDrag"
+            @scale="onScale"
+            @rotate="onRotate"
+          />
+        </div>
       </vue-infinite-viewer>
+      
     </div>
     <div class="right">
 
@@ -27,35 +41,72 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { onMounted, onUnmounted, reactive } from "vue";
+import { nextTick, onBeforeUnmount, onMounted, onUnmounted, reactive, ref } from "vue";
 import InfiniteViewer , { InfiniteViewerOptions, OnPinch, OnDrag, OnScroll } from "infinite-viewer";
 import { VueInfiniteViewer } from "vue3-infinite-viewer";
 import { ReloadOutlined } from "@ant-design/icons-vue";
+// import Moveable from "moveable";
+import VueMoveable, { MoveableOptions } from "vue3-moveable";
 import Guides from "@scena/guides";
 import Gesto from "gesto";
+
+let ctrlDown = false;
 let guideHorizontal: Guides;
 let guideVertical: Guides;
 let infiniteViewer: InfiniteViewer;
+let moveable;
 let getso: Gesto;
-let viewerOptions = reactive<Partial<InfiniteViewerOptions>>({
+
+const viewerOptions = reactive<Partial<InfiniteViewerOptions>>({
   zoom: 1,
   rangeX: [-1000, 1000],
   rangeY: [-1000, 1000],
   usePinch: true,
   maxPinchWheel: 10,
 });
+
+const moveableOptions = reactive<Partial<MoveableOptions>>({
+
+});
+
+const ctrlKeyDownHandle = (event: KeyboardEvent) => {
+    if(event.code === "ControlLeft"){
+        ctrlDown = true;
+    }
+};
+
+const ctrlKeyUpHandle = (event: KeyboardEvent) => {
+  ctrlDown = false;
+};
+
 const resizeHandle = () => {
   guideHorizontal.resize();
   guideVertical.resize();
 };
+
 const recoverViewer = () => {
   // 点击左上角recoverBtn后让infiniteViewer的缩放和viewport的位置回到最初的样式
   infiniteViewer.setZoom(1);
   infiniteViewer.scrollCenter();
   guideHorizontal.setState({scrollPos: infiniteViewer.getScrollLeft(), zoom: 1});
   guideVertical.setState({scrollPos: infiniteViewer.getScrollTop(), zoom: 1});
-}
+};
+
+function onDrag(e) {
+  console.log(e);
+  e.target.style.transform = e.transform;
+};
+
+function onScale({ target, drag }) {
+  target.style.transform = drag.transform;
+};
+
+function onRotate({ target, drag }) {
+  target.style.transform = drag.transform;
+};
+
 onMounted(() => {
+  // 初始化两个guide
   guideHorizontal = new Guides(
     document.querySelector(".guide.horizontal"),
     {
@@ -70,7 +121,14 @@ onMounted(() => {
       rulerStyle: { top: "30px", height: "calc(100% - 30px)", width: "30px" },
     }
   );
+
+  // 初始化moveable
+  // moveable = new Moveable(document.querySelector(".viewport"), moveableOptions);
+  moveable = ref();
+  console.log(moveable)
   window.addEventListener("resize", resizeHandle);
+  window.addEventListener("keyup", ctrlKeyUpHandle);
+  window.addEventListener("keydown", ctrlKeyDownHandle);
 });
 
 // 页面在刚刚刷新进来的时候，会触发一次原始的scroll事件，利用这个事件来获取infiniteViewer的实例
@@ -85,14 +143,8 @@ const getInstance = (e) => {
   infiniteViewer.on("pinch", (e: OnPinch) => {
     // ctrl + 鼠标滚轮的缩放处理
     infiniteViewer.setZoom(e.zoom);
-    guideHorizontal.setState({
-      zoom: e.zoom,
-      scrollPos: infiniteViewer.getScrollLeft()
-    });
-    guideVertical.setState({
-      zoom: e.zoom,
-      scrollPos: infiniteViewer.getScrollTop()
-    })
+    guideHorizontal.setState({ zoom: e.zoom, scrollPos: infiniteViewer.getScrollLeft() });
+    guideVertical.setState({ zoom: e.zoom, scrollPos: infiniteViewer.getScrollTop() });
   });
 
   infiniteViewer.on("scroll", (e: OnScroll) => {
@@ -101,22 +153,28 @@ const getInstance = (e) => {
     guideHorizontal.scroll(e.scrollLeft);
     guideVertical.scroll(e.scrollTop);
   });
-  
+
   getso = new Gesto(infiniteViewer.getContainer());
   getso.on("drag", (e: OnDrag) => {
+    // 这里要对画布拖拽进行判断，看是否按下了ctrlleft，以免和moveable的拖拽事件冲突
+    if(!ctrlDown){
+      return;      
+    }
     infiniteViewer.scrollBy(-1 * e.deltaX, -1 * e.deltaY);
   })
 }
 
-onUnmounted(() => {
+onBeforeUnmount(() => {
   getso.unset();
   infiniteViewer.off();
   infiniteViewer.destroy();
   guideHorizontal.destroy();
   guideVertical.destroy();
   window.removeEventListener("resize", resizeHandle);
+  window.removeEventListener("keyup", ctrlKeyUpHandle);
+  window.removeEventListener("keydown", ctrlKeyDownHandle);
   // 这里要记录一些图表的数据
-})
+});
 
 </script>
 <style lang="less" scoped>
