@@ -4,6 +4,12 @@
 
     </div>
     <div class="editorbox">
+      <reload-outlined
+        ref="recoverBtn"
+        class="recoverBtn"
+        title="恢复画布"
+        @click="recoverViewer"
+      />
       <div class="guide horizontal"></div>
       <div class="guide vertical"></div>
       <vue-infinite-viewer
@@ -21,9 +27,10 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { onMounted, onUnmounted, reactive, ref } from "vue";
+import { onMounted, onUnmounted, reactive } from "vue";
 import InfiniteViewer , { InfiniteViewerOptions, OnPinch, OnDrag, OnScroll } from "infinite-viewer";
 import { VueInfiniteViewer } from "vue3-infinite-viewer";
+import { ReloadOutlined } from "@ant-design/icons-vue";
 import Guides from "@scena/guides";
 import Gesto from "gesto";
 let guideHorizontal: Guides;
@@ -37,7 +44,17 @@ let viewerOptions = reactive<Partial<InfiniteViewerOptions>>({
   usePinch: true,
   maxPinchWheel: 10,
 });
-
+const resizeHandle = () => {
+  guideHorizontal.resize();
+  guideVertical.resize();
+};
+const recoverViewer = () => {
+  // 点击左上角recoverBtn后让infiniteViewer的缩放和viewport的位置回到最初的样式
+  infiniteViewer.setZoom(1);
+  infiniteViewer.scrollCenter();
+  guideHorizontal.setState({scrollPos: infiniteViewer.getScrollLeft(), zoom: 1});
+  guideVertical.setState({scrollPos: infiniteViewer.getScrollTop(), zoom: 1});
+}
 onMounted(() => {
   guideHorizontal = new Guides(
     document.querySelector(".guide.horizontal"),
@@ -53,10 +70,7 @@ onMounted(() => {
       rulerStyle: { top: "30px", height: "calc(100% - 30px)", width: "30px" },
     }
   );
-  window.addEventListener("resize", () => {
-    guideHorizontal.resize();
-    guideVertical.resize();
-  });
+  window.addEventListener("resize", resizeHandle);
 });
 
 // 页面在刚刚刷新进来的时候，会触发一次原始的scroll事件，利用这个事件来获取infiniteViewer的实例
@@ -87,6 +101,7 @@ const getInstance = (e) => {
     guideHorizontal.scroll(e.scrollLeft);
     guideVertical.scroll(e.scrollTop);
   });
+  
   getso = new Gesto(infiniteViewer.getContainer());
   getso.on("drag", (e: OnDrag) => {
     infiniteViewer.scrollBy(-1 * e.deltaX, -1 * e.deltaY);
@@ -99,6 +114,7 @@ onUnmounted(() => {
   infiniteViewer.destroy();
   guideHorizontal.destroy();
   guideVertical.destroy();
+  window.removeEventListener("resize", resizeHandle);
   // 这里要记录一些图表的数据
 })
 
@@ -131,6 +147,16 @@ onUnmounted(() => {
       height: inherit;
       overflow: hidden;
       position: relative;
+      > .recoverBtn{
+        width: 30px;
+        height: 30px;
+        position: absolute;
+        z-index: 10;
+        line-height: 30px;
+        cursor: pointer;
+        background: #000;
+        color: white
+      }
       .guide { 
         position: absolute;
         &.horizontal{
@@ -143,7 +169,7 @@ onUnmounted(() => {
       > .viewer {
         overflow: hidden;
         width: calc(100% - 30px);
-        height: calc(100% - 60px);
+        height: calc(100% - 30px);
         left: 30px;
         top: 30px;
         border: black 2px solid;
