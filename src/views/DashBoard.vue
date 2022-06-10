@@ -8,7 +8,7 @@
         ref="recoverBtn"
         class="recoverBtn"
         title="恢复画布"
-        @click="recoverViewer"
+        @click="resetViewer"
       />
       <div class="guide horizontal"></div>
       <div class="guide vertical"></div>
@@ -23,12 +23,9 @@
           <VueMoveable
             ref="moveable"
             className="moveable"
-            v-bind:target="['.target1']"
-            v-bind:draggable="true"
-            v-bind:scalable="true"
-            v-bind:rotatable="true"
+            v-bind="moveableOptions"
             @drag="onDrag"
-            @scale="onScale"
+            @resize="onResize"
             @rotate="onRotate"
           />
         </div>
@@ -46,7 +43,7 @@ import InfiniteViewer , { InfiniteViewerOptions, OnPinch, OnDrag, OnScroll } fro
 import { VueInfiniteViewer } from "vue3-infinite-viewer";
 import { ReloadOutlined } from "@ant-design/icons-vue";
 // import Moveable from "moveable";
-import VueMoveable, { MoveableOptions } from "vue3-moveable";
+import VueMoveable, { MoveableOptions, OnResize } from "vue3-moveable";
 import Guides from "@scena/guides";
 import Gesto from "gesto";
 
@@ -66,38 +63,48 @@ const viewerOptions = reactive<Partial<InfiniteViewerOptions>>({
 });
 
 const moveableOptions = reactive<Partial<MoveableOptions>>({
-
+  target: ['.target1'],
+  draggable: true,
+  rotatable: true,
+  resizable: true
 });
 
+const changeTarget = ({target}: Event) => {
+  console.log(target);
+}
+
+// 控制全局变量ctrlDown的回调函数
 const ctrlKeyDownHandle = (event: KeyboardEvent) => {
     if(event.code === "ControlLeft"){
         ctrlDown = true;
     }
 };
-
 const ctrlKeyUpHandle = (event: KeyboardEvent) => {
   ctrlDown = false;
 };
 
-const resizeHandle = () => {
+// window大小发生变化时，两个guide的resize回调函数
+const guideResizeHandle = () => {
   guideHorizontal.resize();
   guideVertical.resize();
 };
 
-const recoverViewer = () => {
-  // 点击左上角recoverBtn后让infiniteViewer的缩放和viewport的位置回到最初的样式
+// 点击左上角recoverBtn后让infiniteViewer的缩放和viewport的位置回到最初的样式
+const resetViewer = () => {
   infiniteViewer.setZoom(1);
   infiniteViewer.scrollCenter();
   guideHorizontal.setState({scrollPos: infiniteViewer.getScrollLeft(), zoom: 1});
   guideVertical.setState({scrollPos: infiniteViewer.getScrollTop(), zoom: 1});
 };
 
-function onDrag(e) {
-  console.log(e);
-  e.target.style.transform = e.transform;
+function onDrag({target, transform}) {
+  target.style.transform = transform;
 };
 
-function onScale({ target, drag }) {
+function onResize({target, width, height, drag}: OnResize) {
+  target.style.width = `${width}px`;
+  target.style.height = `${height}px`;
+  // 这行代码是为了让缩放的origin在对角线位置
   target.style.transform = drag.transform;
 };
 
@@ -124,18 +131,20 @@ onMounted(() => {
 
   // 初始化moveable
   // moveable = new Moveable(document.querySelector(".viewport"), moveableOptions);
-  moveable = ref();
-  console.log(moveable)
-  window.addEventListener("resize", resizeHandle);
+  nextTick(() => {
+    moveable = ref();
+    console.log(moveable)
+  })
+  window.addEventListener("resize", guideResizeHandle);
   window.addEventListener("keyup", ctrlKeyUpHandle);
   window.addEventListener("keydown", ctrlKeyDownHandle);
 });
 
 // 页面在刚刚刷新进来的时候，会触发一次原始的scroll事件，利用这个事件来获取infiniteViewer的实例
-const getInstance = (e) => {
-  infiniteViewer = e.currentTarget;
+const getInstance = ({currentTarget}) => {
+  infiniteViewer = currentTarget;
 
-  // 让viewPort剧中，同时让guide也跟随
+  // 让viewport剧中，同时让guide也跟随到相应位置
   infiniteViewer.scrollCenter();
   guideHorizontal.setState({scrollPos: infiniteViewer.getScrollLeft()});
   guideVertical.setState({scrollPos: infiniteViewer.getScrollTop()});
@@ -153,10 +162,10 @@ const getInstance = (e) => {
     guideHorizontal.scroll(e.scrollLeft);
     guideVertical.scroll(e.scrollTop);
   });
-
+  infiniteViewer.getContainer().addEventListener("click", changeTarget);
   getso = new Gesto(infiniteViewer.getContainer());
   getso.on("drag", (e: OnDrag) => {
-    // 这里要对画布拖拽进行判断，看是否按下了ctrlleft，以免和moveable的拖拽事件冲突
+    // 这里要对画布拖拽进行判断，看是否按下了ctrl-left，以免和moveable的拖拽事件冲突
     if(!ctrlDown){
       return;      
     }
@@ -165,14 +174,15 @@ const getInstance = (e) => {
 }
 
 onBeforeUnmount(() => {
-  getso.unset();
   infiniteViewer.off();
   infiniteViewer.destroy();
   guideHorizontal.destroy();
   guideVertical.destroy();
-  window.removeEventListener("resize", resizeHandle);
+  infiniteViewer.getContainer().removeEventListener("click", changeTarget);
+  window.removeEventListener("resize", guideResizeHandle);
   window.removeEventListener("keyup", ctrlKeyUpHandle);
   window.removeEventListener("keydown", ctrlKeyDownHandle);
+  getso.unset();
   // 这里要记录一些图表的数据
 });
 
