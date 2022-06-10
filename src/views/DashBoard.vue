@@ -64,7 +64,7 @@ let infiniteViewer: InfiniteViewer;
 let getso: Gesto;
 
 // moveable包裹的数据，是有状态的，下次进来要还原的
-const moveableData = reactive([
+const moveableData = [
   {
     className: "target_0",
     positionInfo: "",
@@ -85,7 +85,7 @@ const moveableData = reactive([
       transform: "matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1) translate(0px, 0px)"
     }
   }
-]);
+];
 
 // infinite-viewer的无状态的（暂定），每次进来的样式都是一样的
 const viewerOptions = reactive<Partial<InfiniteViewerOptions>>({
@@ -153,6 +153,7 @@ function onRotate({ target, drag }) {
 
 // end函数主要用来改变状态，并给服务端回传数据的
 function onDragEnd({lastEvent}: OnDragEnd){
+  if(!lastEvent) return;
   const index = getTargetIndex(moveableOptions.target as string);
   moveableData[index].style.transform = lastEvent.transform;
 }
@@ -161,6 +162,7 @@ function onResizeEnd({lastEvent}: OnResizeEnd){
   const index = getTargetIndex(moveableOptions.target as string);
   moveableData[index].style.width = `${lastEvent.width}px`;
   moveableData[index].style.height = `${lastEvent.height}px`;
+  moveableData[index].style.transform = lastEvent.drag.transform;
 }
 
 function onRotateEnd({lastEvent}: OnRotateEnd){
