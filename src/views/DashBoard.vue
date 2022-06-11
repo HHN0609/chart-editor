@@ -50,7 +50,6 @@ import { h, nextTick, onBeforeUnmount, onMounted, reactive} from "vue";
 import InfiniteViewer , { InfiniteViewerOptions, OnPinch, OnDrag, OnScroll } from "infinite-viewer";
 import { VueInfiniteViewer } from "vue3-infinite-viewer";
 import { ReloadOutlined } from "@ant-design/icons-vue";
-// import Moveable from "moveable";
 import VueMoveable, { MoveableOptions, OnDragEnd, OnResize, OnResizeEnd, OnRotate, OnRotateEnd } from "vue3-moveable";
 import Guides from "@scena/guides";
 import Gesto from "gesto";
@@ -60,7 +59,7 @@ let ctrlDown = false;
 let guideHorizontal: Guides;
 let guideVertical: Guides;
 let infiniteViewer: InfiniteViewer;
-// let moveable;
+let moveable;
 let getso: Gesto;
 
 // moveable包裹的数据，是有状态的，下次进来要还原的
@@ -101,6 +100,12 @@ const moveableOptions = reactive<Partial<MoveableOptions>>({
   draggable: true,
   rotatable: true,
   resizable: true,
+  snapContainer: null,
+  snappable: true,
+  snapDirections: true,
+  elementSnapDirections: true,
+  isDisplayInnerSnapDigit: true,
+  isDisplaySnapDigit: true,
 });
 
 // 点击切换moveable选中的元素
@@ -147,7 +152,7 @@ function onResize({target, width, height, drag}: OnResize) {
   target.style.transform = drag.transform;
 };
 
-function onRotate({ target, drag }) {
+function onRotate({ target, drag }: OnRotate) {
   target.style.transform = drag.transform;
 };
 
@@ -186,7 +191,10 @@ onMounted(() => {
       rulerStyle: { top: "30px", height: "calc(100% - 30px)", width: "30px" },
     }
   );
-
+  moveableOptions.elementGuidelines = [".viewport", ".target_1", ".target_2"]
+  moveableOptions.snapContainer = document.querySelector(".viewport") as HTMLElement;
+  moveableOptions.bounds = { left: 0, right: 800, top: 0, bottom: 450};
+  // console.log(moveableOptions);
   // 初始化moveable
   // moveable = new Moveable(document.querySelector(".viewport"), moveableOptions);
   // nextTick(() => {
@@ -238,15 +246,16 @@ const getInstance = ({currentTarget}) => {
 }
 
 onBeforeUnmount(() => {
-  infiniteViewer.off();
-  infiniteViewer.destroy();
-  guideHorizontal.destroy();
-  guideVertical.destroy();
-  infiniteViewer.getContainer().removeEventListener("click", changeTarget);
-  window.removeEventListener("resize", guideResizeHandle);
-  window.removeEventListener("keyup", ctrlKeyUpHandle);
-  window.removeEventListener("keydown", ctrlKeyDownHandle);
-  getso.unset();
+  // infiniteViewer.off();
+  // infiniteViewer.destroy();
+  // guideHorizontal.destroy();
+  // guideVertical.destroy();
+  // infiniteViewer.getContainer().removeEventListener("click", changeTarget);
+  // window.removeEventListener("resize", guideResizeHandle);
+  // window.removeEventListener("keyup", ctrlKeyUpHandle);
+  // window.removeEventListener("keydown", ctrlKeyDownHandle);
+  // getso.unset();
+
   // 这里要记录一些图表的数据
 });
 
