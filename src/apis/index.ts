@@ -47,10 +47,58 @@ export const getUserInfo = (relativeUrl: string, account?: string): Promise<Axio
   });
 };
 
+/**
+ * put方法修改用户信息
+ * @param relativeUrl 请求相对于baseUrl的地址
+ * @param account 用户账号
+ * @param username 用户名
+ * @param password 密码
+ * @returns Promise
+ */
 export const putUserInfo = (relativeUrl: string, account?: string, username?: string, password?: string): Promise<AxiosResponse<any, any>> => {
   return instance.put(relativeUrl, {
     account,
     username,
     password,
+  });
+};
+
+/**
+* get方法获取用的project信息
+* @param relativeUrl 请求相对于baseUrl的地址
+* @param account 用户账号
+* @returns Promise 
+*/
+export const getUserProjects = ( relativeUrl: string, account: string ): Promise<AxiosResponse<any, any>> => {
+  return instance.get(relativeUrl, {
+    params: {
+      account,
+    }
+  });
+};
+
+/**
+* post方法创建一个project
+* @param relativeUrl 请求相对于baseUrl的地址
+* @param account 用户账号
+* @returns Promise 
+*/
+export const postUserProjects = (relativeUrl: string, account: string) => {
+  return instance.post(relativeUrl, {
+    account,
+  });
+};
+
+/**
+* delete方法删除一个project
+* @param relativeUrl 请求相对于baseUrl的地址
+* @param account 用户账号
+* @returns Promise
+*/
+export const deleteUserProjects = (relativeUrl: string, account: string) => {
+  return instance.delete(relativeUrl, {
+    params: {
+      account,
+    }
   });
 };

@@ -19,6 +19,7 @@ app.use(
  */
 app.use((req, res, next) => {
   console.log(req.method + " " + req.path);
+  // 这里的用户登录和用户的注册都是不需要cookie的
   if(req.path === "/api/user/login" || (req.path === "/api/user/info" && req.method.toLocaleLowerCase() === "post")){
     next();
   } else {
@@ -92,9 +93,73 @@ app.post("/api/user/login", (req, res) => {
 });
 
 // 管理员接口
-app.post("/api/user/register", (req, res) => {
-  
-});
+// app.post("/api/user/register", (req, res) => {
+// });
+
+/**
+ * 用户查询自己的projects的接口
+ * 1. 查询
+ * 2. 新建
+ * 3. 修改信息
+ * 4. 删除信息
+ */
+app.route("/api/user/projects")
+  .get((req, res) => {
+    const { account } = req.query;
+    console.log("account: ", account);
+    connection.query(`select * from chart_basic_info where account = '${account}'`, (error, results) => {
+      if (error) {
+        res.status(500).send({
+          message: "Mysql Error",
+        });
+      } else {
+        res.status(200).send(results);
+      }
+    })
+  })
+  .post((req, res) => {
+    const {body} = req;
+    const { account, chartName} = body;
+    connection.query(`insert into chart_basic_info values(null, ${chartName}, ${account}, NOW(), NOW())`, (error, results) => {
+      if (error) {
+        res.status(500).send({
+          message: "Mysql Error",
+        });
+      } else {
+        res.status(200).send({
+          message: "Create Successfully",
+        })
+      }
+    })
+  })
+  .delete((req, res) => {
+    const { query } = req.query;
+    const { chartId } = query;
+    connection.query(`delete from chart_basic_info where chart_id=${chartId}`, (error ,results) => {
+      if (error) {
+        res.status(500).send({
+          message: "Mysql Error",
+        });
+      } else {
+        res.status(200).send({
+          message: "Delete Successfully",
+        })
+      }
+    });
+  })
+  .put((req, res) => {
+    connection.query(``, (error, results) => {
+      if (error) {
+        res.status(500).send({
+          message: "Mysql Error",
+        });
+      } else {
+        res.status(200).send({
+          message: "Update Successfully",
+        })
+      }
+    });
+  })
 
 /**
 * 用户的对自己信息的接口
@@ -159,6 +224,7 @@ app.route("/api/user/info")
   .delete((req, res) => {
     // 注销用户
   });
+
 
 app.listen(port, () => {
   console.log("Listening on port " + port);
