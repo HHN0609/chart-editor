@@ -83,9 +83,10 @@ export const getUserProjects = ( relativeUrl: string, account: string ): Promise
 * @param account 用户账号
 * @returns Promise 
 */
-export const postUserProjects = (relativeUrl: string, account: string) => {
+export const postUserProjects = (relativeUrl: string, account: string, chartName: string) => {
   return instance.post(relativeUrl, {
     account,
+    chartName,
   });
 };
 
@@ -95,10 +96,10 @@ export const postUserProjects = (relativeUrl: string, account: string) => {
 * @param account 用户账号
 * @returns Promise
 */
-export const deleteUserProjects = (relativeUrl: string, account: string) => {
+export const deleteUserProjects = (relativeUrl: string, chartId: number) => {
   return instance.delete(relativeUrl, {
     params: {
-      account,
+      chartId,
     }
   });
 };

@@ -1,7 +1,7 @@
 <template>
-  <div class="container">
+  <div class="container" >
     <header class="header">
-      <a-button type="primary" style="background-color:green; border: green 1px solid;">Create Project</a-button>
+      <a-button type="primary" style="background-color:green; border: green 1px solid;" @click="modalVisible = !modalVisible">Create Project</a-button>
       <a-input-search
         v-model:value="searchInput"
         placeholder="input search text"
@@ -10,27 +10,55 @@
       />
     </header>
     <main class="main">
-
+      <ChartCard @delete-chart="deleteChart" v-for="data in projectInfoArr" :data="data" :key="data.chart_id"></ChartCard>
     </main>
   </div>
+  <a-modal v-model:visible="modalVisible" title="Create project" @ok="createProject">
+    <label>Chart name: <a-input v-model:value="newChartName"></a-input></label>
+  </a-modal>
 </template>
 <script lang="ts" setup>
 import { onMounted, reactive, ref } from "vue";
-import { getUserProjects } from "@/apis/index";
+import { deleteUserProjects, getUserProjects, postUserProjects } from "@/apis/index";
 import userInfo from "@/stores/userInfo";
+import ChartCard from "@/components/ChartCard.vue";
 
 const store = userInfo();
 const searchInput = ref<string>("");
-const projectInfoArr = reactive([]);
+let projectInfoArr = reactive([]);
+
+let newChartName = ref("");
+
 const onSearch = (e) => {
   console.log(e);
 };
+
+const modalVisible = ref<boolean>(false);
+const deleteChart = (chart_id) => {
+  deleteUserProjects("/user/projects", chart_id)
+    .then(data => {
+      console.log("删除成功：", data);
+      getProjectsData();
+    })
+    .catch(reason => {
+      console.log("删除失败：", reason);
+    })
+}
+
+const createProject = () => {
+  // postUserProjects("/user/projects", store.account);
+}
+
 onMounted(() => {
-  console.log("account:", store.account)
-  getUserProjects("/user/projects", store.account).then(({data}) => {
-    console.log(data);
-  })
+  getProjectsData();
 });
+
+function getProjectsData() {
+  getUserProjects("/user/projects", store.account).then(({ data }) => {
+    projectInfoArr.splice(0);
+    projectInfoArr.push(...data);
+  })
+}
 </script>
 <style lang="less" scoped>
 .container {

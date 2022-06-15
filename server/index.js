@@ -107,7 +107,7 @@ app.route("/api/user/projects")
   .get((req, res) => {
     const { account } = req.query;
     console.log("account: ", account);
-    connection.query(`select * from chart_basic_info where account = '${account}'`, (error, results) => {
+    connection.query(`select * from chart_basic_info where owner='${account}'`, (error, results) => {
       if (error) {
         res.status(500).send({
           message: "Mysql Error",
@@ -133,7 +133,7 @@ app.route("/api/user/projects")
     })
   })
   .delete((req, res) => {
-    const { query } = req.query;
+    const { query } = req;
     const { chartId } = query;
     connection.query(`delete from chart_basic_info where chart_id=${chartId}`, (error ,results) => {
       if (error) {
