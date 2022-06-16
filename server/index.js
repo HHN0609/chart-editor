@@ -120,8 +120,10 @@ app.route("/api/user/projects")
   .post((req, res) => {
     const {body} = req;
     const { account, chartName} = body;
-    connection.query(`insert into chart_basic_info values(null, ${chartName}, ${account}, NOW(), NOW())`, (error, results) => {
+    console.log(account, chartName)
+    connection.query(`insert into chart_basic_info values(0, '${chartName}', '${account}', NOW(), NOW())`, (error, results) => {
       if (error) {
+        console.log("error is: ", error);
         res.status(500).send({
           message: "Mysql Error",
         });
