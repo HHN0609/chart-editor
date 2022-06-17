@@ -20,7 +20,7 @@ window.addEventListener("load", async () => {
   const _account = getCookie("account");
   if(!_account){
     message.warn("Cookie is expired", 0.5).then(() => {
-      router.replace("Login");
+      router.replace({name: "Login"});
     })
     return;
   }

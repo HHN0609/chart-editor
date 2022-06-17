@@ -5,15 +5,15 @@
       <a-menu theme="dark" mode="inline" @click="switchTitle" v-model:selectedKeys="selectedKeys">
         <a-menu-item key="1">
           <bar-chart-outlined />
-          <span>我的项目</span>
+          <span>Projects</span>
         </a-menu-item>
         <a-menu-item key="2">
           <user-outlined />
-          <span>我的账户</span>
+          <span>Profile</span>
         </a-menu-item>
         <a-menu-item key="3" v-if="store.$state.isAdmin === 1">
           <cluster-outlined />
-          <span>全局管理</span>
+          <span>Management</span>
         </a-menu-item>
       </a-menu>
     </a-layout-sider>
@@ -27,11 +27,11 @@
               <user-outlined />
             </template>
           </a-avatar>
-          <a-popover title="更多操作" trigger="hover" placement="bottomRight">
+          <a-popover title="More Operations" trigger="hover" placement="bottomRight">
             <template #content>
-              <a @click="logOut">退出登录</a>
+              <a @click="logOut">Logout</a>
             </template>
-            <a>{{ store.userName || "未登录" }}</a>
+            <a>{{ store.userName || "Not logged in" }}</a>
           </a-popover>
         </strong>
       </a-layout-header>
@@ -52,20 +52,20 @@ import { clearAllCookies } from "@/utils";
 const store = userInfo();
 const collapsed = ref<boolean>(false);
 const selectedKeys = ref<string[]>(["1"]);
-const headerTitle = ref<string>("已创建项目");
+const headerTitle = ref<string>("Projects");
 
 const switchTitle = (event) => {
   switch (event.key) {
     case "1":
-      headerTitle.value = "已创建项目";
+      headerTitle.value = "Projects";
       router.push({ name: "MyProject" });
       break;
     case "2":
-      headerTitle.value = "个人信息";
+      headerTitle.value = "Profile";
       router.push({ name: "MyProfile" });
       break;
     case "3":
-      headerTitle.value = "全局管理";
+      headerTitle.value = "Management";
       router.push({ name: "Manage" });
       break;
     default:
@@ -74,7 +74,7 @@ const switchTitle = (event) => {
 };
 
 const logOut = () => {
-  message.loading("正在退出", 0.5).then(() => {
+  message.loading("Exiting", 0.5).then(() => {
     store.$reset();
     localStorage.removeItem("token");
     clearAllCookies();
@@ -86,13 +86,13 @@ const logOut = () => {
 onMounted(() => {
   if (router.currentRoute.value.name === "MyProject") {
     selectedKeys.value = ["1"];
-    headerTitle.value = "已创建项目";
+    headerTitle.value = "Projects";
   } else if (router.currentRoute.value.name === "MyProfile") {
     selectedKeys.value = ["2"];
-    headerTitle.value = "个人信息";
+    headerTitle.value = "Profile";
   } else if (router.currentRoute.value.name === "Manage") {
     selectedKeys.value = ["3"];
-    headerTitle.value = "全局管理";
+    headerTitle.value = "Management";
   }
 });
 </script>

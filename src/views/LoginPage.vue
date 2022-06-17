@@ -59,7 +59,13 @@
               </a-input-password>
             </a-form-item>
 
-            <a-form-item label="Confirm" name="confirm" :rules="[{ required: true, message: 'Please input your password!' }]">
+            <a-form-item
+              label="Confirm"
+              name="confirm"
+              :rules="[{
+                required: true,
+                validator: validatePassword,
+              }]">
               <a-input-password v-model:value="formState.confirm">
                 <template #prefix>
                   <LockOutlined class="site-form-item-icon" />
@@ -82,9 +88,8 @@ import { UserOutlined, LockOutlined } from "@ant-design/icons-vue";
 import { postUserLogin, postUserRegister } from "@/apis/index";
 import { message } from "ant-design-vue";
 import router from "@/router/index";
-// import userInfo from "../stores/userInfo";
-// import pinia from "../stores/store";
-// const store = userInfo(pinia);
+import { Rule } from "ant-design-vue/lib/form";
+
 interface FormState {
   account: string;
   password: string;
@@ -106,25 +111,23 @@ const submitForm = () => {
       message.success(data.message, 0.5).then(() => {
         router.push({ name: "MyProject" });
       });
-    })
-    .catch(({ response }) => {
-      console.log(response);
-      message.error(response.data.message);
     });
 };
-const submitRegister = () => {
-  if (formState.password !== formState.confirm) {
-    message.error("两次密码不一致", 0.5);
-    return;
+
+const validatePassword =async (_rule:Rule, value: string) => {
+  if(formState.password && formState.confirm !== formState.password){
+    return Promise.reject("Two passwords are not match!");
+  } else {
+    return Promise.resolve();
   }
+}
+
+const submitRegister = () => {
   postUserRegister("/user/info", formState.account, formState.name, formState.password)
-    .then(() => {
-      message.success("注册成功", 0.5);
+    .then(({ data }) => {
+      message.success(data.message, 0.5);
       // 切换到登录框
       activeKey.value = "1";
-    })
-    .catch(({ response }) => {
-      message.error(response.data.message, 0.5);
     });
 };
 </script>

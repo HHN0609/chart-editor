@@ -93,7 +93,7 @@ export const postUserProjects = (relativeUrl: string, account: string, chartName
 /**
 * delete方法删除一个project
 * @param relativeUrl 请求相对于baseUrl的地址
-* @param account 用户账号
+* @param chartId 用户账号
 * @returns Promise
 */
 export const deleteUserProjects = (relativeUrl: string, chartId: number) => {

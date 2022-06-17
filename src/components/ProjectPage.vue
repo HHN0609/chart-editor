@@ -38,11 +38,10 @@ const onSearch = (e) => {
 const modalVisible = ref<boolean>(false);
 const deleteChart = (chart_id) => {
   deleteUserProjects("/user/projects", chart_id)
-    .then(data => {
+    .then(({ data }) => {
+      message.success(data.message, 1);
       getProjectsData();
-    })
-    .catch(reason => {
-    })
+    });
 }
 
 const createProject = () => {
@@ -56,7 +55,6 @@ const createProject = () => {
 }
 
 onMounted(() => {
-  console.log("获取工程信息")
   getProjectsData();
 });
 

@@ -28,7 +28,10 @@ app.use((req, res, next) => {
     next();
   } else {
     if(!verifyToken(req.headers.authorization)){
-      res.status(401).send({message: "Token Invalid!"});
+      res.status(401)
+        .clearCookie("account")
+        .clearCookie("username")
+        .send({message: "Token Invalid!"});
     } else {
       next();
     }
@@ -129,7 +132,6 @@ app.route("/api/user/projects")
     console.log(account, chartName)
     connection.query(`insert into chart_basic_info values(0, '${chartName}', '${account}', NOW(), NOW())`, (error, results) => {
       if (error) {
-        console.log("error is: ", error);
         res.status(500).send({
           message: "Mysql Error",
         });
@@ -179,13 +181,9 @@ app.route("/api/user/projects")
 app.route("/api/user/info")
   .get((req, res) => {
     let { account } = req?.query;
-    // if (!account) {
-    //   要是没传递account，就用token的account
-    //   account = verifyToken(req.headers.authorization).account;
-    // }
     connection.query(`select name, account, is_admin from user_info where account='${account}'`, (error, results) => {
       if (error) {
-        res.status(404).send({
+        res.status(500).send({
           message: "Mysql Error",
         });
       } else {
@@ -198,7 +196,7 @@ app.route("/api/user/info")
     const { body } = req;
     connection.query(`insert into user_info values('${body.account}', '${body.name}', '${body.password}', ${0})`, (error, result) => {
       if (error) {
-        res.status(400).send({
+        res.status(500).send({
           message: "Mysql Error",
         })
       } else {
@@ -211,15 +209,14 @@ app.route("/api/user/info")
   .put((req, res) => {
     // 修改用户信息
     const { body } = req;
-    // console.log("put :", body);
     let sql = `update user_info set name='${body.username}' where account='${body.account}';`;
     // 区分要不要改密码
-    if (body.password && body.password !== "undefined") {
+    if (body.password.length <= 15 && body.password !== "undefined") {
       sql = `update user_info set name='${body.username}', pwd='${body.password}' where account='${body.account}';`;
     }
     connection.query(sql, (error) => {
       if(error){
-        res.status(400).send({
+        res.status(500).send({
           message: "Mysql Error",
         })
       } else {

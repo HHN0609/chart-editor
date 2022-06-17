@@ -18,7 +18,7 @@ const instance = axios.create({
  * @return {boolean} true or false
  */
 export const needToken = (config: AxiosRequestConfig<any>): boolean => {
-  if (config.url === "/user/login" || (config.url === "/user/info" && config.method === "POST")) {
+  if (config.url === "/user/login" || (config.url === "/user/info" && config.method.toLowerCase() === "post")) {
     return false;
   }
   return true;
@@ -35,13 +35,14 @@ instance.interceptors.request.use(
     } else {
       const token = localStorage.getItem("token");
       if (!token) {
-        // 没token就先登录
+        // 没token就先登录，取消这次请求
         message.warn("Please Login", 0.5).then(() => {
           router.replace({ name: "Login" });
         });
         controller.abort();
         return null;
       } else {
+        // 有token就带上token
         config.headers.Authorization = token;
         return config;
       }

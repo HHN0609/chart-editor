@@ -42,18 +42,19 @@
       </a-form-item>
 
       <a-form-item :wrapper-col="{ span: 16 , offset: 8 }">
-        <a-button type="primary" html-type="submit">保存修改</a-button>
+        <a-button type="primary" html-type="submit">Save</a-button>
       </a-form-item>
     </a-form>
   </div>
 </template>
 <script lang="ts" setup>
 import { message } from "ant-design-vue";
-import { onMounted, reactive } from "vue";
+import { onMounted, reactive, watch } from "vue";
 import { getUserInfo, putUserInfo } from "@/apis";
 import router from "@/router";
 import userInfo from "@/stores/userInfo";
 import { Rule } from "ant-design-vue/lib/form";
+import { clearAllCookies } from "@/utils";
 const store = userInfo();
 
 const validateMessages = {
@@ -85,7 +86,7 @@ const onFinish = () => {
       // 修改了密码要重新登陆
       if (formState.user.newPassword) {
         localStorage.removeItem("token");
-        
+        clearAllCookies();
         message.success(value.data.message, 0.5);
         message.info("Please Login Again", 0.5).then(() => {
           router.replace({ name: "Login" });
@@ -98,11 +99,13 @@ const onFinish = () => {
         userName: name,
         isAdmin: is_admin,
       });
-    })
-    .catch((reason) => {
-      console.log(reason);
     });
 };
+
+watch(() => store.getAccount, ()=>{
+  formState.user.userName = store.getUserName;
+  formState.user.account = store.getAccount;
+});
 
 onMounted(() => {
   formState.user.userName = store.getUserName;
