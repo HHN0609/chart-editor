@@ -23,6 +23,7 @@ import { deleteUserProjects, getUserProjects, postUserProjects } from "@/apis/in
 import userInfo from "@/stores/userInfo";
 import ChartCard from "@/components/ChartCard.vue";
 import { getCookie } from "@/utils";
+import { message } from "ant-design-vue";
 
 const store = userInfo();
 const searchInput = ref<string>("");
@@ -38,20 +39,24 @@ const modalVisible = ref<boolean>(false);
 const deleteChart = (chart_id) => {
   deleteUserProjects("/user/projects", chart_id)
     .then(data => {
-      console.log("删除成功：", data);
       getProjectsData();
     })
     .catch(reason => {
-      console.log("删除失败：", reason);
     })
 }
 
 const createProject = () => {
-  postUserProjects("/user/projects", store.account);
+  postUserProjects("/user/projects", store.account, newChartName.value)
+    .then(({data}) => {
+      message.success(data.message, 0.2);
+      modalVisible.value = !modalVisible.value;
+      newChartName.value = "";
+      getProjectsData();
+    })
 }
 
 onMounted(() => {
-  console.log("页面挂载");
+  console.log("获取工程信息")
   getProjectsData();
 });
 
