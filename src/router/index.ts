@@ -23,6 +23,12 @@ const router = createRouter({
       component: HomePage,
       children: [
         {
+          path: "",
+          redirect: {
+            name: "MyProject",
+          }
+        },
+        {
           name: "MyProject",
           path: "/Home/MyProject",
           component: ProjectPage,

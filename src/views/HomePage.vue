@@ -47,16 +47,17 @@ import { message } from "ant-design-vue";
 import { onMounted, ref } from "vue";
 import router from "@/router/index";
 import userInfo from "@/stores/userInfo";
+import { clearAllCookies } from "@/utils";
 
 const store = userInfo();
 const collapsed = ref<boolean>(false);
 const selectedKeys = ref<string[]>(["1"]);
-const headerTitle = ref<string>("已创建大屏");
+const headerTitle = ref<string>("已创建项目");
 
 const switchTitle = (event) => {
   switch (event.key) {
     case "1":
-      headerTitle.value = "已创建大屏";
+      headerTitle.value = "已创建项目";
       router.push({ name: "MyProject" });
       break;
     case "2":
@@ -76,6 +77,7 @@ const logOut = () => {
   message.loading("正在退出", 0.5).then(() => {
     store.$reset();
     localStorage.removeItem("token");
+    clearAllCookies();
     router.replace({ name: "Login" });
   });
 };
@@ -84,7 +86,7 @@ const logOut = () => {
 onMounted(() => {
   if (router.currentRoute.value.name === "MyProject") {
     selectedKeys.value = ["1"];
-    headerTitle.value = "已创建大屏";
+    headerTitle.value = "已创建项目";
   } else if (router.currentRoute.value.name === "MyProfile") {
     selectedKeys.value = ["2"];
     headerTitle.value = "个人信息";

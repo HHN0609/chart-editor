@@ -1,25 +1,47 @@
 <template>
   <div class="container">
     <a-form
-      :model="formState"
-      v-bind="layout"
       class="info_form"
+      :model="formState"
+      :labelCol="{ span: 8 }"
+      :wrapperCol="{ span: 16 }"
       :validate-messages="validateMessages" 
       @finish="onFinish"
     >
-      <a-form-item :name="['user', 'userName']" label="Name" :rules="[{ required: true }]">
+      <a-form-item
+        :name="['user', 'userName']"
+        label="Name"
+        :rules="[{ required: true }]"
+      >
         <a-input v-model:value="formState.user.userName" :maxlength="15" />
       </a-form-item>
-      <a-form-item :name="['user', 'account']" label="Account">
+
+      <a-form-item
+        :name="['user', 'account']"
+        label="Account"
+      >
         <a-input v-model:value="formState.user.account" disabled />
       </a-form-item>
-      <a-form-item :name="['user', 'newPassword']" label="New Password">
+
+      <a-form-item
+        :name="['user', 'newPassword']"
+        label="New Password"
+      >
         <a-input v-model:value="formState.user.newPassword" :maxlength="15" />
       </a-form-item>
-      <a-form-item :name="['user', 'confirmPassword']" label="Confirm Password">
+
+      <a-form-item
+        :name="['user', 'confirmPassword']"
+        label="Confirm Password"
+        :rules="[{
+          required: formState.user.newPassword,
+          validator: validatePassword
+        }]"
+      >
         <a-input v-model:value="formState.user.confirmPassword" :maxlength="15" />
       </a-form-item>
-      <a-form-item :wrapper-col="{ ...layout.wrapperCol, offset: 8 }">
+
+      <a-form-item :wrapper-col="{ span: 16 , offset: 8 }">
         <a-button type="primary" html-type="submit">保存修改</a-button>
       </a-form-item>
     </a-form>
@@ -27,15 +49,12 @@
 </template>
 <script lang="ts" setup>
 import { message } from "ant-design-vue";
-import { nextTick, onMounted, reactive } from "vue";
+import { onMounted, reactive } from "vue";
 import { getUserInfo, putUserInfo } from "@/apis";
 import router from "@/router";
 import userInfo from "@/stores/userInfo";
+import { Rule } from "ant-design-vue/lib/form";
 const store = userInfo();
-const layout = {
-  labelCol: { span: 8 },
-  wrapperCol: { span: 16 },
-};
 
 const validateMessages = {
   required: "${label} is required!",
@@ -49,6 +68,16 @@ const formState = reactive({
     confirmPassword: "",
   },
 });
+
+// 两次密码一致性的验证
+const validatePassword = async (_rule: Rule, value: string) => {
+  if(formState.user.newPassword && value !== formState.user.newPassword){
+    return Promise.reject("newPassword and confirmPassword are not match!");
+  } else {
+    return Promise.resolve();
+  }
+}
+
 const onFinish = () => {
   // 调用修改用户信息的接口
   putUserInfo("/user/info", store.account, formState.user.userName, formState.user.newPassword)
@@ -56,13 +85,14 @@ const onFinish = () => {
       // 修改了密码要重新登陆
       if (formState.user.newPassword) {
         localStorage.removeItem("token");
+        
         message.success(value.data.message, 0.5);
         message.info("Please Login Again", 0.5).then(() => {
           router.replace({ name: "Login" });
         });
         return;
       }
-      let { account, name, is_admin } = (await getUserInfo("/user/info")).data;
+      let { account, name, is_admin } = (await getUserInfo("/user/info", store.account)).data;
       store.$patch({
         account: account,
         userName: name,
@@ -73,10 +103,12 @@ const onFinish = () => {
       console.log(reason);
     });
 };
+
 onMounted(() => {
-  formState.user.userName = store.userName;
-  formState.user.account = store.account;
+  formState.user.userName = store.getUserName;
+  formState.user.account = store.getAccount;
 });
+
 </script>
 <style lang="less" scoped>
 .container {

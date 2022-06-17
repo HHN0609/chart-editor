@@ -37,7 +37,7 @@ type cardDataType = {
 const props = defineProps<{
     data: cardDataType
 }>();
-const emitter = defineEmits(["delete-chart"]);
+const emitter = defineEmits(["delete-chart", "go-dashboard"]);
 const create_time = computed(() => {
     const arr = props.data.create_time.split("T");
     return arr[0]+ " " + arr[1].split(".")[0];
@@ -51,6 +51,7 @@ const deleteChart = () => {
 };
 const goDashBoard = () => {
     //会把chart_id发过去
+    emitter("go-dashboard", props.data.chart_id);
 };
 </script>
 <style lang="less" scoped>

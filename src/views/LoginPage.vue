@@ -104,7 +104,7 @@ const submitForm = () => {
   postUserLogin("/user/login", formState.account, formState.password)
     .then(({ data }) => {
       message.success(data.message, 0.5).then(() => {
-        router.push({ name: "Home" });
+        router.push({ name: "MyProject" });
       });
     })
     .catch(({ response }) => {

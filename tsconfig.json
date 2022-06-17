@@ -9,6 +9,7 @@
         "paths": {
             "@/*": ["src/*"]
         },
+        "lib": [ "dom", "es5", "es2015.promise" ,"es2015", "es2017", "ES2019.Object"],
         "outDir": "./dist",
         "allowJs": true,
         "sourceMap": true,

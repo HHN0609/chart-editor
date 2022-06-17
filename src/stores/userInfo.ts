@@ -14,4 +14,9 @@ export default defineStore("user", {
       isAdmin: 0,
     };
   },
+  getters: {
+    getUserName: (state) => { return state.userName },
+    getAccount: (state) => { return state.account },
+    getIsAdmin: (state) => { return state.isAdmin },
+  }
 });

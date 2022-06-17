@@ -1,5 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser")
+const cookieParser = require("cookie-parser");
 const { signToken, verifyToken } = require("./utils");
 const config = require("./config");
 const connection = require("./db");
@@ -8,18 +9,21 @@ const app = express();
 const port = config.express.port;
 
 /**
- * 用中间件解析响应头里的body，为post做准备
+ * 用中间件解析请求头里的body，为post做准备
  */
-app.use(
-  bodyParser.json()
-);
+app.use(bodyParser.json());
+
+/**
+ * 中间件解析请求头里的cookie
+ */
+app.use(cookieParser());
 
 /**
  * 中间件解析、验证token
  */
 app.use((req, res, next) => {
   console.log(req.method + " " + req.path);
-  // 这里的用户登录和用户的注册都是不需要cookie的
+  // 这里的用户登录和用户的注册都是不需要token的
   if(req.path === "/api/user/login" || (req.path === "/api/user/info" && req.method.toLocaleLowerCase() === "post")){
     next();
   } else {
@@ -57,13 +61,13 @@ app.post("/api/user/login", (req, res) => {
     if (error) {
       // 数据库查询错误
       res.status(500).send({
-        message: "Internal Server Error"
+        message: "Mysql Error"
       })
     } else {
       if(results.length === 0){
         // 查询不到账户信息
         res.status(401).json({
-          message: "No Account!"
+          message: "No Account"
         });
       } else {
         // 核验密码是否正确
@@ -74,13 +78,20 @@ app.post("/api/user/login", (req, res) => {
             username: results[0].name,
             isAdmin: results[0].is_admin
           });
-          res.status(200).json({
-            message: "Login Successfully",
-            account: results[0].account,
-            username: results[0].name,
-            isAdmin: results[0].is_admin,
-            token: tokenStr
-          });
+          res.status(200)
+            .cookie("account", results[0].account, {
+              maxAge: 3600000
+            })
+            .cookie("username", results[0].name, {
+              maxAge: 3600000
+            })
+            .json({
+              message: "Login Successfully",
+              account: results[0].account,
+              username: results[0].name,
+              isAdmin: results[0].is_admin,
+              token: tokenStr
+            });
         } else {
           // 密码错误
           res.status(401).json({
@@ -92,10 +103,6 @@ app.post("/api/user/login", (req, res) => {
   })
 });
 
-// 管理员接口
-// app.post("/api/user/register", (req, res) => {
-// });
-
 /**
  * 用户查询自己的projects的接口
  * 1. 查询
@@ -106,7 +113,6 @@ app.post("/api/user/login", (req, res) => {
 app.route("/api/user/projects")
   .get((req, res) => {
     const { account } = req.query;
-    console.log("account: ", account);
     connection.query(`select * from chart_basic_info where owner='${account}'`, (error, results) => {
       if (error) {
         res.status(500).send({
@@ -166,15 +172,15 @@ app.route("/api/user/projects")
 * 1.查询自己信息
 * 2.修改自己信息
 * 3.注册新用户
-* 4.注销用
+* 4.注销
 */
 app.route("/api/user/info")
   .get((req, res) => {
-    // 要是没传递account，就用token的account
     let { account } = req?.query;
-    if (!account) {
-      account = verifyToken(req.headers.authorization).account;
-    }
+    // if (!account) {
+    //   要是没传递account，就用token的account
+    //   account = verifyToken(req.headers.authorization).account;
+    // }
     connection.query(`select name, account, is_admin from user_info where account='${account}'`, (error, results) => {
       if (error) {
         res.status(404).send({

@@ -22,6 +22,7 @@ import { onMounted, reactive, ref } from "vue";
 import { deleteUserProjects, getUserProjects, postUserProjects } from "@/apis/index";
 import userInfo from "@/stores/userInfo";
 import ChartCard from "@/components/ChartCard.vue";
+import { getCookie } from "@/utils";
 
 const store = userInfo();
 const searchInput = ref<string>("");
@@ -46,15 +47,16 @@ const deleteChart = (chart_id) => {
 }
 
 const createProject = () => {
-  // postUserProjects("/user/projects", store.account);
+  postUserProjects("/user/projects", store.account);
 }
 
 onMounted(() => {
+  console.log("页面挂载");
   getProjectsData();
 });
 
 function getProjectsData() {
-  getUserProjects("/user/projects", store.account).then(({ data }) => {
+  getUserProjects("/user/projects", store.account || getCookie("account")).then(({ data }) => {
     projectInfoArr.splice(0);
     projectInfoArr.push(...data);
   })

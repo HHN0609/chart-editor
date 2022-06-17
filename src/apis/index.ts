@@ -39,7 +39,7 @@ export const postVerify = (relativeUrl: string): Promise<AxiosResponse<any, any>
  * @param account 用户账号
  * @returns Promise
  */
-export const getUserInfo = (relativeUrl: string, account?: string): Promise<AxiosResponse<any, any>> => {
+export const getUserInfo = (relativeUrl: string, account: string): Promise<AxiosResponse<any, any>> => {
   return instance.get(relativeUrl, {
     params: {
       account,
@@ -55,7 +55,7 @@ export const getUserInfo = (relativeUrl: string, account?: string): Promise<Axio
  * @param password 密码
  * @returns Promise
  */
-export const putUserInfo = (relativeUrl: string, account?: string, username?: string, password?: string): Promise<AxiosResponse<any, any>> => {
+export const putUserInfo = (relativeUrl: string, account: string, username: string, password?: string): Promise<AxiosResponse<any, any>> => {
   return instance.put(relativeUrl, {
     account,
     username,
