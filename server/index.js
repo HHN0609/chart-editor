@@ -31,6 +31,7 @@ app.use((req, res, next) => {
       res.status(401)
         .clearCookie("account")
         .clearCookie("username")
+        // .clearCookie("isAdmin")
         .send({message: "Token Invalid!"});
     } else {
       next();
@@ -49,7 +50,24 @@ app.use("/api/admin/", (req, res, next) => {
   } else {
     res.status(401).send({ message: "No Permission" });
   }
-});
+})
+  .get("/api/admin/usersInfo", (req, res) => {
+    connection.query(`select account, name, is_admin from user_info`, (error, results) => {
+      if(error){
+        res.status(500).send({
+          message: "Mysql Error"
+        })
+      } else {
+        res.status(200).send(results);
+      }
+    });
+  })
+  .put("/api/admin/usersInfo", (req, res) => {
+    connection.query(``, (error, results) => {
+      
+    });
+  });
+
 
 /**
 * 用户初次登录的接口
@@ -86,8 +104,12 @@ app.post("/api/user/login", (req, res) => {
               maxAge: 3600000
             })
             .cookie("username", results[0].name, {
-              maxAge: 3600000
+              maxAge: 3600000,
             })
+            // .cookie("isAdmin", results[0].is_admin, {
+            //   maxAge: 3600000,
+            //   httpOnly: true
+            // })
             .json({
               message: "Login Successfully",
               account: results[0].account,
@@ -116,7 +138,7 @@ app.post("/api/user/login", (req, res) => {
 app.route("/api/user/projects")
   .get((req, res) => {
     const { account } = req.query;
-    connection.query(`select * from chart_basic_info where owner='${account}'`, (error, results) => {
+    connection.query(`select * from project_info where owner='${account}'`, (error, results) => {
       if (error) {
         res.status(500).send({
           message: "Mysql Error",
@@ -128,9 +150,9 @@ app.route("/api/user/projects")
   })
   .post((req, res) => {
     const {body} = req;
-    const { account, chartName} = body;
-    console.log(account, chartName)
-    connection.query(`insert into chart_basic_info values(0, '${chartName}', '${account}', NOW(), NOW())`, (error, results) => {
+    const { account, projectName} = body;
+    console.log(account, projectName)
+    connection.query(`insert into project_info values(0, '${projectName}', '${account}', NOW(), NOW())`, (error, results) => {
       if (error) {
         res.status(500).send({
           message: "Mysql Error",
@@ -144,8 +166,8 @@ app.route("/api/user/projects")
   })
   .delete((req, res) => {
     const { query } = req;
-    const { chartId } = query;
-    connection.query(`delete from chart_basic_info where chart_id=${chartId}`, (error ,results) => {
+    const { projectId } = query;
+    connection.query(`delete from project_info where project_id=${projectId}`, (error ,results) => {
       if (error) {
         res.status(500).send({
           message: "Mysql Error",

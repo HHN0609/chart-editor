@@ -1,13 +1,14 @@
 import { createRouter, createWebHashHistory } from "vue-router";
 import userInfo from "@/stores/userInfo";
 import pinia from "@/stores/store";
+import { getCookie } from "@/utils";
 const LoginPage = () => import("@/views/LoginPage.vue");
 const DashBoard = () => import("@/views/DashBoard.vue");
 const NotFound = () => import("@/views/NotFound.vue");
 const HomePage = () => import("@/views/HomePage.vue");
 const ProjectPage = () => import("@/components/ProjectPage.vue");
 const InfoPage = () => import("@/components/InfoPage.vue");
-const ManagePage = () => import("@/components/Managepage.vue");
+const ManagePage = () => import("@/components/ManagePage.vue");
 
 const store = userInfo(pinia);
 const router = createRouter({
@@ -42,13 +43,13 @@ const router = createRouter({
           name: "Manage",
           path: "/Home/Manage",
           component: ManagePage,
-          beforeEnter: (to, from) => {
-            if (store.isAdmin) {
-              return true;
-            } else {
-              return false;
-            }
-          },
+          // beforeEnter: async (to, from) => {
+          //   if (store.isAdmin) {
+          //     return true;
+          //   } else {
+          //     return false;
+          //   }
+          // },
         },
       ],
     },

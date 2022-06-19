@@ -1,11 +1,18 @@
 <template>
-  <div class="container"></div>
+  <div class="container">121323</div>
 </template>
 <script lang="ts" setup>
+import { getAllUsersInfo } from "@/apis";
 import { onMounted } from "vue";
 onMounted(() => {
-  let a = 10;
-  a++;
+  console.log("管理页面")
+  getAllUsersInfo("/admin/usersInfo")
+   .then(({data}) => {
+      console.log(data);
+   })
+   .catch((reason) => {
+      console.log(reason);
+   });
 });
 </script>
 <style lang="less" scoped>

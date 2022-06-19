@@ -10,11 +10,11 @@
       />
     </header>
     <main class="main">
-      <ChartCard @delete-chart="deleteChart" v-for="data in projectInfoArr" :data="data" :key="data.chart_id"></ChartCard>
+      <ChartCard @delete-project="deleteProject" v-for="data in projectInfoArr" :data="data" :key="data.project_id"></ChartCard>
     </main>
   </div>
   <a-modal v-model:visible="modalVisible" title="Create project" @ok="createProject">
-    <label>Chart name: <a-input v-model:value="newChartName"></a-input></label>
+    <label>Project name: <a-input v-model:value="newprojectName"></a-input></label>
   </a-modal>
 </template>
 <script lang="ts" setup>
@@ -29,15 +29,15 @@ const store = userInfo();
 const searchInput = ref<string>("");
 let projectInfoArr = reactive([]);
 
-let newChartName = ref("");
+let newprojectName = ref("");
 
 const onSearch = (e) => {
   console.log(e);
 };
 
 const modalVisible = ref<boolean>(false);
-const deleteChart = (chart_id) => {
-  deleteUserProjects("/user/projects", chart_id)
+const deleteProject = (project_id) => {
+  deleteUserProjects("/user/projects", project_id)
     .then(({ data }) => {
       message.success(data.message, 1);
       getProjectsData();
@@ -45,11 +45,11 @@ const deleteChart = (chart_id) => {
 }
 
 const createProject = () => {
-  postUserProjects("/user/projects", store.account, newChartName.value)
+  postUserProjects("/user/projects", store.account, newprojectName.value)
     .then(({data}) => {
       message.success(data.message, 0.2);
       modalVisible.value = !modalVisible.value;
-      newChartName.value = "";
+      newprojectName.value = "";
       getProjectsData();
     })
 }

@@ -4,7 +4,7 @@
             <img src="../../public/柱状图.svg" alt="No img">
         </div>
         <div class="infoBox">
-            <strong>{{data.chart_name}}</strong>
+            <strong>{{data.project_name}}</strong>
             <h5>create time: </h5>
             <h5>{{create_time}}</h5>
         </div>
@@ -28,8 +28,8 @@
 import { computed, ref } from '@vue/reactivity';
 
 type cardDataType = {
-    chart_id: number,
-    chart_name: string,
+    project_id: number,
+    project_name: string,
     create_time: string,
     last_modify: string,
     owner: string,
@@ -37,7 +37,7 @@ type cardDataType = {
 const props = defineProps<{
     data: cardDataType
 }>();
-const emitter = defineEmits(["delete-chart", "go-dashboard"]);
+const emitter = defineEmits(["delete-project", "go-dashboard"]);
 const create_time = computed(() => {
     const arr = props.data.create_time.split("T");
     return arr[0]+ " " + arr[1].split(".")[0];
@@ -46,12 +46,12 @@ const showOverLayout = ref<Boolean>(false);
 const showModal = ref<Boolean>(false);
 const deleteChart = () => {
     // 发出一个时间，父组件来删
-    emitter("delete-chart", props.data.chart_id);
+    emitter("delete-project", props.data.project_id);
     showModal.value = false;
 };
 const goDashBoard = () => {
-    //会把chart_id发过去
-    emitter("go-dashboard", props.data.chart_id);
+    //会把project_id发过去
+    emitter("go-dashboard", props.data.project_id);
 };
 </script>
 <style lang="less" scoped>

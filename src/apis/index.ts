@@ -25,15 +25,6 @@ export const postUserRegister = (relativeUrl: string, account: string, name: str
 };
 
 /**
- * 查询登录状态(已经弃用)
- * @param relativeUrl 请求相对于baseUrl的地址
- * @returns Promise
- */
-export const postVerify = (relativeUrl: string): Promise<AxiosResponse<any, any>> => {
-  return instance.post(relativeUrl);
-};
-
-/**
  * get方法获取用户信息
  * @param relativeUrl 请求相对于baseUrl的地址
  * @param account 用户账号
@@ -81,25 +72,30 @@ export const getUserProjects = ( relativeUrl: string, account: string ): Promise
 * post方法创建一个project
 * @param relativeUrl 请求相对于baseUrl的地址
 * @param account 用户账号
+* @param projectName 项目名称
 * @returns Promise 
 */
-export const postUserProjects = (relativeUrl: string, account: string, chartName: string) => {
+export const postUserProjects = (relativeUrl: string, account: string, projectName: string) => {
   return instance.post(relativeUrl, {
     account,
-    chartName,
+    projectName,
   });
 };
 
 /**
 * delete方法删除一个project
 * @param relativeUrl 请求相对于baseUrl的地址
-* @param chartId 用户账号
+* @param projectId 项目id
 * @returns Promise
 */
-export const deleteUserProjects = (relativeUrl: string, chartId: number) => {
+export const deleteUserProjects = (relativeUrl: string, projectId: number) => {
   return instance.delete(relativeUrl, {
     params: {
-      chartId,
+      projectId,
     }
   });
 };
+
+export const getAllUsersInfo = (relativeUrl: string) => {
+  return instance.get(relativeUrl);
+}
