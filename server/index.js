@@ -63,8 +63,33 @@ app.use("/api/admin/", (req, res, next) => {
     });
   })
   .put("/api/admin/usersInfo", (req, res) => {
-    connection.query(``, (error, results) => {
-      
+    const { body } = req;
+    const { account, newAuth } = body;
+    connection.query(`update user_info set is_admin=${newAuth} where account='${account}';`, (error, results) => {
+      if(error){
+        res.status(500).send({
+          message: "Mysql Error"
+        })
+      } else {
+        res.status(200).send({
+          message: "Change successfully"
+        });
+      }
+    });
+  })
+  .delete("/api/admin/usersInfo", (req, res) => {
+    const { query } = req;
+    const { account } = query;
+    connection.query(`delete from user_info where account='${account}'`, (error, results) => {
+      if(error){
+        res.status(500).send({
+          message: "Mysql Error"
+        })
+      } else {
+        res.status(200).send({
+          message: "Delete successfully"
+        });
+      }
     });
   });
 
@@ -233,7 +258,7 @@ app.route("/api/user/info")
     const { body } = req;
     let sql = `update user_info set name='${body.username}' where account='${body.account}';`;
     // 区分要不要改密码
-    if (body.password.length <= 15 && body.password !== "undefined") {
+    if (body.password && body.password.length <= 15) {
       sql = `update user_info set name='${body.username}', pwd='${body.password}' where account='${body.account}';`;
     }
     connection.query(sql, (error) => {

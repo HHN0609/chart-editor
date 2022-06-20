@@ -11,7 +11,7 @@
           <user-outlined />
           <span>Profile</span>
         </a-menu-item>
-        <a-menu-item key="3" v-if="store.$state.isAdmin === 1">
+        <a-menu-item key="3" v-if="store.$state.isAdmin !== 0">
           <cluster-outlined />
           <span>Management</span>
         </a-menu-item>

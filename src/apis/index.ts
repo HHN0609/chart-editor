@@ -99,3 +99,18 @@ export const deleteUserProjects = (relativeUrl: string, projectId: number) => {
 export const getAllUsersInfo = (relativeUrl: string) => {
   return instance.get(relativeUrl);
 }
+
+export const deleteUserInfo = (relativeUrl: string, account: string) => {
+  return instance.delete(relativeUrl, {
+    params: {
+      account,
+    }
+  });
+};
+
+export const putUserAuth = (relativeUrl: string, account: string, newAuth: number) => {
+  return instance.put(relativeUrl, {
+    account,
+    newAuth,
+  });
+};
