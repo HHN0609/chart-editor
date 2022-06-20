@@ -1,5 +1,5 @@
- CREATE TABLE `chart_basic_info` (
-  `chart_id` int(5) NOT NULL AUTO_INCREMENT,
+ CREATE TABLE `project_info` (
+  `peoject_id` int(5) NOT NULL AUTO_INCREMENT,
   `chart_name` char(15) DEFAULT NULL,
   `owner` char(15) DEFAULT NULL,
   `create_time` datetime DEFAULT NULL,

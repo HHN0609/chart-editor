@@ -41,7 +41,7 @@
       
     </div>
     <div class="right">
-
+      <CanvasConfigForm></CanvasConfigForm>
     </div>
   </div>
 </template>
@@ -54,6 +54,7 @@ import VueMoveable, { MoveableOptions, OnDragEnd, OnResize, OnResizeEnd, OnRotat
 import Guides from "@scena/guides";
 import Gesto from "gesto";
 import { getTargetIndex } from "@/utils";
+import CanvasConfigForm from "@/components/sideFroms/CanvasConfigForm.vue";
 
 let ctrlDown = false;
 let guideHorizontal: Guides;
