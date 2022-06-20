@@ -46,7 +46,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { h, nextTick, onBeforeUnmount, onMounted, reactive} from "vue";
+import { onBeforeUnmount, onMounted, reactive } from "vue";
 import InfiniteViewer , { InfiniteViewerOptions, OnPinch, OnDrag, OnScroll } from "infinite-viewer";
 import { VueInfiniteViewer } from "vue3-infinite-viewer";
 import { ReloadOutlined } from "@ant-design/icons-vue";
@@ -107,6 +107,7 @@ const moveableOptions = reactive<Partial<MoveableOptions>>({
   elementSnapDirections: true,
   isDisplayInnerSnapDigit: true,
   isDisplaySnapDigit: true,
+  bounds: { left: 0, right: 800, top: 0, bottom: 450},
 });
 
 // 点击切换moveable选中的元素
@@ -194,7 +195,7 @@ onMounted(() => {
   );
   moveableOptions.elementGuidelines = [".viewport", ".target_1", ".target_2"]
   moveableOptions.snapContainer = document.querySelector(".viewport") as HTMLElement;
-  moveableOptions.bounds = { left: 0, right: 800, top: 0, bottom: 450};
+  // moveableOptions.bounds = { left: 0, right: 800, top: 0, bottom: 450};
   // console.log(moveableOptions);
   // 初始化moveable
   // moveable = new Moveable(document.querySelector(".viewport"), moveableOptions);
