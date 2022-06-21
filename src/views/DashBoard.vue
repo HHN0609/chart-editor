@@ -12,6 +12,7 @@
       <div class="guide horizontal"></div>
       <div class="guide vertical"></div>
       <vue-infinite-viewer
+        ref="Viewer"
         class="viewer"
         v-bind="viewerOptions"
         @scroll.once="getInstance"
@@ -46,7 +47,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { onBeforeUnmount, onMounted, reactive } from "vue";
+import { onBeforeMount, onBeforeUnmount, onMounted, reactive, Ref, ref } from "vue";
 import InfiniteViewer , { InfiniteViewerOptions, OnPinch, OnDrag, OnScroll } from "infinite-viewer";
 import { VueInfiniteViewer } from "vue3-infinite-viewer";
 import { ReloadOutlined } from "@ant-design/icons-vue";
@@ -55,14 +56,19 @@ import Guides from "@scena/guides";
 import Gesto from "gesto";
 import { getTargetIndex } from "@/utils";
 import CanvasConfigForm from "@/components/sideFroms/CanvasConfigForm.vue";
+import router from "@/router";
+import { getUserProjectsBasic } from "@/apis";
+import useGuide from "@/hooks/useGuide";
 
 let ctrlDown = false;
-let guideHorizontal: Guides;
-let guideVertical: Guides;
-let infiniteViewer: InfiniteViewer;
-let moveable;
-let getso: Gesto;
+let guideHorizontal: Ref<Guides> = useGuide(".guide.horizontal", "horizontal");
+let guideVertical: Ref<Guides> = useGuide(".guide.vertical", "vertical");
 
+let infiniteViewer: InfiniteViewer;
+let getso: Gesto;
+let projectId = ref<string>("");
+let moveable = ref<VueMoveable>();
+let Viewer = ref();
 // moveable包裹的数据，是有状态的，下次进来要还原的
 const moveableData = [
   {
@@ -129,18 +135,12 @@ const ctrlKeyUpHandle = (event: KeyboardEvent) => {
   ctrlDown = false;
 };
 
-// window大小发生变化时，两个guide的resize回调函数
-const guideResizeHandle = () => {
-  guideHorizontal.resize();
-  guideVertical.resize();
-};
-
 // 点击左上角recoverBtn后让infiniteViewer的缩放和viewport的位置回到最初的样式
 const resetViewer = () => {
   infiniteViewer.setZoom(1);
   infiniteViewer.scrollCenter();
-  guideHorizontal.setState({scrollPos: infiniteViewer.getScrollLeft(), zoom: 1});
-  guideVertical.setState({scrollPos: infiniteViewer.getScrollTop(), zoom: 1});
+  guideHorizontal.value.setState({scrollPos: infiniteViewer.getScrollLeft(), zoom: 1});
+  guideVertical.value.setState({scrollPos: infiniteViewer.getScrollTop(), zoom: 1});
 };
 
 function onDrag({target, transform}) {
@@ -177,33 +177,17 @@ function onRotateEnd({lastEvent}: OnRotateEnd){
   moveableData[index].style.transform = lastEvent.transform;
 }
 
+onBeforeMount(() => {
+  projectId.value = router.currentRoute.value.params.projectId as string;
+  getUserProjectsBasic("/user/projectsBasic", projectId.value)
+    .then(({ data }) => {
+      console.log(data);
+    });
+})
+
 onMounted(() => {
-  // 初始化两个guide
-  guideHorizontal = new Guides(
-    document.querySelector(".guide.horizontal"),
-    {
-      type: "horizontal",
-      rulerStyle: { left: "30px", width: "calc(100% - 30px)", height: "30px" },
-    }
-  );
-  guideVertical = new Guides(
-    document.querySelector(".guide.vertical"),
-    {
-      type: "vertical",
-      rulerStyle: { top: "30px", height: "calc(100% - 30px)", width: "30px" },
-    }
-  );
   moveableOptions.elementGuidelines = [".viewport", ".target_1", ".target_2"]
   moveableOptions.snapContainer = document.querySelector(".viewport") as HTMLElement;
-  // moveableOptions.bounds = { left: 0, right: 800, top: 0, bottom: 450};
-  // console.log(moveableOptions);
-  // 初始化moveable
-  // moveable = new Moveable(document.querySelector(".viewport"), moveableOptions);
-  // nextTick(() => {
-  //   moveable = ref();
-  //   console.log(moveable)
-  // })
-  window.addEventListener("resize", guideResizeHandle);
   window.addEventListener("keyup", ctrlKeyUpHandle);
   window.addEventListener("keydown", ctrlKeyDownHandle);
 });
@@ -211,26 +195,27 @@ onMounted(() => {
 
 // 页面在刚刚刷新进来的时候，会触发一次原始的scroll事件，利用这个事件来获取infiniteViewer的实例
 const getInstance = ({currentTarget}) => {
+  console.log("2");
   infiniteViewer = currentTarget;
 
   // 让viewport剧中，同时让guide也跟随到相应位置
   infiniteViewer.setZoom(1);
   infiniteViewer.scrollCenter();
-  guideHorizontal.setState({scrollPos: infiniteViewer.getScrollLeft()});
-  guideVertical.setState({scrollPos: infiniteViewer.getScrollTop()});
+  guideHorizontal.value.setState({scrollPos: infiniteViewer.getScrollLeft()});
+  guideVertical.value.setState({scrollPos: infiniteViewer.getScrollTop()});
   
   infiniteViewer.on("pinch", (e: OnPinch) => {
     // ctrl + 鼠标滚轮的缩放处理
     infiniteViewer.setZoom(e.zoom);
-    guideHorizontal.setState({ zoom: e.zoom, scrollPos: infiniteViewer.getScrollLeft() });
-    guideVertical.setState({ zoom: e.zoom, scrollPos: infiniteViewer.getScrollTop() });
+    guideHorizontal.value.setState({ zoom: e.zoom, scrollPos: infiniteViewer.getScrollLeft() });
+    guideVertical.value.setState({ zoom: e.zoom, scrollPos: infiniteViewer.getScrollTop() });
   });
 
   infiniteViewer.on("scroll", (e: OnScroll) => {
     // infiniteViewer的滚动处理，会带动guide的滚动
     // 拖拽事件也会触发这个回调函数
-    guideHorizontal.scroll(e.scrollLeft);
-    guideVertical.scroll(e.scrollTop);
+    guideHorizontal.value.scroll(e.scrollLeft);
+    guideVertical.value.scroll(e.scrollTop);
   });
 
   // 添加点击事件的委托监听

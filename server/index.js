@@ -251,6 +251,21 @@ app.route("/api/user/projects")
     });
   })
 
+app.route("/api/user/projectsBasic")
+  .get((req, res) => {
+    let {projectId} = req.query;
+    connection.query(`select * from project_basic where project_id='${projectId}'`, (err, results) => {
+      if (err) {
+        res.status(500).send({
+          message: "Mysql Error",
+        })
+      } else {
+        res.status(200).send({
+          message: results[0],
+        })
+      }
+    })
+  })
 /**
 * 用户的对自己信息的接口
 * 1.查询自己信息

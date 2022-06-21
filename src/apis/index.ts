@@ -88,7 +88,7 @@ export const postUserProjects = (relativeUrl: string, account: string, initInfo:
 * @param projectId 项目id
 * @returns Promise
 */
-export const deleteUserProjects = (relativeUrl: string, projectId: number) => {
+export const deleteUserProjects = (relativeUrl: string, projectId: string) => {
   return instance.delete(relativeUrl, {
     params: {
       projectId,
@@ -114,3 +114,11 @@ export const putUserAuth = (relativeUrl: string, account: string, newAuth: numbe
     newAuth,
   });
 };
+
+export const getUserProjectsBasic = (relativeUrl: string, projectId: string) => {
+  return instance.get(relativeUrl, {
+    params: {
+      projectId,
+    }
+  })
+}

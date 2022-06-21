@@ -60,8 +60,15 @@ const router = createRouter({
     },
     {
       name: "DashBoard",
-      path: "/DashBoard",
+      path: "/DashBoard/:projectId",
       component: DashBoard,
+      beforeEnter: (to) => {
+        if (!to.params.projectId) {
+          return false;
+        } else {
+          return true;
+        }
+      }
     },
     {
       name: "404",

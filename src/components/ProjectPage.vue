@@ -10,7 +10,13 @@
       />
     </header>
     <main class="main">
-      <ChartCard @delete-project="deleteProject" v-for="data in projectInfoArr" :data="data" :key="data.project_id"></ChartCard>
+      <ChartCard
+        v-for="data in projectInfoArr"
+        :key="data.project_id"
+        @delete-project="deleteProject"
+        @go-dashboard="goDashboard" 
+        :data="data">
+      </ChartCard>
     </main>
   </div>
   <a-modal v-model:visible="modalVisible" title="Create project" :footer="null" @cancel="closeModal">
@@ -51,6 +57,7 @@ import userInfo from "@/stores/userInfo";
 import ChartCard from "@/components/ChartCard.vue";
 import { getCookie } from "@/utils";
 import { FormInstance, message } from "ant-design-vue";
+import router from "@/router";
 
 const modalForm = ref<FormInstance>();
 const store = userInfo();
@@ -68,7 +75,12 @@ const onSearch = (e) => {
 };
 
 const modalVisible = ref<boolean>(false);
-const deleteProject = (project_id) => {
+
+const goDashboard = (project_Id: string) => {
+  router.push({name: "DashBoard", params:{projectId: project_Id}});
+}
+
+const deleteProject = (project_id: string) => {
   deleteUserProjects("/user/projects", project_id)
     .then(({ data }) => {
       message.success(data.message, 1);
