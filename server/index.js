@@ -1,10 +1,14 @@
 const express = require("express");
 const bodyParser = require("body-parser")
 const cookieParser = require("cookie-parser");
-const { signToken, verifyToken } = require("./utils");
+const { signToken, verifyToken, generateUUID } = require("./utils");
 const config = require("./config");
 const connection = require("./db");
-
+connection.connect((err) => {
+  if(null){
+    console.log("Connection error: ", err);
+  }
+})
 const app = express();
 const port = config.express.port;
 
@@ -175,24 +179,53 @@ app.route("/api/user/projects")
   })
   .post((req, res) => {
     const {body} = req;
-    const { account, projectName} = body;
-    console.log(account, projectName)
-    connection.query(`insert into project_info values(0, '${projectName}', '${account}', NOW(), NOW())`, (error, results) => {
-      if (error) {
-        res.status(500).send({
-          message: "Mysql Error",
-        });
-      } else {
-        res.status(200).send({
-          message: "Create Successfully",
+    const { account, name, width, height, bgColor, viewportColor} = body;
+    const uuid = generateUUID();
+    let sqlArr = [
+      `insert into project_info values('${uuid}', '${name}', '${account}', NOW(), NOW())`,
+      `insert into project_basic values('${uuid}', ${width}, ${height}, ${1.0}, '${bgColor}', '${viewportColor}')`,
+    ]
+    // 这里需要用到事务的特性
+    connection.beginTransaction((err) => {
+      let p1 = new Promise((resolve, reject) => {
+        connection.query(sqlArr[0], (err, results) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(results);
+          }
         })
-      }
-    })
+      });
+      let p2 = new Promise((resolve, reject) => {
+        connection.query(sqlArr[1], (err, results) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(results);
+          }
+        })
+      })
+      Promise.all([p1, p2])
+        .then((value) => {
+          console.log(value);
+          connection.commit();
+          res.status(200).send({
+            message: "Create Successfully",
+          })
+        })
+        .catch((reason) => {
+          console.log(reason);
+          connection.rollback();
+          res.status(500).send({
+            message: "Mysql Error",
+          })
+        })
+    });
   })
   .delete((req, res) => {
     const { query } = req;
     const { projectId } = query;
-    connection.query(`delete from project_info where project_id=${projectId}`, (error ,results) => {
+    connection.query(`delete from project_info where project_id='${projectId}'`, (error ,results) => {
       if (error) {
         res.status(500).send({
           message: "Mysql Error",
@@ -276,7 +309,6 @@ app.route("/api/user/info")
   .delete((req, res) => {
     // 注销用户
   });
-
 
 app.listen(port, () => {
   console.log("Listening on port " + port);

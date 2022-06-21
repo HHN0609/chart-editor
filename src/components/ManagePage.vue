@@ -9,7 +9,12 @@
 
         </template>
         <template v-else-if="column.key === 'is_admin'">
-          <a-select v-if="editingAccount === record.account" v-model:value="selectedAuth" style="width: 150px;">
+          <a-select
+            v-if="editingAccount === record.account"
+            v-model:value="selectedAuth"
+            style="width: 150px;"
+            size="small"
+          >
             <a-select-option
               v-for="item in authMap"
               :key="item"
@@ -72,7 +77,7 @@ const datasource = reactive([]);
 const columns = [
   {title: "Account", dataIndex: "account", key: "account"},
   {title: "Name", dataIndex: "name", key: "name"},
-  {title: "IsAdmin", dataIndex: "is_admin", key: "is_admin"},
+  {title: "IsAdmin", dataIndex: "is_admin", key: "is_admin", width: '180px'},
   {title: "Action", key: "action"}
 ];
 const authMap = [

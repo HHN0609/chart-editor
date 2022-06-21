@@ -75,10 +75,10 @@ export const getUserProjects = ( relativeUrl: string, account: string ): Promise
 * @param projectName 项目名称
 * @returns Promise 
 */
-export const postUserProjects = (relativeUrl: string, account: string, projectName: string) => {
+export const postUserProjects = (relativeUrl: string, account: string, initInfo: object) => {
   return instance.post(relativeUrl, {
     account,
-    projectName,
+    ...initInfo
   });
 };
 

@@ -13,32 +13,33 @@
       <ChartCard @delete-project="deleteProject" v-for="data in projectInfoArr" :data="data" :key="data.project_id"></ChartCard>
     </main>
   </div>
-  <a-modal v-model:visible="modalVisible" title="Create project" :footer="null">
-    <!-- <label>Project name: <a-input v-model:value="newprojectName"></a-input></label> -->
+  <a-modal v-model:visible="modalVisible" title="Create project" :footer="null" @cancel="closeModal">
     <a-form
-      style="width: 70%; margin: 0 auto;"
+      ref="modalForm"
+      class="modalForm"
       :label-col="{span: 10}"
       :wrapper-col="{span: 14}"
-      :model="newprojectState"
+      :model="newProjectState"
+      @finish="createProject"
     >
-      <a-form-item label="Name" name="name" required>
-        <a-input type="text" v-model:value="newprojectState.name" />
+      <a-form-item label="Name" name="name" required >
+        <a-input type="text" v-model:value="newProjectState.name" :maxlength="15"/>
       </a-form-item>
       <a-form-item label="Width" name="width" required>
-        <a-input type="number" v-model:value="newprojectState.width" suffix="px"/>
+        <a-input type="number" v-model:value="newProjectState.width" suffix="px"/>
       </a-form-item>
       <a-form-item label="Height" name="height" required>
-        <a-input type="number" v-model:value="newprojectState.height" suffix="px"/>
+        <a-input type="number" v-model:value="newProjectState.height" suffix="px"/>
       </a-form-item>
       <a-form-item label="Background color" name="bgColor" required>
-        <a-input type="color" v-model:value="newprojectState.bgColor" />
+        <a-input type="color" v-model:value="newProjectState.bgColor" />
       </a-form-item>
       <a-form-item label="Viewport color" name="viewportColor" required>
-        <a-input type="color" v-model:value="newprojectState.viewportColor" />
+        <a-input type="color" v-model:value="newProjectState.viewportColor" />
       </a-form-item>
-      <a-form-item :wrapper-col="{ offset: 12 }">
-        <a-button type="primary" html-type="submit" @click="createProject">Create</a-button>
-        <a-button style="margin-left: 10px" @click="modalVisible=false">Cancel</a-button>
+      <a-form-item class="buttonItem" :wrapper-col="{span: 12}">
+        <a-button type="primary" html-type="submit">Create</a-button>
+        <a-button style="margin-left: 10px" @click="closeModal">Cancel</a-button>
       </a-form-item>
     </a-form>
   </a-modal>
@@ -49,20 +50,19 @@ import { deleteUserProjects, getUserProjects, postUserProjects } from "@/apis/in
 import userInfo from "@/stores/userInfo";
 import ChartCard from "@/components/ChartCard.vue";
 import { getCookie } from "@/utils";
-import { message } from "ant-design-vue";
+import { FormInstance, message } from "ant-design-vue";
 
+const modalForm = ref<FormInstance>();
 const store = userInfo();
 const searchInput = ref<string>("");
 let projectInfoArr = reactive([]);
-const newprojectState = reactive({
+let newProjectState = reactive({
   name: "",
   width: 800,
   height: 450,
-  bgColor: "#9c4f4f",
-  viewportColor: "#9cdc4f"
-})
-let newprojectName = ref("");
-
+  bgColor: "#DCDCDC",
+  viewportColor: "#272C2C",
+});
 const onSearch = (e) => {
   console.log(e);
 };
@@ -76,12 +76,16 @@ const deleteProject = (project_id) => {
     });
 }
 
+const closeModal = () => {
+  modalVisible.value = false;
+  modalForm.value.resetFields();
+}
+
 const createProject = () => {
-  postUserProjects("/user/projects", store.account, newprojectName.value)
+  postUserProjects("/user/projects", store.account, {...newProjectState})
     .then(({data}) => {
       message.success(data.message, 0.2);
-      modalVisible.value = false;
-      newprojectName.value = "";
+      closeModal();
       getProjectsData();
     })
 }
@@ -117,6 +121,14 @@ function getProjectsData() {
     justify-content: left;
     align-items: center;
     justify-items: center;
+  }
+}
+.modalForm{
+  width: 70%;
+  margin: 0 auto;
+  > .buttonItem{
+    display:flex;
+    justify-content: center;
   }
 }
 </style>
