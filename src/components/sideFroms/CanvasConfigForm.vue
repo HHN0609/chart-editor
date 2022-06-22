@@ -1,7 +1,8 @@
 <!-- 画布的配置表单 -->
 <template>
   <div class="container">
-    <a-collapse>
+    45645644
+    <!-- <a-collapse>
       <a-collapse-panel key="1" header="Canvas settings">
         <a-form
           name="basic"
@@ -24,7 +25,7 @@
           </a-form-item>
         </a-form>
       </a-collapse-panel>
-    </a-collapse>
+    </a-collapse> -->
   </div>
 </template>
 

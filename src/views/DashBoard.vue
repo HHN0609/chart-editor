@@ -52,6 +52,7 @@
     <div class="right">
       <TopBotton></TopBotton>
       <!-- <CanvasConfigForm></CanvasConfigForm> -->
+      <!-- {{ render(h(CanvasConfigForm)) }} -->
     </div>
   </div>
 </template>
@@ -85,7 +86,10 @@ let Viewer = ref();
 let infiniteViewer: InfiniteViewer;
 let projectId = "";
 let moveable = ref<VueMoveable>();
-let projectGlobalInfo = reactive<Partial<BasicInfo>>({});
+let projectGlobalInfo = reactive<Partial<BasicInfo>>({
+  width: 800,
+  height: 450,
+});
 
 useDragGetso(".viewer", (e: OnDrag) => {
     infiniteViewer.scrollBy(-1 * e.deltaX, -1 * e.deltaY);
@@ -115,7 +119,7 @@ const moveableData = [
   }
 ];
 
-// infinite-viewer的无状态的（暂定），每次进来的样式都是一样的
+// infinite-viewer的zoom是有状态的
 const viewerOptions = reactive<Partial<InfiniteViewerOptions>>({
   rangeX: [-1000, 1000],
   rangeY: [-1000, 1000],
@@ -124,7 +128,7 @@ const viewerOptions = reactive<Partial<InfiniteViewerOptions>>({
   zoom: 1,
 });
 
-// moveable本身是无状态的
+// moveable只有一个bounds有状态
 const moveableOptions = reactive<Partial<MoveableOptions>>({
   target: "",
   draggable: true,
@@ -155,6 +159,15 @@ watch(
       guideHorizontal.value.setState({scrollPos: infiniteViewer.getScrollLeft(), zoom: newZoom});
       guideVertical.value.setState({scrollPos: infiniteViewer.getScrollTop(), zoom: newZoom});
     })
+  }
+);
+
+watch(
+  [() => projectGlobalInfo.height, () => projectGlobalInfo.width],
+  ([newH, newW]) => {
+    console.log(newH, newW);
+    moveableOptions.bounds.bottom = newH;
+    moveableOptions.bounds.right = newW;
   }
 );
 
@@ -243,6 +256,7 @@ onMounted(() => {
 onMounted(() => {
   moveableOptions.elementGuidelines = [".viewport", ".target_1", ".target_2"]
   // moveableOptions.snapContainer = document.querySelector(".viewport") as HTMLElement;
+  render(h(CanvasConfigForm), document.querySelector(".right"));
 });
 
 onBeforeUnmount(() => {
