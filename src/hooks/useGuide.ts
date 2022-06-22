@@ -1,9 +1,9 @@
 import Guides from "@scena/guides";
-import { onMounted, onUnmounted, reactive, ref } from "vue";
+import { onMounted, onUnmounted, ref } from "vue";
 
 const rulerStyle = {
     horizontal: { left: "30px", width: "calc(100% - 30px)", height: "30px" },
-    vertical: { top: "30px", height: "calc(100% - 30px)", width: "30px" }
+    vertical: { top: "30px", height: "calc(100% - 60px)", width: "30px" }
 }
 
 export default function useGuide (selector: string, orient: "vertical" | "horizontal") {

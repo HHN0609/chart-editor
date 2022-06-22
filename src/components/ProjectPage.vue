@@ -1,7 +1,7 @@
 <template>
   <div class="container" >
     <header class="header">
-      <a-button type="primary" style="background-color:green; border: green 1px solid;" @click="modalVisible = !modalVisible">Create Project</a-button>
+      <a-button type="primary" style="background-color:green; border: green 1px solid;" @click="modalVisible = true">Create Project</a-button>
       <a-input-search
         v-model:value="searchInput"
         placeholder="input search text"

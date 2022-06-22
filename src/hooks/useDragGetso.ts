@@ -1,7 +1,7 @@
 import Gesto, { OnDrag } from "gesto";
 import { onMounted, onUnmounted, Ref, ref } from "vue";
 
-export default function useDragGetso (selector: string, callback): Ref<Gesto> {
+export default function useDragGetso (selector: string, callback: (e: OnDrag) => void): Ref<Gesto> {
     let getso = ref<Gesto>();
     let ctrlDown = false;
     const ctrlKeyDownHandle = (event: KeyboardEvent) => {

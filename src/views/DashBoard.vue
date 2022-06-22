@@ -5,7 +5,7 @@
     </div>
     <div class="editorbox">
       <reload-outlined
-        class="recoverBtn"
+        class="resizeBtn"
         title="恢复画布"
         @click="resetViewer"
       />
@@ -15,7 +15,6 @@
         ref="Viewer"
         class="viewer"
         v-bind="viewerOptions"
-        @scroll.once="getInstance"
         >
         <div class="viewport">
           <div
@@ -39,7 +38,11 @@
           />
         </div>
       </vue-infinite-viewer>
-      
+      <div class="bottomBar">
+        <a-input class="zoomInput" v-model:value="infiniteViewZoom" size="small" suffix="%" type="number" :min="10" :max="200"></a-input>
+        <a-slider class="zoomSlider" v-model:value="infiniteViewZoom" :tip-formatter="tipFormatter" :min="10" :max="200"></a-slider>
+        <h3>zoom: </h3>
+      </div>
     </div>
     <div class="right">
       <CanvasConfigForm></CanvasConfigForm>
@@ -48,7 +51,7 @@
 </template>
 <script lang="ts" setup>
 import { ReloadOutlined } from "@ant-design/icons-vue";
-import { onBeforeMount, onBeforeUnmount, onMounted, reactive, Ref, ref } from "vue";
+import { nextTick, onBeforeMount, onBeforeUnmount, onMounted, reactive, Ref, ref, watch } from "vue";
 import InfiniteViewer , { InfiniteViewerOptions, OnPinch, OnDrag, OnScroll } from "infinite-viewer";
 import { VueInfiniteViewer } from "vue3-infinite-viewer";
 import VueMoveable, { MoveableOptions, OnDragEnd, OnResize, OnResizeEnd, OnRotate, OnRotateEnd } from "vue3-moveable";
@@ -59,15 +62,16 @@ import Guides from "@scena/guides";
 import router from "@/router";
 import useGuide from "@/hooks/useGuide";
 import useDragGetso from "@/hooks/useDragGetso";
+// import useInfiniteView from "@/hooks/useInfiniteView";
+import { computed } from "@vue/reactivity";
 
-let ctrlDown = false;
 let guideHorizontal: Ref<Guides> = useGuide(".guide.horizontal", "horizontal");
 let guideVertical: Ref<Guides> = useGuide(".guide.vertical", "vertical");
-
+let Viewer = ref();
 let infiniteViewer: InfiniteViewer;
 let projectId = ref<string>("");
 let moveable = ref<VueMoveable>();
-let Viewer = ref();
+// useInfiniteView();
 useDragGetso(".viewer", (e: OnDrag) => {
     infiniteViewer.scrollBy(-1 * e.deltaX, -1 * e.deltaY);
 });
@@ -102,6 +106,7 @@ const viewerOptions = reactive<Partial<InfiniteViewerOptions>>({
   rangeY: [-1000, 1000],
   usePinch: true,
   maxPinchWheel: 10,
+  zoom: 1,
 });
 
 // moveable本身是无状态的
@@ -119,6 +124,25 @@ const moveableOptions = reactive<Partial<MoveableOptions>>({
   bounds: { left: 0, right: 800, top: 0, bottom: 450},
 });
 
+let infiniteViewZoom = computed({
+  get: () => {
+    return viewerOptions.zoom * 100;
+  }, 
+  set: (newValue) => {
+    viewerOptions.zoom = newValue / 100;
+  }
+})
+
+watch(
+  () => viewerOptions.zoom,
+  (newZoom: number) => {
+    nextTick(() => {
+      guideHorizontal.value.setState({scrollPos: infiniteViewer.getScrollLeft(), zoom: newZoom});
+      guideVertical.value.setState({scrollPos: infiniteViewer.getScrollTop(), zoom: newZoom});
+    })
+  }
+);
+
 // 点击切换moveable选中的元素
 const changeTarget = ({target}) => {
   if( target.getAttribute("data-type") === "moveBox"){
@@ -130,10 +154,8 @@ const changeTarget = ({target}) => {
 
 // 点击左上角recoverBtn后让infiniteViewer的缩放和viewport的位置回到最初的样式
 const resetViewer = () => {
-  infiniteViewer.setZoom(1);
+  viewerOptions.zoom = 1;
   infiniteViewer.scrollCenter();
-  guideHorizontal.value.setState({scrollPos: infiniteViewer.getScrollLeft(), zoom: 1});
-  guideVertical.value.setState({scrollPos: infiniteViewer.getScrollTop(), zoom: 1});
 };
 
 function onDrag({target, transform}) {
@@ -179,26 +201,15 @@ onBeforeMount(() => {
 })
 
 onMounted(() => {
-  moveableOptions.elementGuidelines = [".viewport", ".target_1", ".target_2"]
-  moveableOptions.snapContainer = document.querySelector(".viewport") as HTMLElement;
-});
-
-
-// 页面在刚刚刷新进来的时候，会触发一次原始的scroll事件，利用这个事件来获取infiniteViewer的实例
-const getInstance = ({currentTarget}) => {
-  infiniteViewer = currentTarget;
-
-  // 让viewport剧中，同时让guide也跟随到相应位置
-  infiniteViewer.setZoom(1);
+  infiniteViewer = Viewer.value.infiniteViewer;
+    // 让viewport剧中，同时让guide也跟随到相应位置
   infiniteViewer.scrollCenter();
   guideHorizontal.value.setState({scrollPos: infiniteViewer.getScrollLeft()});
   guideVertical.value.setState({scrollPos: infiniteViewer.getScrollTop()});
   
   infiniteViewer.on("pinch", (e: OnPinch) => {
     // ctrl + 鼠标滚轮的缩放处理
-    infiniteViewer.setZoom(e.zoom);
-    guideHorizontal.value.setState({ zoom: e.zoom, scrollPos: infiniteViewer.getScrollLeft() });
-    guideVertical.value.setState({ zoom: e.zoom, scrollPos: infiniteViewer.getScrollTop() });
+    viewerOptions.zoom = e.zoom;
   });
 
   infiniteViewer.on("scroll", (e: OnScroll) => {
@@ -210,31 +221,22 @@ const getInstance = ({currentTarget}) => {
 
   // 添加点击事件的委托监听
   infiniteViewer.getContainer().addEventListener("click", changeTarget);
-  
-  // 初始化拖拽手势
-  // getso = new Gesto(infiniteViewer.getContainer());
-  // console.log(infiniteViewer.getContainer())
-  // getso.on("drag", (e: OnDrag) => {
-  //   // 这里要对画布拖拽进行判断，看是否按下了ctrl-left，以免和moveable的拖拽事件冲突
-  //   if(!ctrlDown){
-  //     return;      
-  //   }
-  //   infiniteViewer.scrollBy(-1 * e.deltaX, -1 * e.deltaY);
-  // })
-}
+})
 
-onBeforeUnmount(() => {
-  // infiniteViewer.off();
-  // infiniteViewer.destroy();
-  // guideHorizontal.destroy();
-  // guideVertical.destroy();
-  // infiniteViewer.getContainer().removeEventListener("click", changeTarget);
-  // window.removeEventListener("resize", guideResizeHandle);
-
-  // 这里要记录一些图表的数据
+onMounted(() => {
+  moveableOptions.elementGuidelines = [".viewport", ".target_1", ".target_2"]
+  // moveableOptions.snapContainer = document.querySelector(".viewport") as HTMLElement;
 });
 
+onBeforeUnmount(() => {
+  // 这里要记录一些图表的数据，回传给服务端
+});
+
+function tipFormatter (value: number) {
+  return `${value}%`;
+};
 </script>
+
 <style lang="less" scoped>
   .mainbox {
     width: 100%;
@@ -263,7 +265,7 @@ onBeforeUnmount(() => {
       height: inherit;
       overflow: hidden;
       position: relative;
-      > .recoverBtn{
+      > .resizeBtn{
         width: 30px;
         height: 30px;
         position: absolute;
@@ -285,7 +287,7 @@ onBeforeUnmount(() => {
       > .viewer {
         overflow: hidden;
         width: calc(100% - 30px);
-        height: calc(100% - 30px);
+        height: calc(100% - 60px);
         left: 30px;
         top: 30px;
         border: black 2px solid;
@@ -303,7 +305,27 @@ onBeforeUnmount(() => {
           }
         }
       }
-
+      > .bottomBar{
+        width: 100%;
+        height: 30px;
+        padding: 0 20px;
+        background-color: gainsboro;
+        position: absolute;
+        bottom: 0px;
+        border-left: black 2px solid;
+        border-right: black 2px solid;
+        overflow: hidden;
+        display: flex;
+        flex-direction: row-reverse;
+        align-items: center;
+        > .zoomSlider{
+          width: 100px;
+        }
+        > .zoomInput{
+          height: 25px;
+          width: 80px;
+        }
+      }
     }
   }
 </style>
