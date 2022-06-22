@@ -47,28 +47,31 @@
   </div>
 </template>
 <script lang="ts" setup>
+import { ReloadOutlined } from "@ant-design/icons-vue";
 import { onBeforeMount, onBeforeUnmount, onMounted, reactive, Ref, ref } from "vue";
 import InfiniteViewer , { InfiniteViewerOptions, OnPinch, OnDrag, OnScroll } from "infinite-viewer";
 import { VueInfiniteViewer } from "vue3-infinite-viewer";
-import { ReloadOutlined } from "@ant-design/icons-vue";
 import VueMoveable, { MoveableOptions, OnDragEnd, OnResize, OnResizeEnd, OnRotate, OnRotateEnd } from "vue3-moveable";
-import Guides from "@scena/guides";
-import Gesto from "gesto";
-import { getTargetIndex } from "@/utils";
 import CanvasConfigForm from "@/components/sideFroms/CanvasConfigForm.vue";
-import router from "@/router";
 import { getUserProjectsBasic } from "@/apis";
+import { getTargetIndex } from "@/utils";
+import Guides from "@scena/guides";
+import router from "@/router";
 import useGuide from "@/hooks/useGuide";
+import useDragGetso from "@/hooks/useDragGetso";
 
 let ctrlDown = false;
 let guideHorizontal: Ref<Guides> = useGuide(".guide.horizontal", "horizontal");
 let guideVertical: Ref<Guides> = useGuide(".guide.vertical", "vertical");
 
 let infiniteViewer: InfiniteViewer;
-let getso: Gesto;
 let projectId = ref<string>("");
 let moveable = ref<VueMoveable>();
 let Viewer = ref();
+useDragGetso(".viewer", (e: OnDrag) => {
+    infiniteViewer.scrollBy(-1 * e.deltaX, -1 * e.deltaY);
+});
+
 // moveable包裹的数据，是有状态的，下次进来要还原的
 const moveableData = [
   {
@@ -125,16 +128,6 @@ const changeTarget = ({target}) => {
   }
 }
 
-// 控制全局变量ctrlDown的回调函数
-const ctrlKeyDownHandle = (event: KeyboardEvent) => {
-    if(event.code === "ControlLeft"){
-        ctrlDown = true;
-    }
-};
-const ctrlKeyUpHandle = (event: KeyboardEvent) => {
-  ctrlDown = false;
-};
-
 // 点击左上角recoverBtn后让infiniteViewer的缩放和viewport的位置回到最初的样式
 const resetViewer = () => {
   infiniteViewer.setZoom(1);
@@ -188,14 +181,11 @@ onBeforeMount(() => {
 onMounted(() => {
   moveableOptions.elementGuidelines = [".viewport", ".target_1", ".target_2"]
   moveableOptions.snapContainer = document.querySelector(".viewport") as HTMLElement;
-  window.addEventListener("keyup", ctrlKeyUpHandle);
-  window.addEventListener("keydown", ctrlKeyDownHandle);
 });
 
 
 // 页面在刚刚刷新进来的时候，会触发一次原始的scroll事件，利用这个事件来获取infiniteViewer的实例
 const getInstance = ({currentTarget}) => {
-  console.log("2");
   infiniteViewer = currentTarget;
 
   // 让viewport剧中，同时让guide也跟随到相应位置
@@ -222,14 +212,15 @@ const getInstance = ({currentTarget}) => {
   infiniteViewer.getContainer().addEventListener("click", changeTarget);
   
   // 初始化拖拽手势
-  getso = new Gesto(infiniteViewer.getContainer());
-  getso.on("drag", (e: OnDrag) => {
-    // 这里要对画布拖拽进行判断，看是否按下了ctrl-left，以免和moveable的拖拽事件冲突
-    if(!ctrlDown){
-      return;      
-    }
-    infiniteViewer.scrollBy(-1 * e.deltaX, -1 * e.deltaY);
-  })
+  // getso = new Gesto(infiniteViewer.getContainer());
+  // console.log(infiniteViewer.getContainer())
+  // getso.on("drag", (e: OnDrag) => {
+  //   // 这里要对画布拖拽进行判断，看是否按下了ctrl-left，以免和moveable的拖拽事件冲突
+  //   if(!ctrlDown){
+  //     return;      
+  //   }
+  //   infiniteViewer.scrollBy(-1 * e.deltaX, -1 * e.deltaY);
+  // })
 }
 
 onBeforeUnmount(() => {
@@ -239,9 +230,6 @@ onBeforeUnmount(() => {
   // guideVertical.destroy();
   // infiniteViewer.getContainer().removeEventListener("click", changeTarget);
   // window.removeEventListener("resize", guideResizeHandle);
-  // window.removeEventListener("keyup", ctrlKeyUpHandle);
-  // window.removeEventListener("keydown", ctrlKeyDownHandle);
-  // getso.unset();
 
   // 这里要记录一些图表的数据
 });
