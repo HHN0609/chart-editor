@@ -1,7 +1,6 @@
 <template>
   <div class="mainbox">
     <div class="left" ref="viewer">
-
     </div>
     <div class="editorbox">
       <reload-outlined
@@ -14,9 +13,15 @@
       <vue-infinite-viewer
         ref="Viewer"
         class="viewer"
+        :style="{ backgroundColor: projectGlobalInfo.bg_color }"
         v-bind="viewerOptions"
         >
-        <div class="viewport">
+        <div class="viewport"
+          :style="{
+            backgroundColor: projectGlobalInfo.viewport_color,
+            width: projectGlobalInfo.width+'px',
+            height: projectGlobalInfo.height+'px'
+          }">
           <div
             data-type="moveBox"
             v-for="item in moveableData" 
@@ -45,13 +50,14 @@
       </div>
     </div>
     <div class="right">
-      <CanvasConfigForm></CanvasConfigForm>
+      <TopBotton></TopBotton>
+      <!-- <CanvasConfigForm></CanvasConfigForm> -->
     </div>
   </div>
 </template>
 <script lang="ts" setup>
 import { ReloadOutlined } from "@ant-design/icons-vue";
-import { nextTick, onBeforeMount, onBeforeUnmount, onMounted, reactive, Ref, ref, watch } from "vue";
+import { nextTick, onBeforeUnmount, onMounted, reactive, Ref, ref, watch, h, defineComponent, render } from "vue";
 import InfiniteViewer , { InfiniteViewerOptions, OnPinch, OnDrag, OnScroll } from "infinite-viewer";
 import { VueInfiniteViewer } from "vue3-infinite-viewer";
 import VueMoveable, { MoveableOptions, OnDragEnd, OnResize, OnResizeEnd, OnRotate, OnRotateEnd } from "vue3-moveable";
@@ -64,14 +70,23 @@ import useGuide from "@/hooks/useGuide";
 import useDragGetso from "@/hooks/useDragGetso";
 // import useInfiniteView from "@/hooks/useInfiniteView";
 import { computed } from "@vue/reactivity";
-
+import TopBotton from "@/components/sideFroms/TopBotton.vue";
+type BasicInfo = {
+  bg_color: string,
+  height: number,
+  init_zoom: number,
+  project_id: string,
+  viewport_color: string,
+  width: number,
+}
 let guideHorizontal: Ref<Guides> = useGuide(".guide.horizontal", "horizontal");
 let guideVertical: Ref<Guides> = useGuide(".guide.vertical", "vertical");
 let Viewer = ref();
 let infiniteViewer: InfiniteViewer;
-let projectId = ref<string>("");
+let projectId = "";
 let moveable = ref<VueMoveable>();
-// useInfiniteView();
+let projectGlobalInfo = reactive<Partial<BasicInfo>>({});
+
 useDragGetso(".viewer", (e: OnDrag) => {
     infiniteViewer.scrollBy(-1 * e.deltaX, -1 * e.deltaY);
 });
@@ -149,6 +164,7 @@ const changeTarget = ({target}) => {
     moveableOptions.target = `.${target.className}`;
   } else {
     moveableOptions.target = "";
+    // 展示viewport的配置项
   }
 }
 
@@ -192,20 +208,21 @@ function onRotateEnd({lastEvent}: OnRotateEnd){
   moveableData[index].style.transform = lastEvent.transform;
 }
 
-onBeforeMount(() => {
-  projectId.value = router.currentRoute.value.params.projectId as string;
-  getUserProjectsBasic("/user/projectsBasic", projectId.value)
-    .then(({ data }) => {
-      console.log(data);
-    });
-})
-
 onMounted(() => {
+  // 拿到infiniteViewer的实例
   infiniteViewer = Viewer.value.infiniteViewer;
-    // 让viewport剧中，同时让guide也跟随到相应位置
-  infiniteViewer.scrollCenter();
-  guideHorizontal.value.setState({scrollPos: infiniteViewer.getScrollLeft()});
-  guideVertical.value.setState({scrollPos: infiniteViewer.getScrollTop()});
+
+  projectId = router.currentRoute.value.params.projectId as string;
+  getUserProjectsBasic("/user/projectsBasic", projectId)
+    .then(({ data }) => {
+      Object.assign(projectGlobalInfo, data.message);
+      viewerOptions.zoom = projectGlobalInfo.init_zoom;
+      nextTick(() => {
+        infiniteViewer.scrollCenter();
+        guideHorizontal.value.setState({scrollPos: infiniteViewer.getScrollLeft()});
+        guideVertical.value.setState({scrollPos: infiniteViewer.getScrollTop()});
+      })
+    });
   
   infiniteViewer.on("pinch", (e: OnPinch) => {
     // ctrl + 鼠标滚轮的缩放处理
@@ -275,7 +292,7 @@ function tipFormatter (value: number) {
         background: #000;
         color: white
       }
-      .guide { 
+      .guide {
         position: absolute;
         &.horizontal{
           width: 100%;
@@ -292,12 +309,10 @@ function tipFormatter (value: number) {
         top: 30px;
         border: black 2px solid;
         overflow: hidden;
-        background:gainsboro;
         .viewport {
           overflow: hidden;
-          width: 800px;
-          height: 450px;
-          background-color:rgb(39, 44, 44);
+          // width: 800px;
+          // height: 450px;
           > [data-type="moveBox"] {
             color: white;
             background-color: cadetblue;
