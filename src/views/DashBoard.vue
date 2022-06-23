@@ -1,6 +1,6 @@
 <template>
   <div class="mainbox">
-    <div class="left" ref="viewer">
+    <div class="left">
     </div>
     <div class="editorbox">
       <reload-outlined
@@ -51,14 +51,13 @@
     </div>
     <div class="right">
       <TopBotton></TopBotton>
-      <!-- <CanvasConfigForm></CanvasConfigForm> -->
-      <!-- {{ render(h(CanvasConfigForm)) }} -->
+      <CanvasConfigForm></CanvasConfigForm>
     </div>
   </div>
 </template>
 <script lang="ts" setup>
 import { ReloadOutlined } from "@ant-design/icons-vue";
-import { nextTick, onBeforeUnmount, onMounted, reactive, Ref, ref, watch, h, defineComponent, render } from "vue";
+import { nextTick, onBeforeUnmount, onMounted, reactive, Ref, ref, watch, h, render, provide, inject } from "vue";
 import InfiniteViewer , { InfiniteViewerOptions, OnPinch, OnDrag, OnScroll } from "infinite-viewer";
 import { VueInfiniteViewer } from "vue3-infinite-viewer";
 import VueMoveable, { MoveableOptions, OnDragEnd, OnResize, OnResizeEnd, OnRotate, OnRotateEnd } from "vue3-moveable";
@@ -90,7 +89,7 @@ let projectGlobalInfo = reactive<Partial<BasicInfo>>({
   width: 800,
   height: 450,
 });
-
+provide("projectGlobalInfo", projectGlobalInfo);
 useDragGetso(".viewer", (e: OnDrag) => {
     infiniteViewer.scrollBy(-1 * e.deltaX, -1 * e.deltaY);
 });
@@ -256,7 +255,11 @@ onMounted(() => {
 onMounted(() => {
   moveableOptions.elementGuidelines = [".viewport", ".target_1", ".target_2"]
   // moveableOptions.snapContainer = document.querySelector(".viewport") as HTMLElement;
-  render(h(CanvasConfigForm), document.querySelector(".right"));
+  // let vNode = h(CanvasConfigForm, {
+  //   onClick: () => { console.log("clicked!") },
+  // });
+  // console.log(vNode)
+  // render(vNode, document.querySelector(".d1"));
 });
 
 onBeforeUnmount(() => {
