@@ -27,18 +27,17 @@
     </Collapse>
     <Collapse>
       <CollapsePanel key="1" header="test">
-        <Switch :value="true" :data-index="'dsdsd'" label="Switch"></Switch>
+        <Font :label="'Font'"></Font>
       </CollapsePanel>
     </Collapse>
   </div>
 </template>
 
 <script setup lang="ts">
-import { reactive, inject, onMounted, ref } from 'vue';
+import { reactive, inject } from 'vue';
 import { CanvasFormProps } from "./form.types";
 import { Collapse, CollapsePanel, Form, FormItem, Input } from 'ant-design-vue';
-import Select from './atomInputs/Select.vue';
-import Switch from './atomInputs/Switch.vue';
+import Font from './atomInputs/Font.vue';
 const projectGlobalInfo = inject("projectGlobalInfo");
 console.log(projectGlobalInfo)
 const fromState = reactive<CanvasFormProps>({

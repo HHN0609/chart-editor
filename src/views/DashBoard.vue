@@ -290,7 +290,7 @@ function tipFormatter (value: number) {
       width: 300px;
       flex-basis: 300px;
       height: inherit;
-      overflow: hidden;
+      overflow-x: hidden;
       overflow-y: auto;
     }
     > .editorbox {
