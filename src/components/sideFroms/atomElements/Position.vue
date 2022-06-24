@@ -13,10 +13,10 @@
 <script lang="ts" setup>
 import { RadioGroup, RadioButton ,FormItem, Form } from 'ant-design-vue';
 import { ref, watch } from "vue";
-type PositionType = "position4" | "position8";
+// type PositionType = "position4" | "position8";
 type PositionOptions = "top" | "left" | "right" | "bottom";
 const props = defineProps<{
-    type: PositionType,
+    // type: PositionType,
     value: PositionOptions,
     label?: string,
     dataIndex: string,

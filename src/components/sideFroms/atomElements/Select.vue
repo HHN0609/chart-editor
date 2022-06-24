@@ -4,6 +4,7 @@
         <Select
             v-model:value="value"
             :options="props.selectOptions"
+            size="small"
         >
         </Select>
     </FormItem>

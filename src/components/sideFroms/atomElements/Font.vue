@@ -3,26 +3,24 @@
     <FormItem :label="props.label">
         <div>
             <Row :gutter="5" style="margin-bottom: 5px;">
-                <Col :span="16">
-                    <Select
-                        v-model:value="value.fontFamily"
-                        :options="fontFamilyType"
-                    >
+                <Col :span="12">
+                    <Select v-model:value="value.fontFamily" size="small" :style="{ fontFamily: value.fontFamily }">
+                        <SelectOption v-for="option in fontFamilyType" :value="option.value" :style="{ fontFamily: option.label }"> {{ option.label }} </SelectOption>
                     </Select>
                 </Col>
-                <Col :span="8">
-                    <Input type="number" v-model:value="value.fontSize" suffix="px"></Input>
+                <Col :span="12">
+                    <Input type="number" v-model:value="value.fontSize" suffix="px" size="small"></Input>
                 </Col>
             </Row>
             <Row>
-                <Input type="color" v-model:value="value.color"></Input>
+                <Input type="color" v-model:value="value.color" size="small"></Input>
             </Row>
         </div>
     </FormItem>
 </Form>
 </template>
 <script lang="ts" setup>
-import { Row, Col, FormItem, Form, Select, Input } from 'ant-design-vue';
+import { Row, Col, FormItem, Form, Select, Input, SelectOption } from 'ant-design-vue';
 import { GenericFamily } from 'csstype';
 import { reactive, watch } from "vue";
 type fontValueType = {
@@ -32,7 +30,7 @@ type fontValueType = {
 };
 
 const props = defineProps<{
-    value: string | number | undefined,
+    value: any,
     label?: string,
     dataIndex: string,
 }>();
@@ -64,11 +62,13 @@ watch(value, () => {
 .form {
     > div {
         margin-bottom: 0px;
-        > div {
-            display: flex !important;
-            align-items: center !important;
-            background: #000;
-        }
+        // > .ant-row.ant-form-item{
+        //     > .ant-col.ant-col-8.ant-form-item-label{
+        //         display: flex;
+        //         justify-content: center;
+        //         align-items: center;
+        //     }
+        // }
     }
 }
 </style>

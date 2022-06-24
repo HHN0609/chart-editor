@@ -1,7 +1,7 @@
 <template>
 <Form :label-col="{ span: props.label ? 8 : 0 }" :wrapper-col="{ span: props.label ? 16 : 24}" class="form">
     <FormItem :label="props.label">
-        <Input :type="props.type" v-model:value="color"></Input>
+        <Input :type="props.type" v-model:value="color" size="small"></Input>
     </FormItem>
 </Form>
 </template>
