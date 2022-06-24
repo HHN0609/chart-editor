@@ -3,21 +3,16 @@
   <div class="container">
     <Collapse :activeKey="[1]">
       <CollapsePanel key="1" header="Project settings">
-        <Form
-          name="basic"
-          style="width: 100%;"
-          :label-col="{ span: 12 }"
-          :wrapper-col="{ span: 12 }"
-          :model="fromState"
-        >
+        <Form name="basic" style="width: 100%;" :label-col="{ span: 12 }" :wrapper-col="{ span: 12 }"
+          :model="fromState">
           <FormItem label="Width" name="width">
-            <Input type="number" suffix="px" v-model:value="fromState.width" size="small" style="width:80px"/>
+            <Input type="number" suffix="px" v-model:value="fromState.width" size="small" style="width:80px" />
           </FormItem>
           <FormItem label="Height" name="height">
             <Input type="number" suffix="px" v-model:value="fromState.height" size="small" style="width:80px" />
           </FormItem>
           <FormItem label="Background Color" name="backgroundColor">
-            <Input type="color" v-model:value="fromState.backgroundColor" size="small" style="width:80px"/>
+            <Input type="color" v-model:value="fromState.backgroundColor" size="small" style="width:80px" />
           </FormItem>
           <FormItem label="Viewport Color" name="viewportColor">
             <Input type="color" v-model:value="fromState.viewportColor" size="small" style="width:80px" />
@@ -44,70 +39,131 @@ const fromState = reactive<CanvasFormProps>({
 });
 
 const configTree = [
-    {
-        type: "folder",
-        label: "Axis",
-        content: [
-            {
-                type: "font",
-                label: "Axis font",
-                dataIndex: "axis.font"
-            },
-            {
-                type: "inputs",
-                label: "Stroke Width",
-                // type 是inputs的话就会有dataType这个选项
-                dataType: "number",
-                dataIndex: "axis.strokeWidth"
-            },
-            {
-                type: "inputs",
-                label: "Axis Color",
-                dataType: "color",
-                dataIndex: "axis.color"
-            }
-        ]
-    },
-    {
-        type: "folder",
-        label: "Title",
-        content: [
-            {
-                type: "position",
-                label: "Position",
-                dataIndex: "title.position"
-            },
-            {
-                type: "select",
-                label: "Stroke Style",
-                // type是select和radio有options这个值
-                options: [
-                    {label: "Solid", value: "solid"},
-                    {label: "Dash", value: "dash"}
-                ],
-                dataIndex: "axis.strokeStyle"
-            },
-            {
-                type: "radio",
-                label: "Title Style",
-                options: [
-                    {label: "Style1", value:"Style1"},
-                    {label: "Style2", value:"Style2"},
-                ],
-                dataIndex: "axis.color"
-            }
-        ]
-    }
+  {
+    type: "folder",
+    label: "Axis",
+    content: [
+      {
+        type: "font",
+        label: "Axis font",
+        dataIndex: "axis.font"
+      },
+      {
+        type: "inputs",
+        label: "Stroke Width",
+        // type 是inputs的话就会有dataType这个选项
+        dataType: "number",
+        dataIndex: "axis.strokeWidth"
+      },
+      {
+        type: "inputs",
+        label: "Axis Color",
+        dataType: "color",
+        dataIndex: "axis.color"
+      }
+    ]
+  },
+  {
+    type: "folder",
+    label: "Title",
+    content: [
+      {
+        type: "position",
+        label: "Position",
+        dataIndex: "title.position"
+      },
+      {
+        type: "select",
+        label: "Stroke Style",
+        // type 是select和radio有options这个值
+        options: [
+          { label: "Solid", value: "solid" },
+          { label: "Dash", value: "dash" }
+        ],
+        dataIndex: "axis.strokeStyle"
+      },
+      {
+        type: "radio",
+        label: "Title Style",
+        options: [
+          { label: "Style1", value: "Style1" },
+          { label: "Style2", value: "Style2" },
+        ],
+        dataIndex: "axis.color"
+      },
+    ]
+  },
+  {
+    type: "folder",
+    label: "Title",
+    content: [
+      {
+        type: "position",
+        label: "Position",
+        dataIndex: "title.position"
+      },
+      {
+        type: "select",
+        label: "Stroke Style",
+        // type 是select和radio有options这个值
+        options: [
+          { label: "Solid", value: "solid" },
+          { label: "Dash", value: "dash" }
+        ],
+        dataIndex: "axis.strokeStyle"
+      },
+      {
+        type: "radio",
+        label: "Title Style",
+        options: [
+          { label: "Style1", value: "Style1" },
+          { label: "Style2", value: "Style2" },
+        ],
+        dataIndex: "axis.color"
+      },
+    ]
+  },
+  {
+    type: "folder",
+    label: "Title",
+    content: [
+      {
+        type: "position",
+        label: "Position",
+        dataIndex: "title.position"
+      },
+      {
+        type: "select",
+        label: "Stroke Style",
+        // type 是select和radio有options这个值
+        options: [
+          { label: "Solid", value: "solid" },
+          { label: "Dash", value: "dash" }
+        ],
+        dataIndex: "axis.strokeStyle"
+      },
+      {
+        type: "radio",
+        label: "Title Style",
+        options: [
+          { label: "Style1", value: "Style1" },
+          { label: "Style2", value: "Style2" },
+        ],
+        dataIndex: "axis.color"
+      },
+    ]
+  },
 ]
 
 </script>
 
 <style scoped lang="less">
-  .container{
-    width: 100%;
-    .ant-form-item{
-      margin-bottom: 0px;
-    }
+.container {
+  width: 100%;
+
+  .ant-form-item {
+    margin-bottom: 0px;
   }
+}
 </style>
 

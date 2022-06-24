@@ -50,7 +50,7 @@
       </div>
     </div>
     <div class="right">
-      <TopBotton></TopBotton>
+      <TopBotton style="position:sticky; top: 0px; z-index: 10;"></TopBotton>
       <CanvasConfigForm></CanvasConfigForm>
     </div>
   </div>
@@ -281,7 +281,7 @@ function tipFormatter (value: number) {
       background: gainsboro;
       width: 200px;
       flex-basis: 200px;
-      height: inherit;
+      height: 100vh;
       overflow-x: hidden;
       overflow-y: auto;
     }
@@ -289,7 +289,7 @@ function tipFormatter (value: number) {
       background-color: gainsboro;
       width: 300px;
       flex-basis: 300px;
-      height: inherit;
+      height: 100vh;
       overflow-x: hidden;
       overflow-y: auto;
     }
@@ -298,6 +298,7 @@ function tipFormatter (value: number) {
       flex-grow: 1;
       height: inherit;
       overflow: hidden;
+      height: 100vh;
       position: relative;
       > .resizeBtn{
         width: 30px;
