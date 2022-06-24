@@ -24,7 +24,7 @@ export default defineComponent({
                     if (item.content && item.content.length) {
                         children = generateSideVnodes(item.content);
                     }
-                    return h(Collapse, {} , h(CollapsePanel, { header: item.label }, () => children));
+                    return h(Collapse, {} , () => h(CollapsePanel, { header: item.label }, () => children));
                 } else if (item.type === "font") {
                     return h(Font, { label: item.label, dataIndex: item.dataIndex, value: "" });
                 } else if (item.type === "inputs") {

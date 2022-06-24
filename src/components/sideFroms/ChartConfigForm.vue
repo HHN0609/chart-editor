@@ -1,8 +1,7 @@
 <!-- 画布的配置表单 -->
 <template>
   <div class="container">
-    <Collapse :activeKey="[1]">
-      <CollapsePanel key="1" header="Project settings">
+      <Card size="small" title="a card">
         <Form name="basic" style="width: 100%;" :label-col="{ span: 12 }" :wrapper-col="{ span: 12 }"
           :model="fromState">
           <FormItem label="Width" name="width">
@@ -11,31 +10,46 @@
           <FormItem label="Height" name="height">
             <Input type="number" suffix="px" v-model:value="fromState.height" size="small" style="width:80px" />
           </FormItem>
-          <FormItem label="Background Color" name="backgroundColor">
+
+          <FormItem label="Background Color" name="backgroundColor" v-if="!isChart">
             <Input type="color" v-model:value="fromState.backgroundColor" size="small" style="width:80px" />
           </FormItem>
-          <FormItem label="Viewport Color" name="viewportColor">
+          <FormItem label="X" name="x" v-else>
+            <Input type="number" v-model:value="fromState.x" size="small" style="width:80px" />
+          </FormItem>
+
+          <FormItem label="Viewport Color" name="viewportColor" v-if="!isChart">
             <Input type="color" v-model:value="fromState.viewportColor" size="small" style="width:80px" />
           </FormItem>
+          <FormItem label="Y" name="y" v-else>
+            <Input type="number" v-model:value="fromState.y" size="small" style="width:80px" />
+          </FormItem>
+
         </Form>
-      </CollapsePanel>
-    </Collapse>
+      </Card>
     <DynamicForm :configTree="configTree"></DynamicForm>
   </div>
 </template>
 
 <script setup lang="ts">
 import { reactive, inject } from 'vue';
-import { CanvasFormProps } from "./form.types";
-import { Collapse, CollapsePanel, Form, FormItem, Input } from 'ant-design-vue';
+// import { CanvasFormProps } from "./form.types";
+import { Form, FormItem, Input, Card } from 'ant-design-vue';
 import DynamicForm from './DynamicForm.vue';
+import { computed } from '@vue/reactivity';
+const props = defineProps<{
+  targetClass: string
+}>();
+const isChart = computed(() => props.targetClass.slice(0, 6) === "target");
 // const projectGlobalInfo = inject("projectGlobalInfo");
 // console.log(projectGlobalInfo)
-const fromState = reactive<CanvasFormProps>({
+const fromState = reactive({
   width: 1920,
   height: 1080,
   backgroundColor: "",
   viewportColor: "",
+  x: 0,
+  y: 0,
 });
 
 const configTree = [
@@ -153,8 +167,7 @@ const configTree = [
       },
     ]
   },
-]
-
+];
 </script>
 
 <style scoped lang="less">

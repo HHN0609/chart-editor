@@ -51,17 +51,25 @@
     </div>
     <div class="right">
       <TopBotton style="position:sticky; top: 0px; z-index: 10;"></TopBotton>
-      <CanvasConfigForm></CanvasConfigForm>
+          <Tabs v-model:activeKey="tabActiveKey" animated>
+              <TabPane key="1" tab="Config">
+                <ChartConfigForm target-class="viewport"></ChartConfigForm>
+              </TabPane>
+              <TabPane key="2" tab="Data">
+                null
+              </TabPane>
+          </Tabs>
     </div>
   </div>
 </template>
 <script lang="ts" setup>
+import { Tabs, TabPane } from "ant-design-vue";
 import { ReloadOutlined } from "@ant-design/icons-vue";
-import { nextTick, onBeforeUnmount, onMounted, reactive, Ref, ref, watch, h, render, provide, inject } from "vue";
+import { nextTick, onBeforeUnmount, onMounted, reactive, Ref, ref, watch, provide, inject } from "vue";
 import InfiniteViewer , { InfiniteViewerOptions, OnPinch, OnDrag, OnScroll } from "infinite-viewer";
 import { VueInfiniteViewer } from "vue3-infinite-viewer";
 import VueMoveable, { MoveableOptions, OnDragEnd, OnResize, OnResizeEnd, OnRotate, OnRotateEnd } from "vue3-moveable";
-import CanvasConfigForm from "@/components/sideFroms/CanvasConfigForm.vue";
+import ChartConfigForm from "@/components/sideFroms/ChartConfigForm.vue";
 import { getUserProjectsBasic } from "@/apis";
 import { getTargetIndex } from "@/utils";
 import Guides from "@scena/guides";
@@ -79,6 +87,7 @@ type BasicInfo = {
   viewport_color: string,
   width: number,
 }
+let tabActiveKey = ref("1");
 let guideHorizontal: Ref<Guides> = useGuide(".guide.horizontal", "horizontal");
 let guideVertical: Ref<Guides> = useGuide(".guide.vertical", "vertical");
 let Viewer = ref();
@@ -255,11 +264,6 @@ onMounted(() => {
 onMounted(() => {
   moveableOptions.elementGuidelines = [".viewport", ".target_1", ".target_2"]
   // moveableOptions.snapContainer = document.querySelector(".viewport") as HTMLElement;
-  // let vNode = h(CanvasConfigForm, {
-  //   onClick: () => { console.log("clicked!") },
-  // });
-  // console.log(vNode)
-  // render(vNode, document.querySelector(".d1"));
 });
 
 onBeforeUnmount(() => {
