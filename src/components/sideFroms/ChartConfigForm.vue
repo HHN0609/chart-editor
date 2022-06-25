@@ -1,56 +1,56 @@
 <!-- 画布的配置表单 -->
 <template>
   <div class="container">
-      <Card size="small" title="a card">
+    <Card size="small" title="Settings" v-if="!isChart">
+      <Form name="basic" style="width: 100%;" :label-col="{ span: 12 }" :wrapper-col="{ span: 12 }"
+        :model="projectInfo">
+        <FormItem label="Width" name="width">
+          <Input type="number" suffix="px" v-model:value.number.lazy="projectInfo.width" size="small" style="width:80px" />
+        </FormItem>
+        <FormItem label="Height" name="height">
+          <Input type="number" suffix="px" v-model:value.number.lazy="projectInfo.height" size="small" style="width:80px" />
+        </FormItem>
+        <FormItem label="Background Color" name="backgroundColor">
+          <Input type="color" v-model:value="projectInfo.bgColor" size="small" style="width:80px" />
+        </FormItem>
+        <FormItem label="Viewport Color" name="viewportColor">
+          <Input type="color" v-model:value="projectInfo.viewportColor" size="small" style="width:80px" />
+        </FormItem>
+      </Form>
+    </Card>
+      <!-- <Card size="small" title="a card" v-else>
+
         <Form name="basic" style="width: 100%;" :label-col="{ span: 12 }" :wrapper-col="{ span: 12 }"
-          :model="fromState">
+          :model="projectInfo">
           <FormItem label="Width" name="width">
-            <Input type="number" suffix="px" v-model:value="fromState.width" size="small" style="width:80px" />
+            <Input type="number" suffix="px" v-model:value="projectInfo.width" size="small" style="width:80px" />
           </FormItem>
           <FormItem label="Height" name="height">
-            <Input type="number" suffix="px" v-model:value="fromState.height" size="small" style="width:80px" />
+            <Input type="number" suffix="px" v-model:value="projectInfo.height" size="small" style="width:80px" />
           </FormItem>
 
-          <FormItem label="Background Color" name="backgroundColor" v-if="!isChart">
-            <Input type="color" v-model:value="fromState.backgroundColor" size="small" style="width:80px" />
+          <FormItem label="X" name="x">
+            <Input type="number" v-model:value="projectInfo.x" size="small" style="width:80px" />
           </FormItem>
-          <FormItem label="X" name="x" v-else>
-            <Input type="number" v-model:value="fromState.x" size="small" style="width:80px" />
+          <FormItem label="Y" name="y">
+            <Input type="number" v-model:value="projectInfo.y" size="small" style="width:80px" />
           </FormItem>
-
-          <FormItem label="Viewport Color" name="viewportColor" v-if="!isChart">
-            <Input type="color" v-model:value="fromState.viewportColor" size="small" style="width:80px" />
-          </FormItem>
-          <FormItem label="Y" name="y" v-else>
-            <Input type="number" v-model:value="fromState.y" size="small" style="width:80px" />
-          </FormItem>
-
         </Form>
-      </Card>
-    <DynamicForm :configTree="configTree"></DynamicForm>
+
+      </Card> -->
+    <DynamicForm :configTree="configTree" v-if="isChart"></DynamicForm>
   </div>
 </template>
 
 <script setup lang="ts">
-import { reactive, inject } from 'vue';
-// import { CanvasFormProps } from "./form.types";
+import ProjectInfo from '@/stores/projectInfo';
 import { Form, FormItem, Input, Card } from 'ant-design-vue';
 import DynamicForm from './DynamicForm.vue';
 import { computed } from '@vue/reactivity';
-const props = defineProps<{
-  targetClass: string
-}>();
-const isChart = computed(() => props.targetClass.slice(0, 6) === "target");
-// const projectGlobalInfo = inject("projectGlobalInfo");
-// console.log(projectGlobalInfo)
-const fromState = reactive({
-  width: 1920,
-  height: 1080,
-  backgroundColor: "",
-  viewportColor: "",
-  x: 0,
-  y: 0,
-});
+
+const projectInfo = ProjectInfo();
+// 判断当前选中是不是图表
+const isChart = computed(() => projectInfo.currTarget.slice(0, 6) === "target");
 
 const configTree = [
   {

@@ -1,6 +1,7 @@
 <template>
   <div class="mainbox">
     <div class="left">
+      <ChartMenu></ChartMenu>
     </div>
     <div class="editorbox">
       <reload-outlined
@@ -13,14 +14,14 @@
       <vue-infinite-viewer
         ref="Viewer"
         class="viewer"
-        :style="{ backgroundColor: projectGlobalInfo.bg_color }"
+        :style="{ backgroundColor: projectInfo.bgColor }"
         v-bind="viewerOptions"
         >
         <div class="viewport"
           :style="{
-            backgroundColor: projectGlobalInfo.viewport_color,
-            width: projectGlobalInfo.width+'px',
-            height: projectGlobalInfo.height+'px'
+            backgroundColor: projectInfo.viewportColor,
+            width: projectInfo.width+'px',
+            height: projectInfo.height+'px'
           }">
           <div
             data-type="moveBox"
@@ -44,28 +45,28 @@
         </div>
       </vue-infinite-viewer>
       <div class="bottomBar">
-        <a-input class="zoomInput" v-model:value="infiniteViewZoom" size="small" suffix="%" type="number" :min="10" :max="200"></a-input>
-        <a-slider class="zoomSlider" v-model:value="infiniteViewZoom" :tip-formatter="tipFormatter" :min="10" :max="200"></a-slider>
+        <a-input class="zoomInput" v-model:value.number="infiniteViewZoom" size="small" suffix="%" type="number" :min="10" :max="200"></a-input>
+        <a-slider class="zoomSlider" v-model:value.number="infiniteViewZoom" :tip-formatter="tipFormatter" :min="10" :max="200"></a-slider>
         <h3>zoom: </h3>
       </div>
     </div>
     <div class="right">
       <TopBotton style="position:sticky; top: 0px; z-index: 10;"></TopBotton>
-          <Tabs v-model:activeKey="tabActiveKey" animated>
-              <TabPane key="1" tab="Config">
-                <ChartConfigForm target-class="viewport"></ChartConfigForm>
-              </TabPane>
-              <TabPane key="2" tab="Data">
-                null
-              </TabPane>
-          </Tabs>
+      <Tabs v-model:activeKey="tabActiveKey" animated class="tabs">
+          <TabPane key="1" tab="Config">
+            <ChartConfigForm></ChartConfigForm>
+          </TabPane>
+          <TabPane key="2" tab="Data">
+            null
+          </TabPane>
+      </Tabs>
     </div>
   </div>
 </template>
 <script lang="ts" setup>
 import { Tabs, TabPane } from "ant-design-vue";
 import { ReloadOutlined } from "@ant-design/icons-vue";
-import { nextTick, onBeforeUnmount, onMounted, reactive, Ref, ref, watch, provide, inject } from "vue";
+import { nextTick, onBeforeUnmount, onMounted, reactive, Ref, ref, watch, provide, onBeforeMount } from "vue";
 import InfiniteViewer , { InfiniteViewerOptions, OnPinch, OnDrag, OnScroll } from "infinite-viewer";
 import { VueInfiniteViewer } from "vue3-infinite-viewer";
 import VueMoveable, { MoveableOptions, OnDragEnd, OnResize, OnResizeEnd, OnRotate, OnRotateEnd } from "vue3-moveable";
@@ -79,14 +80,10 @@ import useDragGetso from "@/hooks/useDragGetso";
 // import useInfiniteView from "@/hooks/useInfiniteView";
 import { computed } from "@vue/reactivity";
 import TopBotton from "@/components/sideFroms/TopBotton.vue";
-type BasicInfo = {
-  bg_color: string,
-  height: number,
-  init_zoom: number,
-  project_id: string,
-  viewport_color: string,
-  width: number,
-}
+import ProjectInfo from "@/stores/projectInfo"
+import ChartMenu from "@/components/sideFroms/ChartMenu.vue";
+const projectInfo = ProjectInfo();
+
 let tabActiveKey = ref("1");
 let guideHorizontal: Ref<Guides> = useGuide(".guide.horizontal", "horizontal");
 let guideVertical: Ref<Guides> = useGuide(".guide.vertical", "vertical");
@@ -94,11 +91,7 @@ let Viewer = ref();
 let infiniteViewer: InfiniteViewer;
 let projectId = "";
 let moveable = ref<VueMoveable>();
-let projectGlobalInfo = reactive<Partial<BasicInfo>>({
-  width: 800,
-  height: 450,
-});
-provide("projectGlobalInfo", projectGlobalInfo);
+
 useDragGetso(".viewer", (e: OnDrag) => {
     infiniteViewer.scrollBy(-1 * e.deltaX, -1 * e.deltaY);
 });
@@ -169,11 +162,10 @@ watch(
     })
   }
 );
-
+// viewport的长和宽发生了变化，对应的viewport的边界也发生变化
 watch(
-  [() => projectGlobalInfo.height, () => projectGlobalInfo.width],
+  [() => projectInfo.height, () => projectInfo.width],
   ([newH, newW]) => {
-    console.log(newH, newW);
     moveableOptions.bounds.bottom = newH;
     moveableOptions.bounds.right = newW;
   }
@@ -183,8 +175,14 @@ watch(
 const changeTarget = ({target}) => {
   if( target.getAttribute("data-type") === "moveBox"){
     moveableOptions.target = `.${target.className}`;
+    projectInfo.$patch({
+      currTarget: `${target.className}`
+    });
   } else {
     moveableOptions.target = "";
+    projectInfo.$patch({
+      currTarget: "viewport"
+    });
     // 展示viewport的配置项
   }
 }
@@ -229,21 +227,31 @@ function onRotateEnd({lastEvent}: OnRotateEnd){
   moveableData[index].style.transform = lastEvent.transform;
 }
 
-onMounted(() => {
-  // 拿到infiniteViewer的实例
-  infiniteViewer = Viewer.value.infiniteViewer;
-
+onBeforeMount(() => {
+  // 获取project的信息
   projectId = router.currentRoute.value.params.projectId as string;
   getUserProjectsBasic("/user/projectsBasic", projectId)
     .then(({ data }) => {
-      Object.assign(projectGlobalInfo, data.message);
-      viewerOptions.zoom = projectGlobalInfo.init_zoom;
+      projectInfo.$patch({
+        width: data.message.width,
+        height: data.message.height,
+        initZoom: data.message.init_zoom,
+        projectId: data.message.project_Id,
+        bgColor: data.message.bg_color,
+        viewportColor: data.message.viewport_color
+      });
+      viewerOptions.zoom = projectInfo.initZoom;
       nextTick(() => {
         infiniteViewer.scrollCenter();
         guideHorizontal.value.setState({scrollPos: infiniteViewer.getScrollLeft()});
         guideVertical.value.setState({scrollPos: infiniteViewer.getScrollTop()});
       })
     });
+})
+
+onMounted(() => {
+  // 拿到infiniteViewer的实例
+  infiniteViewer = Viewer.value.infiniteViewer;
   
   infiniteViewer.on("pinch", (e: OnPinch) => {
     // ctrl + 鼠标滚轮的缩放处理
@@ -256,10 +264,10 @@ onMounted(() => {
     guideHorizontal.value.scroll(e.scrollLeft);
     guideVertical.value.scroll(e.scrollTop);
   });
-
   // 添加点击事件的委托监听
   infiniteViewer.getContainer().addEventListener("click", changeTarget);
 })
+
 
 onMounted(() => {
   moveableOptions.elementGuidelines = [".viewport", ".target_1", ".target_2"]
@@ -296,6 +304,12 @@ function tipFormatter (value: number) {
       height: 100vh;
       overflow-x: hidden;
       overflow-y: auto;
+    }
+    > .tabs {
+      [role="tablist"] {
+        display: flex;
+        justify-content: center !important;;
+      }
     }
     > .editorbox {
       // 中间撑满
