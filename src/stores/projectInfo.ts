@@ -73,12 +73,20 @@ export default defineStore("project", {
         // 获取当前选中的的chartsData信息
         currChartData: (state): chartDataType => {
             return state.chartsDatas[state.currChartIndex];
-        }
+        },
+        transform: (state) => {
+            return (_uid: string) => {
+                let index = state.chartsDatas.findIndex(({ uid }) => {
+                    return _uid === uid;
+                })
+                return `transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1) translate(${state.chartsDatas[index].basicData.x}px, ${state.chartsDatas[index].basicData.y}px) rotate(${state.chartsDatas[index].basicData.rotate}deg);`;
+            }
+        } 
     },
     actions: {
-        changeCurrChartIndex(uid: string) {
-            let newIndex: number = this.chartsDatas.findIndex(({ _uid }) => {
-                return _uid === uid;
+        changeCurrChartIndex(_uid: string) {
+            let newIndex: number = this.chartsDatas.findIndex(({ uid }) => {
+                return uid === _uid;
             })
             this.currChartIndex = newIndex === -1 ? 0 : newIndex;
         }

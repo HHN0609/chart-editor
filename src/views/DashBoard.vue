@@ -23,7 +23,7 @@
             width: projectInfo.width+'px',
             height: projectInfo.height+'px'
           }">
-          <div
+          <!-- <div
             data-type="moveBox"
             v-for="item in moveableData" 
             :class="item.className"
@@ -31,6 +31,19 @@
             :style="item.style"
           >
             {{ item.text }}
+          </div> -->
+          <div
+            data-type="moveBox"
+            v-for="(item, index) in projectInfo.chartsDatas"
+            :class="`target_${index}`"
+            :key="`target_${index}`"
+            :style="{ 
+              width: `${item.basicData.width}px`,
+              height: `${item.basicData.height}px`,
+              transform: projectInfo.transform(item.uid)
+            }"
+          >
+            {{ item.uid }}
           </div>
           <VueMoveable
             ref="moveable"
@@ -121,6 +134,7 @@ const moveableData = [
 ];
 
 // infinite-viewer的zoom是有状态的
+// infinite-viewer的zoom由这里的zoom控制
 const viewerOptions = reactive<Partial<InfiniteViewerOptions>>({
   rangeX: [-1000, 1000],
   rangeY: [-1000, 1000],
@@ -155,6 +169,7 @@ let infiniteViewZoom = computed({
 watch(
   () => viewerOptions.zoom,
   (newZoom: number) => {
+    // pinia中的initZoom并不提供响应式绑定，只是暂存数据的作用
     projectInfo.initZoom = newZoom;
     nextTick(() => {
       guideHorizontal.value.setState({scrollPos: infiniteViewer.getScrollLeft(), zoom: newZoom});
@@ -164,6 +179,7 @@ watch(
 );
 
 // viewport的长和宽发生了变化，对应的viewport的边界也发生变化
+// 首次渲染会自动触发一次回调函数
 watch(
   [() => projectInfo.height, () => projectInfo.width],
   ([newH, newW]) => {
@@ -175,9 +191,9 @@ watch(
 // 点击切换moveable选中的元素
 const changeTarget = ({target}) => {
   if( target.getAttribute("data-type") === "moveBox"){
-    // moveableOptions.target = `.${target.className}`;
     projectInfo.$patch({
-      currTarget: `.${target.className}`
+      currTarget: `.${target.className}`,
+      currChartIndex: getTargetIndex(target.className)
     });
   } else {
     projectInfo.$patch({
@@ -186,6 +202,15 @@ const changeTarget = ({target}) => {
     // 展示viewport的配置项
   }
 }
+
+const transform = computed({
+  get: () => {
+    return {}
+  },
+  set: () => {
+
+  }
+})
 
 // 点击左上角recoverBtn后让infiniteViewer的缩放和viewport的位置回到最初的样式
 const resetViewer = () => {
@@ -200,6 +225,8 @@ function onDrag({target, transform}) {
 function onResize({target, width, height, drag}: OnResize) {
   target.style.width = `${width}px`;
   target.style.height = `${height}px`;
+  projectInfo.chartsDatas[projectInfo.currChartIndex].basicData.height = height;
+  projectInfo.chartsDatas[projectInfo.currChartIndex].basicData.width = width;
   // 这行代码是为了让缩放的origin在对角线位置
   target.style.transform = drag.transform;
 };
@@ -227,6 +254,7 @@ function onRotateEnd({lastEvent}: OnRotateEnd){
   moveableData[index].style.transform = lastEvent.transform;
 }
 
+// 获取数据
 onBeforeMount(() => {
   // 获取project的信息
   projectId = router.currentRoute.value.params.projectId as string;
@@ -270,7 +298,7 @@ onMounted(() => {
 
 
 onMounted(() => {
-  moveableOptions.elementGuidelines = [".viewport", ".target_1", ".target_2"]
+  moveableOptions.elementGuidelines = [".viewport", ".target_0", ".target_1"]
   // moveableOptions.snapContainer = document.querySelector(".viewport") as HTMLElement;
 });
 
