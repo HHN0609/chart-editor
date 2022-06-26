@@ -35,6 +35,7 @@
           <VueMoveable
             ref="moveable"
             v-bind="moveableOptions"
+            :target="projectInfo.currTarget"
             @drag="onDrag"
             @resize="onResize"
             @rotate="onRotate"
@@ -45,7 +46,7 @@
         </div>
       </vue-infinite-viewer>
       <div class="bottomBar">
-        <a-input class="zoomInput" v-model:value.number="infiniteViewZoom" size="small" suffix="%" type="number" :min="10" :max="200"></a-input>
+        <a-input class="zoomInput" v-model:value.lazy.number="infiniteViewZoom" size="small" suffix="%" type="number" :min="10" :max="200"></a-input>
         <a-slider class="zoomSlider" v-model:value.number="infiniteViewZoom" :tip-formatter="tipFormatter" :min="10" :max="200"></a-slider>
         <h3>zoom: </h3>
       </div>
@@ -77,7 +78,6 @@ import Guides from "@scena/guides";
 import router from "@/router";
 import useGuide from "@/hooks/useGuide";
 import useDragGetso from "@/hooks/useDragGetso";
-// import useInfiniteView from "@/hooks/useInfiniteView";
 import { computed } from "@vue/reactivity";
 import TopBotton from "@/components/sideFroms/TopBotton.vue";
 import ProjectInfo from "@/stores/projectInfo"
@@ -131,7 +131,6 @@ const viewerOptions = reactive<Partial<InfiniteViewerOptions>>({
 
 // moveable只有一个bounds有状态
 const moveableOptions = reactive<Partial<MoveableOptions>>({
-  target: "",
   draggable: true,
   rotatable: true,
   resizable: true,
@@ -156,12 +155,14 @@ let infiniteViewZoom = computed({
 watch(
   () => viewerOptions.zoom,
   (newZoom: number) => {
+    projectInfo.initZoom = newZoom;
     nextTick(() => {
       guideHorizontal.value.setState({scrollPos: infiniteViewer.getScrollLeft(), zoom: newZoom});
       guideVertical.value.setState({scrollPos: infiniteViewer.getScrollTop(), zoom: newZoom});
     })
   }
 );
+
 // viewport的长和宽发生了变化，对应的viewport的边界也发生变化
 watch(
   [() => projectInfo.height, () => projectInfo.width],
@@ -174,14 +175,13 @@ watch(
 // 点击切换moveable选中的元素
 const changeTarget = ({target}) => {
   if( target.getAttribute("data-type") === "moveBox"){
-    moveableOptions.target = `.${target.className}`;
+    // moveableOptions.target = `.${target.className}`;
     projectInfo.$patch({
-      currTarget: `${target.className}`
+      currTarget: `.${target.className}`
     });
   } else {
-    moveableOptions.target = "";
     projectInfo.$patch({
-      currTarget: "viewport"
+      currTarget: ""
     });
     // 展示viewport的配置项
   }
@@ -211,19 +211,19 @@ function onRotate({ target, drag }: OnRotate) {
 // end函数主要用来改变状态，并给服务端回传数据的
 function onDragEnd({lastEvent}: OnDragEnd){
   if(!lastEvent) return;
-  const index = getTargetIndex(moveableOptions.target as string);
+  const index = getTargetIndex(projectInfo.currTarget as string);
   moveableData[index].style.transform = lastEvent.transform;
 }
 
 function onResizeEnd({lastEvent}: OnResizeEnd){
-  const index = getTargetIndex(moveableOptions.target as string);
+  const index = getTargetIndex(projectInfo.currTarget as string);
   moveableData[index].style.width = `${lastEvent.width}px`;
   moveableData[index].style.height = `${lastEvent.height}px`;
   moveableData[index].style.transform = lastEvent.drag.transform;
 }
 
 function onRotateEnd({lastEvent}: OnRotateEnd){
-  const index = getTargetIndex(moveableOptions.target as string);
+  const index = getTargetIndex(projectInfo.currTarget as string);
   moveableData[index].style.transform = lastEvent.transform;
 }
 
