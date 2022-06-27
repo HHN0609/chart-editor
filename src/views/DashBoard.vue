@@ -2,6 +2,7 @@
   <div class="mainbox">
     <div class="left">
       <ChartMenu></ChartMenu>
+      <SortList/>
     </div>
     <div class="editorbox">
       <reload-outlined
@@ -32,6 +33,7 @@
               width: `${item.basicData.width}px`,
               height: `${item.basicData.height}px`,
               transform: projectInfo.transform(item.uid),
+              zIndex: item.basicData.index,
             }"
           >
             {{ item.uid }}
@@ -46,6 +48,7 @@
             @dragEnd="onDragEnd"
             @resizeEnd="onResizeEnd"
             @rotateEnd="onRotateEnd"
+            :style="{ zIndex: projectInfo.currChartData.basicData.index }"
           />
         </div>
       </vue-infinite-viewer>
@@ -86,6 +89,8 @@ import { computed } from "@vue/reactivity";
 import TopBotton from "@/components/sideFroms/TopBotton.vue";
 import ProjectInfo from "@/stores/projectInfo"
 import ChartMenu from "@/components/sideFroms/ChartMenu.vue";
+import SortList from "@/components/sideFroms/SortList.vue";
+
 const projectInfo = ProjectInfo();
 
 let tabActiveKey = ref("1");

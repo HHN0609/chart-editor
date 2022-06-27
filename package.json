@@ -76,6 +76,7 @@
     "vue": "^3.2.36",
     "vue-router": "^4.0.15",
     "vue3-infinite-viewer": "^0.3.0",
-    "vue3-moveable": "^0.4.9"
+    "vue3-moveable": "^0.4.9",
+    "vuedraggable": "^4.1.0"
   }
 }

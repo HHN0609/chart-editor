@@ -18,7 +18,7 @@
         </FormItem>
       </Form>
     </Card>
-      <Card size="small" title="selected chart" v-else>
+      <Card size="small" :title="projectInfo.currChartData.uid" v-else>
         <Form name="basic" style="width: 100%;" :label-col="{ span: 12 }" :wrapper-col="{ span: 12 }">
           <FormItem label="Width" name="width">
             <Input type="number" suffix="px" v-model:value.number.lazy="projectInfo.currChartData.basicData.width" size="small" style="width:80px" />
