@@ -23,24 +23,15 @@
             width: projectInfo.width+'px',
             height: projectInfo.height+'px'
           }">
-          <!-- <div
-            data-type="moveBox"
-            v-for="item in moveableData" 
-            :class="item.className"
-            :key="item.className"
-            :style="item.style"
-          >
-            {{ item.text }}
-          </div> -->
           <div
-            data-type="moveBox"
             v-for="(item, index) in projectInfo.chartsDatas"
+            data-type="moveBox"
             :class="`target_${index}`"
             :key="`target_${index}`"
-            :style="{ 
+            :style="{
               width: `${item.basicData.width}px`,
               height: `${item.basicData.height}px`,
-              transform: projectInfo.transform(item.uid)
+              transform: projectInfo.transform(item.uid),
             }"
           >
             {{ item.uid }}
@@ -86,7 +77,7 @@ import { VueInfiniteViewer } from "vue3-infinite-viewer";
 import VueMoveable, { MoveableOptions, OnDragEnd, OnResize, OnResizeEnd, OnRotate, OnRotateEnd } from "vue3-moveable";
 import ChartConfigForm from "@/components/sideFroms/ChartConfigForm.vue";
 import { getUserProjectsBasic } from "@/apis";
-import { getTargetIndex } from "@/utils";
+import { destructTransform, getTargetIndex } from "@/utils";
 import Guides from "@scena/guides";
 import router from "@/router";
 import useGuide from "@/hooks/useGuide";
@@ -108,30 +99,6 @@ let moveable = ref<VueMoveable>();
 useDragGetso(".viewer", (e: OnDrag) => {
     infiniteViewer.scrollBy(-1 * e.deltaX, -1 * e.deltaY);
 });
-
-// moveable包裹的数据，是有状态的，下次进来要还原的
-const moveableData = [
-  {
-    className: "target_0",
-    positionInfo: "",
-    text: "vue22222222222222222222",
-    style: {
-      width: "160px",
-      height: "130px",
-      transform: "matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1) translate(123px, 139px)"
-    }
-  },
-  {
-    className: "target_1",
-    positionInfo: "",
-    text: "vue3",
-    style: {
-      width: "200px",
-      height: "200px",
-      transform: "matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1) translate(0px, 0px)"
-    }
-  }
-];
 
 // infinite-viewer的zoom是有状态的
 // infinite-viewer的zoom由这里的zoom控制
@@ -203,15 +170,6 @@ const changeTarget = ({target}) => {
   }
 }
 
-const transform = computed({
-  get: () => {
-    return {}
-  },
-  set: () => {
-
-  }
-})
-
 // 点击左上角recoverBtn后让infiniteViewer的缩放和viewport的位置回到最初的样式
 const resetViewer = () => {
   viewerOptions.zoom = 1;
@@ -225,9 +183,6 @@ function onDrag({target, transform}) {
 function onResize({target, width, height, drag}: OnResize) {
   target.style.width = `${width}px`;
   target.style.height = `${height}px`;
-  projectInfo.chartsDatas[projectInfo.currChartIndex].basicData.height = height;
-  projectInfo.chartsDatas[projectInfo.currChartIndex].basicData.width = width;
-  // 这行代码是为了让缩放的origin在对角线位置
   target.style.transform = drag.transform;
 };
 
@@ -235,24 +190,29 @@ function onRotate({ target, drag }: OnRotate) {
   target.style.transform = drag.transform;
 };
 
+
 // end函数主要用来改变状态，并给服务端回传数据的
 function onDragEnd({lastEvent}: OnDragEnd){
   if(!lastEvent) return;
-  const index = getTargetIndex(projectInfo.currTarget as string);
-  moveableData[index].style.transform = lastEvent.transform;
-}
+  let t = destructTransform(lastEvent.transform);
+  projectInfo.currChartData.basicData.x = t.x;
+  projectInfo.currChartData.basicData.y = t.y;
+};
 
 function onResizeEnd({lastEvent}: OnResizeEnd){
-  const index = getTargetIndex(projectInfo.currTarget as string);
-  moveableData[index].style.width = `${lastEvent.width}px`;
-  moveableData[index].style.height = `${lastEvent.height}px`;
-  moveableData[index].style.transform = lastEvent.drag.transform;
-}
+  projectInfo.currChartData.basicData.height = lastEvent.height;
+  projectInfo.currChartData.basicData.width = lastEvent.width;
+
+  let t = destructTransform(lastEvent.drag.transform);
+  projectInfo.currChartData.basicData.x = t.x;
+  projectInfo.currChartData.basicData.y = t.y;
+  projectInfo.currChartData.basicData.rotate = t.rotate;
+};
 
 function onRotateEnd({lastEvent}: OnRotateEnd){
-  const index = getTargetIndex(projectInfo.currTarget as string);
-  moveableData[index].style.transform = lastEvent.transform;
-}
+  let t = destructTransform(lastEvent.transform);
+  projectInfo.currChartData.basicData.rotate = t.rotate;
+};
 
 // 获取数据
 onBeforeMount(() => {
@@ -275,7 +235,7 @@ onBeforeMount(() => {
         guideVertical.value.setState({scrollPos: infiniteViewer.getScrollTop()});
       })
     });
-})
+});
 
 onMounted(() => {
   // 拿到infiniteViewer的实例
@@ -294,7 +254,7 @@ onMounted(() => {
   });
   // 添加点击事件的委托监听
   infiniteViewer.getContainer().addEventListener("click", changeTarget);
-})
+});
 
 
 onMounted(() => {

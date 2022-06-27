@@ -13,7 +13,6 @@ type chartDataType = {
     configData: Array<any>
 }
 
-// 保存当前工程的信息，从接口获取数据
 type stateType = {
     currTarget: string,
     currChartIndex: number,
@@ -23,9 +22,10 @@ type stateType = {
     bgColor: string,
     viewportColor: string,
     projectId: string,
-    chartsDatas: chartDataType[],
-    moveableData: object[],
+    chartsDatas: chartDataType[]
 }
+
+// 保存当前工程的信息，从接口获取数据
 export default defineStore("project", {
     state: (): stateType => (
         {
@@ -65,8 +65,7 @@ export default defineStore("project", {
                     sourceData: [],
                     configData: [],
                 }
-            ],
-            moveableData: []
+            ]
         }
     ),
     getters: {
@@ -79,7 +78,7 @@ export default defineStore("project", {
                 let index = state.chartsDatas.findIndex(({ uid }) => {
                     return _uid === uid;
                 })
-                return `transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1) translate(${state.chartsDatas[index].basicData.x}px, ${state.chartsDatas[index].basicData.y}px) rotate(${state.chartsDatas[index].basicData.rotate}deg);`;
+                return `matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1) translate(${state.chartsDatas[index].basicData.x}px, ${state.chartsDatas[index].basicData.y}px) rotate(${state.chartsDatas[index].basicData.rotate % 360}deg)`;
             }
         } 
     },

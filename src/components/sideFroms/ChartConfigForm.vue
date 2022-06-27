@@ -21,20 +21,20 @@
       <Card size="small" title="selected chart" v-else>
         <Form name="basic" style="width: 100%;" :label-col="{ span: 12 }" :wrapper-col="{ span: 12 }">
           <FormItem label="Width" name="width">
-            <Input type="number" suffix="px" v-model:value="projectInfo.currChartData.basicData.width" size="small" style="width:80px" />
+            <Input type="number" suffix="px" v-model:value.number.lazy="projectInfo.currChartData.basicData.width" size="small" style="width:80px" />
           </FormItem>
           <FormItem label="Height" name="height">
-            <Input type="number" suffix="px" v-model:value="projectInfo.currChartData.basicData.height" size="small" style="width:80px" />
+            <Input type="number" suffix="px" v-model:value.number.lazy="projectInfo.currChartData.basicData.height" size="small" style="width:80px" />
           </FormItem>
 
           <FormItem label="X" name="x">
-            <Input type="number" suffix="px" v-model:value="projectInfo.currChartData.basicData.x" size="small" style="width:80px" />
+            <Input type="number" suffix="px" v-model:value.number.lazy="projectInfo.currChartData.basicData.x" size="small" style="width:80px" />
           </FormItem>
           <FormItem label="Y" name="y">
-            <Input type="number" suffix="px" v-model:value="projectInfo.currChartData.basicData.x" size="small" style="width:80px" />
+            <Input type="number" suffix="px" v-model:value.number.lazy="projectInfo.currChartData.basicData.x" size="small" style="width:80px" />
           </FormItem>
           <FormItem label="Rotate" name="rotate">
-            <Input type="number" suffix="°" v-model:value="projectInfo.currChartData.basicData.rotate" size="small" style="width:80px" />
+            <Input type="number" suffix="°" v-model:value.number.lazy="projectInfo.currChartData.basicData.rotate" size="small" style="width:80px" />
           </FormItem>
         </Form>
 

@@ -2,6 +2,20 @@ export const getTargetIndex = (className: string): number => {
     return parseInt(className.split("_")[1]);
 }
 
+export const destructTransform = (transform: string) => {
+    let res = {
+        x: 0,
+        y: 0,
+        rotate: 0,
+    }
+    let temp = transform.split(" translate(")[1].split(" rotate(");
+    let a = temp[0].split(", ");
+    res.x = parseFloat(a[0]);
+    res.y = parseFloat(a[1]);
+    res.rotate = parseFloat(temp[1]);
+    return res;
+}
+
 export const getCookies = () => {
     if(document.cookie.length === 0) return {};
     return  Object.fromEntries(document.cookie.split("; ").map((item) => {
