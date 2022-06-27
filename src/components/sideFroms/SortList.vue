@@ -3,21 +3,21 @@
       <h3>Charts</h3>
       <draggable
         class="list-group"
-        tag='div'
+        tag="div"
         :component-data="{
           type: 'transition-group',
           name: !drag ? 'flip-list' : null
         }"
         v-model="list"
         v-bind="dragOptions"
-        @start="drag = true"
-        @end="drag = false"
-        item-key="order"
+        @start="dragStart"
+        @end="dragEnd"
+        item-key="index"
       >
         <template #item="{ element }">
           <div class="list-group-item">
             <build-outlined />
-            {{ element.name }}
+            {{ element.uid }}
           </div>
         </template>
       </draggable>
@@ -25,27 +25,22 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref, watch } from "vue";
+import { reactive, ref } from "vue";
 import { BuildOutlined } from "@ant-design/icons-vue"; 
 import draggable from "vuedraggable";
-const message = [
-  "vue.draggable",
-  "draggable",
-  "component",
-  "for",
-  "vue.js 2.0",
-  "based",
-  "on",
-  "Sortablejs"
-];
+import ProjectInfo from "@/stores/projectInfo";
+const projectInfo = ProjectInfo();
+
 const drag = ref(false);
-const list = reactive(message.map((name, index) => {
-    return { name, order: index + 1 };
-}));
- 
-watch(() => list, () => {
-    console.log("change!")
-}, {deep: true});
+
+// index大的排前面
+const list = ref(projectInfo.chartsDatas
+  .map(({uid, basicData}) => {
+      return { uid, index: basicData.index };
+  })
+  .sort((a, b) => {
+    return b.index - a.index;
+  }));
 
 const dragOptions = reactive({
     animation: 200,
@@ -53,6 +48,23 @@ const dragOptions = reactive({
     disabled: false,
     ghostClass: "ghost"
 });
+
+const dragStart = () => {
+    drag.value = true;
+};
+
+const dragEnd = () => {
+    const chartNums = projectInfo.chartsDatas.length;
+    // 给每个chartsData重新设置index
+    projectInfo.chartsDatas.forEach(({uid, basicData }) => {
+        let indexInList = list.value.findIndex((item) => {
+          return item.uid === uid;
+        });
+        basicData.index = chartNums-1-indexInList;
+    });
+    drag.value = false;
+    
+};
 </script>
 
 <style lang="less" scoped>
@@ -82,12 +94,12 @@ const dragOptions = reactive({
   height: 40px;
   line-height: 40px;
   font-size: medium;
-  border-bottom: rgba(0, 0, 0, 0.466) solid 1px;
-  border-left: rgba(0, 0, 0, 0.466) solid 1px;
-  border-right: rgba(0, 0, 0, 0.466) solid 1px;
   margin-bottom: 5px;
   border-radius: 5px;
-  padding-left: 2px;
+  padding-left: 4px;
+  padding-right: 4px;
+  box-shadow:rgba(0, 0, 0, 0.466) 1px 1px 1px 1px;
+  background-color: white;
 }
 .list-group-item:first-child{
     border-top: rgba(0, 0, 0, 0.466) solid 1px;

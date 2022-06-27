@@ -64,6 +64,19 @@ export default defineStore("project", {
                     },
                     sourceData: [],
                     configData: [],
+                },
+                {
+                    uid: "cccccccc",
+                    basicData: {
+                        width: 200,
+                        height: 200,
+                        x: 200,
+                        y: 100,
+                        rotate: 0,
+                        index: 2
+                    },
+                    sourceData: [],
+                    configData: [],
                 }
             ]
         }
