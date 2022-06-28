@@ -48,7 +48,7 @@
             @dragEnd="onDragEnd"
             @resizeEnd="onResizeEnd"
             @rotateEnd="onRotateEnd"
-            :style="{ zIndex: projectInfo.currChartData.basicData.index }"
+            :style="{ zIndex: projectInfo.currChartData?.basicData.index || 0 }"
           />
         </div>
       </vue-infinite-viewer>
@@ -78,7 +78,7 @@ import { nextTick, onBeforeUnmount, onMounted, reactive, Ref, ref, watch, onBefo
 import InfiniteViewer , { InfiniteViewerOptions, OnPinch, OnDrag, OnScroll } from "infinite-viewer";
 import { VueInfiniteViewer } from "vue3-infinite-viewer";
 import VueMoveable, { MoveableOptions, OnDragEnd, OnResize, OnResizeEnd, OnRotate, OnRotateEnd } from "vue3-moveable";
-import ChartConfigForm from "@/components/sideFroms/ChartConfigForm.vue";
+import ChartConfigForm from "@/components/rightSideForms/ChartConfigForm.vue";
 import { getUserProjectsBasic } from "@/apis";
 import { destructTransform, getTargetIndex } from "@/utils";
 import Guides from "@scena/guides";
@@ -86,10 +86,10 @@ import router from "@/router";
 import useGuide from "@/hooks/useGuide";
 import useDragGetso from "@/hooks/useDragGetso";
 import { computed } from "@vue/reactivity";
-import TopBotton from "@/components/sideFroms/TopBotton.vue";
+import TopBotton from "@/components/rightSideForms/TopBotton.vue";
 import ProjectInfo from "@/stores/projectInfo"
-import ChartMenu from "@/components/sideFroms/ChartMenu.vue";
-import SortList from "@/components/sideFroms/SortList.vue";
+import ChartMenu from "@/components/leftSideForms/ChartMenu.vue";
+import SortList from "@/components/leftSideForms/SortList.vue";
 
 const projectInfo = ProjectInfo();
 
@@ -263,7 +263,7 @@ onMounted(() => {
 
 
 onMounted(() => {
-  moveableOptions.elementGuidelines = [".viewport", ".target_0", ".target_1"]
+  moveableOptions.elementGuidelines = [".viewport", ".target_0", ".target_1"];
   // moveableOptions.snapContainer = document.querySelector(".viewport") as HTMLElement;
 });
 

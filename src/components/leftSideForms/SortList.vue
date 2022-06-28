@@ -1,38 +1,40 @@
 <template>
 <div class="sortlist">
-      <h3>Charts</h3>
-      <draggable
-        class="list-group"
-        tag="div"
-        :component-data="{
-          type: 'transition-group',
-          name: !drag ? 'flip-list' : null
+  <h3>Charts</h3>
+  <draggable
+    class="list-group"
+    tag="div"
+    :component-data="{
+      type: 'transition-group',
+      name: !drag ? 'flip-list' : null
+    }"
+    v-model="list"
+    v-bind="dragOptions"
+    @start="onDragStart"
+    @end="onDragEnd"
+    @click="onClick"
+    item-key="index"
+  >
+    <template #item="{ element }">
+      <div
+        :class="{
+          'list-group-item': true,
+          'selected': element.uid === projectInfo.currChartData.uid && projectInfo.currTarget
         }"
-        v-model="list"
-        v-bind="dragOptions"
-        @start="onDragStart"
-        @end="onDragEnd"
-        @click="onClick"
-        item-key="index"
       >
-        <template #item="{ element }">
-          <div
-            :class="{
-              'list-group-item': true,
-              'selected': element.uid === projectInfo.currChartData.uid && projectInfo.currTarget
-            }"
-          >
-            <build-outlined />
-            {{ element.uid }}
-          </div>
-        </template>
-      </draggable>
-    </div>
+          <build-outlined />
+          {{ element.uid }}
+          <delete-outlined class="deleteIcon" @click.stop="showConfirm(element.uid)"/>
+      </div>
+    </template>
+  </draggable>
+</div>
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref, watch } from "vue";
-import { BuildOutlined } from "@ant-design/icons-vue"; 
+import { createVNode, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from "vue";
+import { Row, Col, Modal } from "ant-design-vue";
+import { BuildOutlined, DeleteOutlined, ExclamationCircleOutlined } from "@ant-design/icons-vue"; 
 import draggable from "vuedraggable";
 import ProjectInfo from "@/stores/projectInfo";
 
@@ -62,6 +64,12 @@ watch(() => projectInfo.chartsDatas.length, (newLength, oldLength) => {
     list.value.unshift({ uid: projectInfo.chartsDatas[newLength-1].uid, index: projectInfo.chartsDatas[newLength-1].basicData.index});
   } else if (newLength < oldLength) {
     console.log("delete a chart");
+    list.value = projectInfo.chartsDatas.map(({uid, basicData}) => {
+      return { uid, index: basicData.index };
+    })
+    .sort((a, b) => {
+      return b.index - a.index;
+    });
   }
 });
 
@@ -82,11 +90,44 @@ const onDragEnd = () => {
     
 };
 const onClick = (e) => {
+    // console.log(e);
     let targetUid = e.target.__draggable_context.element.uid;
     projectInfo.changeCurrChartIndex(targetUid);
     let targetClassName = document.querySelector(`[data-uid='${targetUid}']`).className;
     projectInfo.currTarget = `.${targetClassName}`;
 };
+
+
+const showConfirm = (_uid: string) => {
+    Modal.confirm({
+    title: 'Do you Want to delete this chart?',
+    icon: createVNode(ExclamationCircleOutlined),
+    content: createVNode('div', { style: 'color:red;'}, "Can't restore after deletion!"),
+    onOk() {
+        deleteChart(_uid);
+    }
+    });
+};
+
+const deleteChart = (_uid: string) => {
+    // 删除操作
+    let deleteIndex = projectInfo.chartsDatas.findIndex(({uid}) => {
+        return uid === _uid;
+    });
+    projectInfo.chartsDatas.splice(deleteIndex, 1);
+    
+    // 给每个chartsData重新设置index
+    const chartNums = projectInfo.chartsDatas.length;
+    projectInfo.chartsDatas.forEach(({uid, basicData }) => {
+        let indexInList = list.value.findIndex((item) => {
+          return item.uid === uid;
+        });
+        basicData.index = chartNums-1-indexInList;
+    });
+    projectInfo.currChartIndex = 0;
+    console.log(_uid);
+};
+
 </script>
 
 <style lang="less" scoped>
@@ -121,10 +162,19 @@ const onClick = (e) => {
   font-size: medium;
   margin-bottom: 5px;
   border-radius: 5px;
-  padding-left: 4px;
-  padding-right: 4px;
+  padding-left: 8px;
+  padding-right: 8px;
   box-shadow:rgba(0, 0, 0, 0.466) 1px 1px 1px 1px;
   background-color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  .deleteIcon{
+    transition: 0.3s;
+  }
+  .deleteIcon:hover{
+    color: red;
+  }
 }
 
 .list-group-item.selected{
