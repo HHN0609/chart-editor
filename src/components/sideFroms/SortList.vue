@@ -10,12 +10,18 @@
         }"
         v-model="list"
         v-bind="dragOptions"
-        @start="dragStart"
-        @end="dragEnd"
+        @start="onDragStart"
+        @end="onDragEnd"
+        @click="onClick"
         item-key="index"
       >
         <template #item="{ element }">
-          <div class="list-group-item">
+          <div
+            :class="{
+              'list-group-item': true,
+              'selected': element.uid === projectInfo.currChartData.uid && projectInfo.currTarget
+            }"
+          >
             <build-outlined />
             {{ element.uid }}
           </div>
@@ -25,12 +31,18 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref } from "vue";
+import { reactive, ref, watch } from "vue";
 import { BuildOutlined } from "@ant-design/icons-vue"; 
 import draggable from "vuedraggable";
 import ProjectInfo from "@/stores/projectInfo";
-const projectInfo = ProjectInfo();
 
+const projectInfo = ProjectInfo();
+const dragOptions = reactive({
+    animation: 200,
+    group: "description",
+    disabled: false,
+    ghostClass: "ghost"
+});
 const drag = ref(false);
 
 // index大的排前面
@@ -42,18 +54,22 @@ const list = ref(projectInfo.chartsDatas
     return b.index - a.index;
   }));
 
-const dragOptions = reactive({
-    animation: 200,
-    group: "description",
-    disabled: false,
-    ghostClass: "ghost"
+// 监听数组长度，新增一个卡片,默认新增的图表位于最上层，所以新增的卡片在第一个位置
+watch(() => projectInfo.chartsDatas.length, (newLength, oldLength) => {
+  console.log(newLength, oldLength);
+  if (newLength > oldLength) {
+    console.log("add a new chart");
+    list.value.unshift({ uid: projectInfo.chartsDatas[newLength-1].uid, index: projectInfo.chartsDatas[newLength-1].basicData.index});
+  } else if (newLength < oldLength) {
+    console.log("delete a chart");
+  }
 });
 
-const dragStart = () => {
+const onDragStart = () => {
     drag.value = true;
 };
 
-const dragEnd = () => {
+const onDragEnd = () => {
     const chartNums = projectInfo.chartsDatas.length;
     // 给每个chartsData重新设置index
     projectInfo.chartsDatas.forEach(({uid, basicData }) => {
@@ -65,11 +81,17 @@ const dragEnd = () => {
     drag.value = false;
     
 };
+const onClick = (e) => {
+    let targetUid = e.target.__draggable_context.element.uid;
+    projectInfo.changeCurrChartIndex(targetUid);
+    let targetClassName = document.querySelector(`[data-uid='${targetUid}']`).className;
+    projectInfo.currTarget = `.${targetClassName}`;
+};
 </script>
 
 <style lang="less" scoped>
 .sortlist {
-    width: 80%;
+    width: 90%;
     margin: 0 auto;
 }
 .flip-list-move {
@@ -90,9 +112,12 @@ const dragEnd = () => {
 }
 
 .list-group-item {
-  cursor: pointer;
   height: 40px;
   line-height: 40px;
+  cursor: pointer;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
   font-size: medium;
   margin-bottom: 5px;
   border-radius: 5px;
@@ -101,7 +126,9 @@ const dragEnd = () => {
   box-shadow:rgba(0, 0, 0, 0.466) 1px 1px 1px 1px;
   background-color: white;
 }
-.list-group-item:first-child{
-    border-top: rgba(0, 0, 0, 0.466) solid 1px;
+
+.list-group-item.selected{
+  border: #40a9ff solid 2px;
 }
+
 </style>

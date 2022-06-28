@@ -20,6 +20,7 @@
 </template>
 <script lang="ts" setup>
 import { SaveOutlined, FileImageOutlined, ExportOutlined, FundProjectionScreenOutlined } from "@ant-design/icons-vue";
+
 </script>
 <style lang="less" scoped>
 .container{

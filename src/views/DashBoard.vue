@@ -26,7 +26,7 @@
           }">
           <div
             v-for="(item, index) in projectInfo.chartsDatas"
-            data-type="moveBox"
+            :data-uid="item.uid"
             :class="`target_${index}`"
             :key="`target_${index}`"
             :style="{
@@ -74,7 +74,7 @@
 <script lang="ts" setup>
 import { Tabs, TabPane } from "ant-design-vue";
 import { ReloadOutlined } from "@ant-design/icons-vue";
-import { nextTick, onBeforeUnmount, onMounted, reactive, Ref, ref, watch, provide, onBeforeMount } from "vue";
+import { nextTick, onBeforeUnmount, onMounted, reactive, Ref, ref, watch, onBeforeMount } from "vue";
 import InfiniteViewer , { InfiniteViewerOptions, OnPinch, OnDrag, OnScroll } from "infinite-viewer";
 import { VueInfiniteViewer } from "vue3-infinite-viewer";
 import VueMoveable, { MoveableOptions, OnDragEnd, OnResize, OnResizeEnd, OnRotate, OnRotateEnd } from "vue3-moveable";
@@ -162,7 +162,7 @@ watch(
 
 // 点击切换moveable选中的元素
 const changeTarget = ({target}) => {
-  if( target.getAttribute("data-type") === "moveBox"){
+  if( target.getAttribute("data-uid")){
     projectInfo.$patch({
       currTarget: `.${target.className}`,
       currChartIndex: getTargetIndex(target.className)
@@ -342,9 +342,9 @@ function tipFormatter (value: number) {
           overflow: hidden;
           // width: 800px;
           // height: 450px;
-          > [data-type="moveBox"] {
+          > [data-uid] {
             color: white;
-            background-color: cadetblue;
+            background-color: rgba(95, 158, 160, 0.24);
             position: absolute;
           }
         }

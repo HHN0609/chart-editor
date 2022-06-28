@@ -1,4 +1,11 @@
 import { defineStore } from "pinia"; 
+
+/**
+ * @property uid 图表对象的uid
+ * @property basicData 图表的基本信息
+ * @property sourceData 图表的数据源
+ * @property configData 图表的样式配置信息
+ */
 type chartDataType = {
     uid: string,
     basicData: {
@@ -8,11 +15,24 @@ type chartDataType = {
         y: number,
         rotate: number,
         index: number,
+        type: "Bar" | "Line" | "Dot" | "Pie" | "Area"
     },
     sourceData: Array<any>,
     configData: Array<any>
 }
 
+
+/**
+ * @property currTarget 当前选中目标的【类选择器】
+ * @property currChartIndex 当前选中图表在chartsDatas数组中的下标
+ * @property width viewport的宽度
+ * @property height viewport的高度
+ * @property initZoom viewport的初始化缩放系数
+ * @property bgColor 背景的颜色(16进制表示)
+ * @property viewportColor viewport的背景色
+ * @property projectId 项目工程的ID
+ * @property chartsDatas 项目内部包含的图表的数据信息
+ */
 type stateType = {
     currTarget: string,
     currChartIndex: number,
@@ -47,7 +67,8 @@ export default defineStore("project", {
                         x: 0,
                         y: 0,
                         rotate: 0,
-                        index: 0
+                        index: 0,
+                        type: "Bar"
                     },
                     sourceData: [],
                     configData: [],
@@ -60,7 +81,8 @@ export default defineStore("project", {
                         x: 200,
                         y: 100,
                         rotate: 0,
-                        index: 1
+                        index: 1,
+                        type: "Line"
                     },
                     sourceData: [],
                     configData: [],
@@ -73,7 +95,8 @@ export default defineStore("project", {
                         x: 200,
                         y: 100,
                         rotate: 0,
-                        index: 2
+                        index: 2,
+                        type: "Pie"
                     },
                     sourceData: [],
                     configData: [],
@@ -93,7 +116,16 @@ export default defineStore("project", {
                 })
                 return `matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1) translate(${state.chartsDatas[index].basicData.x}px, ${state.chartsDatas[index].basicData.y}px) rotate(${state.chartsDatas[index].basicData.rotate % 360}deg)`;
             }
-        } 
+        },
+        maxIndex: (state) => {
+            let maxIndex = 0;
+            for(let {basicData} of state.chartsDatas){
+                if(basicData.index > maxIndex){
+                    maxIndex = basicData.index;
+                }
+            }
+            return maxIndex;
+        }
     },
     actions: {
         changeCurrChartIndex(_uid: string) {

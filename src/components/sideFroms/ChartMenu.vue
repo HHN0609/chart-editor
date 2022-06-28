@@ -1,5 +1,5 @@
 <template>
-    <Menu @select="change" :selectedKeys="[]">
+    <Menu @select="createNewChart" :selectedKeys="[]">
       <SubMenu>
         <template #icon>
           <PlusCircleOutlined />
@@ -14,10 +14,30 @@
 <script lang="ts" setup>
 import { Menu, MenuItem, SubMenu } from "ant-design-vue";
 import { PlusCircleOutlined } from "@ant-design/icons-vue";
-import { CHARTTYPES } from "@/components/charts/index";
-const change = ({ key }) => {
-    console.log(key);
+import { CHARTTYPES } from "@/charts/index";
+import ProjectInfo from "@/stores/projectInfo";
+import { generateUUID } from "@/utils";
+
+const projectInfo = ProjectInfo();
+const createNewChart = ({ key }) => {
+    let index = projectInfo.maxIndex + 1;
+    projectInfo.chartsDatas.push({
+      uid: generateUUID(),
+      basicData: {
+        width: 100,
+        height: 100,
+        x: 0,
+        y: 0,
+        rotate: 0,
+        index: index,
+        type: key
+      },
+      sourceData: [],
+      configData: [],
+    })
+
 }
+
 </script>
 
 <style lang="less" scoped>
