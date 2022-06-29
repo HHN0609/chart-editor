@@ -16,6 +16,9 @@
         <FormItem label="Viewport Color" name="viewportColor">
           <Input type="color" v-model:value="projectInfo.viewportColor" size="small" style="width:80px" />
         </FormItem>
+        <!-- <FormItem label="Test Color" name="Test Color">
+          <ColorPicker></ColorPicker>
+        </FormItem> -->
       </Form>
     </Card>
       <Card size="small" :title="projectInfo.currChartData.uid" v-else>
@@ -48,11 +51,13 @@ import ProjectInfo from '@/stores/projectInfo';
 import { Form, FormItem, Input, Card } from 'ant-design-vue';
 import DynamicForm from './DynamicForm.vue';
 import { computed } from '@vue/reactivity';
+// import ColorPicker from '../ColorPicker.vue';
 
 const projectInfo = ProjectInfo();
+
+
 // 判断当前选中是不是图表
 const isChart = computed(() => projectInfo.currTarget.slice(0, 7) === ".target");
-
 const configTree = [
   {
     type: "folder",

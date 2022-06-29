@@ -12,7 +12,7 @@
     v-bind="dragOptions"
     @start="onDragStart"
     @end="onDragEnd"
-    @click="onClick"
+    @click.stop="onClick"
     item-key="index"
   >
     <template #item="{ element }">
@@ -23,7 +23,7 @@
         }"
       >
           <build-outlined />
-          {{ element.uid }}
+          <div class="textBox">{{ element.uid }}</div>
           <delete-outlined class="deleteIcon" @click.stop="showConfirm(element.uid)"/>
       </div>
     </template>
@@ -32,11 +32,12 @@
 </template>
 
 <script lang="ts" setup>
-import { createVNode, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from "vue";
-import { Row, Col, Modal } from "ant-design-vue";
+import { createVNode, defineEmits, reactive, ref, watch } from "vue";
+import { Modal } from "ant-design-vue";
 import { BuildOutlined, DeleteOutlined, ExclamationCircleOutlined } from "@ant-design/icons-vue"; 
 import draggable from "vuedraggable";
 import ProjectInfo from "@/stores/projectInfo";
+const emitter = defineEmits(["delete", "create"]);
 
 const projectInfo = ProjectInfo();
 const dragOptions = reactive({
@@ -46,7 +47,6 @@ const dragOptions = reactive({
     ghostClass: "ghost"
 });
 const drag = ref(false);
-
 // index大的排前面
 const list = ref(projectInfo.chartsDatas
   .map(({uid, basicData}) => {
@@ -58,12 +58,11 @@ const list = ref(projectInfo.chartsDatas
 
 // 监听数组长度，新增一个卡片,默认新增的图表位于最上层，所以新增的卡片在第一个位置
 watch(() => projectInfo.chartsDatas.length, (newLength, oldLength) => {
-  console.log(newLength, oldLength);
   if (newLength > oldLength) {
-    console.log("add a new chart");
+    emitter("create");
     list.value.unshift({ uid: projectInfo.chartsDatas[newLength-1].uid, index: projectInfo.chartsDatas[newLength-1].basicData.index});
   } else if (newLength < oldLength) {
-    console.log("delete a chart");
+    emitter("delete");
     list.value = projectInfo.chartsDatas.map(({uid, basicData}) => {
       return { uid, index: basicData.index };
     })
@@ -90,8 +89,12 @@ const onDragEnd = () => {
     
 };
 const onClick = (e) => {
-    // console.log(e);
-    let targetUid = e.target.__draggable_context.element.uid;
+    let targetUid;
+    if (e.target.__draggable_context) {
+      targetUid = e.target.__draggable_context.element.uid;
+    } else {
+      targetUid = e.target.parentElement.__draggable_context.element.uid;
+    }
     projectInfo.changeCurrChartIndex(targetUid);
     let targetClassName = document.querySelector(`[data-uid='${targetUid}']`).className;
     projectInfo.currTarget = `.${targetClassName}`;
@@ -125,7 +128,7 @@ const deleteChart = (_uid: string) => {
         basicData.index = chartNums-1-indexInList;
     });
     projectInfo.currChartIndex = 0;
-    console.log(_uid);
+    projectInfo.currTarget = "";
 };
 
 </script>
@@ -169,6 +172,12 @@ const deleteChart = (_uid: string) => {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  >.textBox{
+    width: 70%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
   .deleteIcon{
     transition: 0.3s;
   }

@@ -33,7 +33,7 @@
               width: `${item.basicData.width}px`,
               height: `${item.basicData.height}px`,
               transform: projectInfo.transform(item.uid),
-              zIndex: item.basicData.index,
+              zIndex: item.basicData.index + 10,
             }"
           >
             {{ item.uid }}
@@ -48,7 +48,7 @@
             @dragEnd="onDragEnd"
             @resizeEnd="onResizeEnd"
             @rotateEnd="onRotateEnd"
-            :style="{ zIndex: projectInfo.currChartData?.basicData.index || 0 }"
+            :style="{ zIndex: projectInfo.currChartData?.basicData.index + 10 || 0 }"
           />
         </div>
       </vue-infinite-viewer>
@@ -90,7 +90,7 @@ import TopBotton from "@/components/rightSideForms/TopBotton.vue";
 import ProjectInfo from "@/stores/projectInfo"
 import ChartMenu from "@/components/leftSideForms/ChartMenu.vue";
 import SortList from "@/components/leftSideForms/SortList.vue";
-
+import Bar from "@/charts/bar/Bar.vue";
 const projectInfo = ProjectInfo();
 
 let tabActiveKey = ref("1");
@@ -205,6 +205,7 @@ function onDragEnd({lastEvent}: OnDragEnd){
 };
 
 function onResizeEnd({lastEvent}: OnResizeEnd){
+  if(!lastEvent) return;
   projectInfo.currChartData.basicData.height = lastEvent.height;
   projectInfo.currChartData.basicData.width = lastEvent.width;
 
@@ -215,6 +216,7 @@ function onResizeEnd({lastEvent}: OnResizeEnd){
 };
 
 function onRotateEnd({lastEvent}: OnRotateEnd){
+  if(!lastEvent) return;
   let t = destructTransform(lastEvent.transform);
   projectInfo.currChartData.basicData.rotate = t.rotate;
 };
@@ -258,13 +260,22 @@ onMounted(() => {
     guideVertical.value.scroll(e.scrollTop);
   });
   // 添加点击事件的委托监听
-  infiniteViewer.getContainer().addEventListener("click", changeTarget);
+  infiniteViewer.getWrapper().addEventListener("click", changeTarget);
+  // console.log(infiniteViewer.getWrapper());
 });
 
 
 onMounted(() => {
-  moveableOptions.elementGuidelines = [".viewport", ".target_0", ".target_1"];
+  moveableOptions.elementGuidelines = [".viewport", ".target_0"];
   // moveableOptions.snapContainer = document.querySelector(".viewport") as HTMLElement;
+});
+
+watch(() => projectInfo.chartsDatas.length, (newLength) => {
+  let newArr = Array.from({length: newLength}).map((item, index) => {
+    return `.target_${index}`;
+  })
+  newArr.unshift(".viewport");
+  moveableOptions.elementGuidelines = newArr;
 });
 
 onBeforeUnmount(() => {

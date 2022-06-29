@@ -42,7 +42,8 @@ type stateType = {
     bgColor: string,
     viewportColor: string,
     projectId: string,
-    chartsDatas: chartDataType[]
+    chartsDatas: chartDataType[],
+    chartInstance: any[]
 }
 
 // 保存当前工程的信息，从接口获取数据
@@ -62,8 +63,8 @@ export default defineStore("project", {
                 {
                     uid: "aaaaaaaa",
                     basicData: {
-                        width: 100,
-                        height: 100,
+                        width: 300,
+                        height: 300,
                         x: 0,
                         y: 0,
                         rotate: 0,
@@ -72,36 +73,9 @@ export default defineStore("project", {
                     },
                     sourceData: [],
                     configData: [],
-                },
-                {
-                    uid: "bbbbbbbb",
-                    basicData: {
-                        width: 200,
-                        height: 200,
-                        x: 200,
-                        y: 100,
-                        rotate: 0,
-                        index: 1,
-                        type: "Line"
-                    },
-                    sourceData: [],
-                    configData: [],
-                },
-                {
-                    uid: "cccccccc",
-                    basicData: {
-                        width: 200,
-                        height: 200,
-                        x: 200,
-                        y: 100,
-                        rotate: 0,
-                        index: 2,
-                        type: "Pie"
-                    },
-                    sourceData: [],
-                    configData: [],
                 }
-            ]
+            ],
+            chartInstance: []
         }
     ),
     getters: {
