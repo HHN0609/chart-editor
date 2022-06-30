@@ -1,50 +1,45 @@
 <template>
-    <div class="container">
-        <input @click.prevent="showPicker" type="color"/>
-        <button @click="hidePicker"></button>
-        <div id="colorPicker"></div>
-    </div>
+    <input type="color" @click="showPicker"/>
+    <Sketch @mouseleave="hidePicker" class="colorInput" v-model="color" v-if="isVisible"/>
 </template>
 
 <script lang="ts" setup>
-import '@easylogic/colorpicker/dist/colorpicker.css';
-import {ColorPicker} from '@easylogic/colorpicker';
-import { defineEmits, onMounted, ref } from 'vue';
-const emitter = defineEmits(["delete"]);
-let colorPicker;
-let isShow = ref(false);
-const showPicker = () => {
-    // isShow.value = true;
-//     colorPicker.show({
-//     left : 100,
-//     top : 0,
-//     hideDelay : 2000 
-// }, "#FFFFFF", function (newColor) {
-//     console.log(newColor)
-// })
-}
-const hidePicker = () => {
-    colorPicker.hide();
-}
-onMounted(() => {
-  colorPicker = new ColorPicker({
-      type: "sketch",
-      position: "inline",
-      right: 0,
-      top : 0,
-      container: document.getElementById('colorPicker'),
-  });
+import { Sketch } from '@ckpack/vue-color';
+import { computed, onMounted, ref, watch } from 'vue';
+const props = defineProps(["color"]);
+const emitter = defineEmits(["update:color"]);
+let color = ref(props.color);
+
+const value = computed({
+  get() {
+    return props.color;
+  },
+  set(value) {
+    emitter('update:color', value);
+  }
 });
+
+watch(color, (newColor) => {
+    let p = newColor.hex8;
+    console.log(p);
+})
+
+let isVisible = ref(false);
+function showPicker(e: PointerEvent) {
+    e.preventDefault();
+    isVisible.value = true;
+};
+
+function hidePicker(e: PointerEvent) {
+    e.preventDefault();
+    isVisible.value = false;
+};
 </script>
 
 <style scoped lang="less">
-.container{
-    width: fit-content;
-    height: fit-content;
+.colorInput{
+    position: fixed;
     z-index: 100;
-    > #colorPicker{
-        position: fixed;
-        z-index: 500;
-    }
+    transform: translateX(-110px);
 }
 </style>
