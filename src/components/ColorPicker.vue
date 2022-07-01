@@ -2,27 +2,23 @@
       <Popconfirm placement="left" :showCancel="false">
         <template #icon></template>
         <template #okButton>
-          <Sketch v-model="color"/>
+          <Sketch :modelValue="modelValue" @update:modelValue="changeColor" @change="changeColor"/>
         </template>
-        <div class="colorInput" :style="{ backgroundColor: color.hex8 || color }"></div>
+        <div class="colorInput" :style="{ backgroundColor: modelValue.hex8 || modelValue }"></div>
       </Popconfirm>
 </template>
 
 <script lang="ts" setup>
 import { Sketch } from "@ckpack/vue-color";
-import { ref, watch } from "vue";
 import { Popconfirm } from "ant-design-vue";
-const props = defineProps(["modelValue"]);
-const emitter = defineEmits(["update:modelValue"]);
-let color = ref(props.modelValue);
-watch(color, (newColor) => {
-  emitter("update:modelValue", newColor.hex8);
-});
 
-watch(() => props.modelValue, (newValue) => {
-  console.log("change", newValue);
-  color = newValue;
-});
+const props = defineProps(["modelValue"]);
+const emit = defineEmits(["update:modelValue"]);
+
+const changeColor = (newColor: any) => {
+  console.log("newColor: ", newColor);
+  emit("update:modelValue", newColor.hex8);
+}
 
 </script>
 
