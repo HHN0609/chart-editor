@@ -9,14 +9,19 @@
 </template>
 
 <script lang="ts" setup>
-import { Sketch } from '@ckpack/vue-color';
-import { ref, watch } from 'vue';
+import { Sketch } from "@ckpack/vue-color";
+import { ref, watch } from "vue";
 import { Popconfirm } from "ant-design-vue";
 const props = defineProps(["modelValue"]);
 const emitter = defineEmits(["update:modelValue"]);
 let color = ref(props.modelValue);
 watch(color, (newColor) => {
   emitter("update:modelValue", newColor.hex8);
+});
+
+watch(() => props.modelValue, (newValue) => {
+  console.log("change", newValue);
+  color = newValue;
 });
 
 </script>
@@ -28,5 +33,10 @@ watch(color, (newColor) => {
   padding: 4px;
   background-clip: content-box;
   border: 1px solid rgba(155, 151, 151, 0.486);
+  border-radius: 2px;
+  transition: 0.3s;
+  &:hover {
+    border-color: #188fffc2;
+  }
 }
 </style>

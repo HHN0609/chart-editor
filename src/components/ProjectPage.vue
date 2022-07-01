@@ -38,10 +38,10 @@
         <a-input type="number" v-model:value="newProjectState.height" suffix="px"/>
       </a-form-item>
       <a-form-item label="Background color" name="bgColor" required>
-        <a-input type="color" v-model:value="newProjectState.bgColor" />
+        <ColorPicker v-model="newProjectState.bgColor"></ColorPicker>
       </a-form-item>
       <a-form-item label="Viewport color" name="viewportColor" required>
-        <a-input type="color" v-model:value="newProjectState.viewportColor" />
+        <ColorPicker v-model="newProjectState.viewportColor"></ColorPicker>
       </a-form-item>
       <a-form-item class="buttonItem" :wrapper-col="{span: 12}">
         <a-button type="primary" html-type="submit">Create</a-button>
@@ -57,6 +57,7 @@ import userInfo from "@/stores/userInfo";
 import ChartCard from "@/components/ChartCard.vue";
 import { getCookie } from "@/utils";
 import { FormInstance, message } from "ant-design-vue";
+import ColorPicker from "./ColorPicker.vue";
 import router from "@/router";
 
 const modalForm = ref<FormInstance>();
