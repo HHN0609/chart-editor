@@ -11,13 +11,10 @@
           <Input type="number" suffix="px" v-model:value.number.lazy="projectInfo.height" size="small" style="width:80px" />
         </FormItem>
         <FormItem label="Background Color" name="backgroundColor">
-          <Input type="color" v-model:value="projectInfo.bgColor" size="small" style="width:80px" />
+          <ColorPicker v-model="projectInfo.bgColor"></ColorPicker>
         </FormItem>
         <FormItem label="Viewport Color" name="viewportColor">
-          <Input type="color" v-model:value="projectInfo.viewportColor" size="small" style="width:80px" />
-        </FormItem>
-        <FormItem label="Test Color" name="Test Color">
-           <ColorPicker color="#FFFFFF"></ColorPicker>
+          <ColorPicker v-model="projectInfo.viewportColor"></ColorPicker>
         </FormItem>
       </Form>
     </Card>
@@ -53,7 +50,7 @@ import { computed, ref } from 'vue';
 import DynamicForm from './DynamicForm.vue';
 import ColorPicker from "@/components/ColorPicker.vue";
 const projectInfo = ProjectInfo();
-let color=ref("#FFFFFF");
+let color=ref("#FFFF00");
 
 // 判断当前选中是不是图表
 const isChart = computed(() => projectInfo.currTarget.slice(0, 7) === ".target");
