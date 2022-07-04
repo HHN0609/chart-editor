@@ -1,15 +1,38 @@
 <template>
-    <div class="container" ref="dom"></div>
+    <div class="container" ref="chartDom"></div>
 </template>
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
+import * as echarts from "echarts";
+import defaultSourceData from "./defaultSourceData";
+import BarTransform from "./barTransform";
+// customOptions会被转化为echart的option
+const props = defineProps(["data", "customOptions", "uid"]);
+let resizeObserver: ResizeObserver;
+let chart: echarts.ECharts;
+const chartDom = ref<HTMLElement>();
+let  option = BarTransform(props.customOptions, props.data || defaultSourceData);
 
-const dom = ref();
-let chart = null;
+watch(props.customOptions, () => {
+  // 侧边栏的变化回触发对应的customOption的变化， config变化后重新生成options
+  // console.log("customOptions change!");
+  option = BarTransform(props.customOptions, props.data || defaultSourceData);
+  option && chart.setOption(option);
+});
 
 onMounted(() => {
-    
+    chart = echarts.init(chartDom.value, {}, {renderer: "canvas"});
+    option && chart.setOption(option);
+    // 用ResizeObserver来监听dom容器的尺寸变化,后续可以添加节流
+    resizeObserver = new ResizeObserver(() => {
+      chart.resize();
+    });
+    resizeObserver.observe(chartDom.value);
 });
+onBeforeUnmount(() => {
+  resizeObserver.disconnect();
+  chart.dispose();
+})
 </script>
 
 <style lang="less" scoped>

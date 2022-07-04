@@ -12,19 +12,32 @@
 </template>
 <script lang="ts" setup>
 import { RadioGroup, RadioButton ,FormItem, Form } from 'ant-design-vue';
-import { ref, watch } from "vue";
+import { computed } from "vue";
+import { _get, _set } from "@/utils";
+import ProjectInfo from "@/stores/projectInfo";
 // type PositionType = "position4" | "position8";
-type PositionOptions = "top" | "left" | "right" | "bottom";
+// type PositionOptions = "top" | "left" | "right" | "bottom";
+
+const projectInfo = ProjectInfo();
 const props = defineProps<{
     // type: PositionType,
-    value: PositionOptions,
+    // value: PositionOptions,
     label?: string,
     dataIndex: string,
+    kkk?: object,
 }>();
-let value = ref<PositionOptions>(props.value);
-watch(value, () => {
-    // 向外抛事件
-})
+let value = computed({
+    get: () => {
+        return _get(projectInfo.currChartData.optionsData, props.dataIndex);
+    },
+    set: (newValue) => {
+        _set(projectInfo.currChartData.optionsData, props.dataIndex, newValue);
+    }
+});
+// let value = ref<PositionOptions>(props.value);
+// watch(value, () => {
+//     // 向外抛事件
+// })
 </script>
 <style lang="less" scoped>
 .form{

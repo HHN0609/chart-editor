@@ -36,7 +36,8 @@
               zIndex: item.basicData.index + 10,
             }"
           >
-            {{ item.uid }}
+            <!-- 图表组件的入口 -->
+            <component :is="Bar" :uid="item.uid" :customOptions="item.optionsData"></component>
           </div>
           <VueMoveable
             ref="moveable"
@@ -161,18 +162,23 @@ watch(
 );
 
 // 点击切换moveable选中的元素
-const changeTarget = ({target}) => {
-  if( target.getAttribute("data-uid")){
-    projectInfo.$patch({
-      currTarget: `.${target.className}`,
-      currChartIndex: getTargetIndex(target.className)
-    });
-  } else {
-    projectInfo.$patch({
-      currTarget: ""
-    });
-    // 展示viewport的配置项
+const changeTarget = (e) => {
+  for(let el of e.path){
+    if(el === infiniteViewer.getWrapper()) {
+      projectInfo.$patch({
+        currTarget: ""
+      });
+      return;
+    }
+    if(el.getAttribute("data-uid")){
+      projectInfo.$patch({
+        currTarget: `.${el.className}`,
+        currChartIndex: getTargetIndex(el.className)
+      });
+      return;
+    }
   }
+
 }
 
 // 点击左上角recoverBtn后让infiniteViewer的缩放和viewport的位置回到最初的样式
@@ -260,7 +266,7 @@ onMounted(() => {
     guideVertical.value.scroll(e.scrollTop);
   });
   // 添加点击事件的委托监听
-  infiniteViewer.getWrapper().addEventListener("click", changeTarget);
+  infiniteViewer.getWrapper().addEventListener("click", changeTarget, true);
   // console.log(infiniteViewer.getWrapper());
 });
 

@@ -33,7 +33,8 @@ const createNewChart = ({ key }) => {
         type: key
       },
       sourceData: [],
-      configData: [],
+      // 这里要deepClone一下
+      optionsData: [],
     })
 
 }

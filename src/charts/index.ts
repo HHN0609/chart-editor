@@ -1,8 +1,8 @@
-import BarConfig from "@/charts/bar/config";
-import LineConfig from "@/charts/line/config";
-
 import BarDefaultData from "@/charts/bar/defaultSourceData";
 import LineDefaultData from "@/charts/line/defaultSourceData";
+
+import BarConfigTree from "@/charts/bar/config";
+import LineConfigTree from "@/charts/line/config";
 
 export const CHARTTYPES = [
     "Bar",
@@ -12,12 +12,12 @@ export const CHARTTYPES = [
     "Aera"
 ];
 
-export const CHARTCONFIGS = {
-    "Bar": BarConfig,
-    "Line": LineConfig
-};
-
 export const DEFAULTSOURCEDATA = {
     "Bar": BarDefaultData,
     "Line": LineDefaultData
-}
+};
+
+export const CONFIGTREES = {
+    "Bar": BarConfigTree,
+    "Line": LineConfigTree
+};

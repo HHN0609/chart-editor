@@ -47,7 +47,7 @@ export const clearAllCookies = () => {
     })
 }
 
-export function generateUUID(){
+export function generateUUID(): string{
     let d = new Date().getTime();
     let uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
         let r = (d + Math.random()*16)%16 | 0;
@@ -55,4 +55,68 @@ export function generateUUID(){
         return (c=='x' ? r : (r&0x7|0x8)).toString(16);
     });
     return uuid;
+}
+
+export function getSacleAndDimensions(data: object[]){
+    // 这里要注意对象属性的遍历是没顺序的
+    let scale = [];
+    let dimensions = [];
+    for(let [key, value] of Object.entries(data[0])){
+        console.log(key, value)
+        if(typeof value === "string"){
+            dimensions.push(key);
+        } else {
+            scale.push(key);
+        }
+    }
+    return {
+        scale,
+        dimensions
+    };
+}
+
+// 防抖函数
+export function debounce(fn: Function, delay: number): any{
+    let timer = Date.now();
+    let _this = this;
+    return function (...args: any[]) {
+        console.log(Date.now() - timer);
+        if(Date.now() - timer >= delay){
+            timer = Date.now();
+            fn.apply(_this, args);
+        }
+    }
+}
+
+// 节流函数
+export function throttle(func, wait) {
+    let previous = 0;
+    return function (...args) {
+        let now = Date.now();
+        let context = this;
+        if (now - previous > wait) {
+            func.apply(context, args);
+            previous = now;
+        }
+    }
+}
+
+export function _get(obj, dataIndex: string): any{
+    let indexArr = dataIndex.split(".");
+    if(indexArr[0] === "") return obj;
+    let p = obj;
+    for(let property of indexArr){
+        p = p[property];
+    }
+    return p;
+}
+
+export function _set(obj, dataIndex: string, newValue): any{
+    let indexArr = dataIndex.split(".");
+    let lastProperty = indexArr.pop();
+    let p = obj;
+    for(let property of indexArr){
+        p = obj[property];
+    }
+    p[lastProperty] = newValue;
 }

@@ -24,19 +24,19 @@ export default defineComponent({
                     if (item.content && item.content.length) {
                         children = generateSideVnodes(item.content);
                     }
-                    return h(Collapse, {} , () => h(CollapsePanel, { header: item.label }, () => children));
+                    return h(Collapse, { } , () => h(CollapsePanel, { header: item.label }, () => children));
                 } else if (item.type === "font") {
-                    return h(Font, { label: item.label, dataIndex: item.dataIndex, value: "" });
+                    return h(Font, { label: item.label, dataIndex: item.dataIndex,  });
                 } else if (item.type === "inputs") {
-                    return h(Inputs, { label: item.label, dataIndex: item.dataIndex, type: item.dataType, value: "" });
+                    return h(Inputs, { label: item.label, dataIndex: item.dataIndex, type: item.dataType,  });
                 } else if (item.type === "position") {
-                    return h(Position, { label: item.label, dataIndex: item.dataIndex, value: "" });
+                    return h(Position, { label: item.label, dataIndex: item.dataIndex,  });
                 } else if (item.type === "radio") {
-                    return h(Radio, { label: item.label, dataIndex: item.dataIndex, value: "", valueOptions: item.options });
+                    return h(Radio, { label: item.label, dataIndex: item.dataIndex, valueOptions: item.options });
                 } else if (item.type === "select") {
-                    return h(Select, { label: item.label, dataIndex: item.dataIndex, value: "", valueOptions: item.options })
+                    return h(Select, { label: item.label, dataIndex: item.dataIndex, valueOptions: item.options });
                 } else if (item.type === "switch") {
-                    return h(Switch, { label: item.label, dataIndex: item.dataIndex, value: true });
+                    return h(Switch, { label: item.label, dataIndex: item.dataIndex });
                 } else {
                     console.error("No such type!");
                 }
@@ -48,3 +48,9 @@ export default defineComponent({
     }
 })
 </script>
+
+<style lang="less" scoped>
+    .collapsePanel{
+        min-height: 40px;
+    }
+</style>

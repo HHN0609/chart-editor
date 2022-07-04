@@ -4,7 +4,7 @@ import { defineStore } from "pinia";
  * @property uid 图表对象的uid
  * @property basicData 图表的基本信息
  * @property sourceData 图表的数据源
- * @property configData 图表的样式配置信息
+ * @property optionsData 图表的样式配置信息（自定义），会转换成echart的options
  */
 type chartDataType = {
     uid: string,
@@ -18,7 +18,7 @@ type chartDataType = {
         type: "Bar" | "Line" | "Dot" | "Pie" | "Area"
     },
     sourceData: Array<any>,
-    configData: Array<any>
+    optionsData: any
 }
 
 
@@ -43,7 +43,6 @@ type stateType = {
     viewportColor: string,
     projectId: string,
     chartsDatas: chartDataType[],
-    chartInstance: any[]
 }
 
 // 保存当前工程的信息，从接口获取数据
@@ -72,10 +71,87 @@ export default defineStore("project", {
                         type: "Bar"
                     },
                     sourceData: [],
-                    configData: [],
+                    optionsData: {
+                        chartStyle: {
+                            orientation: "horizontal",
+                            isStack: true,
+                        },
+                        title: {
+                            show: true,
+                            text: "Bar",
+                            font: {
+                                color: "#FFFFFF",
+                                size: "10",
+                                family: "sans-serif",
+                            },
+                        },
+                        legend: {
+                            show: true,
+                            orient: "horizontal",
+                            font: {
+                                color: "#FFFFFF",
+                                size: "10",
+                                family: "sans-serif",
+                            },
+                        },
+                        xAxis: {
+                            show: true,
+                            // type: "category",
+                            lineType: "solid",
+                            lineColor: "#FFFFFF",
+                            lineWidth: 1,
+
+                            name: "",
+                            nameFont: {
+                                color: "#FFFFFF",
+                                size: "10",
+                                family: "sans-serif",
+                            },
+
+                            labelFont: {
+                                color: "#FFFFFF",
+                                size: "10",
+                                family: "sans-serif",
+                            },
+                        },
+                        yAxis: {
+                            show: true,
+                            // type: "value",
+                            lineType: "solid",
+                            lineColor: "#FFFFFF",
+                            lineWidth: 1,
+
+                            name: "",
+                            nameFont: {
+                                color: "#FFFFFF",
+                                size: "10",
+                                family: "sans-serif",
+                            },
+
+                            labelFont: {
+                                color: "#FFFFFF",
+                                size: "10",
+                                family: "sans-serif",
+                            },
+                        },
+                        grid: {
+                            show: false,
+                            borderColor: "#FFFFFF",
+                            borderWidth: 1,
+                            backgroundColor: "transparent"
+                        },
+                        seriseLabel: {
+                            show: true,
+                            position: "top",
+                            font: {
+                                color: "#FFFFFF",
+                                size: "10",
+                                family: "sans-serif",
+                            },
+                        }
+                    }
                 }
             ],
-            chartInstance: []
         }
     ),
     getters: {
@@ -99,6 +175,15 @@ export default defineStore("project", {
                 }
             }
             return maxIndex;
+        },
+        getchartsDataByUid: (state) => {
+            return (_uid: string) => {
+                for(let item of state.chartsDatas){
+                    if(item.uid === _uid){
+                        return item;
+                    }
+                }
+            };
         }
     },
     actions: {
