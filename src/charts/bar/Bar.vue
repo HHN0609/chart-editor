@@ -2,21 +2,20 @@
     <div class="container" ref="chartDom"></div>
 </template>
 <script setup lang="ts">
-import { nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
+import { onBeforeUnmount, onMounted, ref, watch } from "vue";
 import * as echarts from "echarts";
-import defaultSourceData from "./defaultSourceData";
 import BarTransform from "./barTransform";
 // customOptions会被转化为echart的option
-const props = defineProps(["data", "customOptions", "uid"]);
+const props = defineProps(["sourceData", "optionsData", "uid"]);
 let resizeObserver: ResizeObserver;
 let chart: echarts.ECharts;
 const chartDom = ref<HTMLElement>();
-let  option = BarTransform(props.customOptions, props.data || defaultSourceData);
+let  option = BarTransform(props.optionsData, props.sourceData);
 
-watch(props.customOptions, () => {
+watch([props.optionsData, props.sourceData], () => {
+  console.log("change");
   // 侧边栏的变化回触发对应的customOption的变化， config变化后重新生成options
-  // console.log("customOptions change!");
-  option = BarTransform(props.customOptions, props.data || defaultSourceData);
+  option = BarTransform(props.optionsData, props.sourceData);
   option && chart.setOption(option);
 });
 

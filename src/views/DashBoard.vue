@@ -37,7 +37,7 @@
             }"
           >
             <!-- 图表组件的入口 -->
-            <component :is="Bar" :uid="item.uid" :customOptions="item.optionsData"></component>
+            <component :is="CHARTS[item.basicData.type]" :uid="item.uid" :sourceData="item.sourceData" :optionsData="item.optionsData"></component>
           </div>
           <VueMoveable
             ref="moveable"
@@ -66,7 +66,7 @@
             <ChartConfigForm></ChartConfigForm>
           </TabPane>
           <TabPane key="2" tab="Data">
-            null
+            <CodeMirror></CodeMirror>
           </TabPane>
       </Tabs>
     </div>
@@ -91,7 +91,8 @@ import TopBotton from "@/components/rightSideForms/TopBotton.vue";
 import ProjectInfo from "@/stores/projectInfo"
 import ChartMenu from "@/components/leftSideForms/ChartMenu.vue";
 import SortList from "@/components/leftSideForms/SortList.vue";
-import Bar from "@/charts/bar/Bar.vue";
+import { CHARTS } from "@/charts/index";
+import CodeMirror from "@/components/CodeMirror.vue";
 const projectInfo = ProjectInfo();
 
 let tabActiveKey = ref("1");

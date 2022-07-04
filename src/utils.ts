@@ -120,3 +120,7 @@ export function _set(obj, dataIndex: string, newValue): any{
     }
     p[lastProperty] = newValue;
 }
+
+export function deepClone(obj): any {
+    
+}

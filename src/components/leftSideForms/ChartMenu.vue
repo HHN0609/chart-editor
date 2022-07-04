@@ -14,7 +14,7 @@
 <script lang="ts" setup>
 import { Menu, MenuItem, SubMenu } from "ant-design-vue";
 import { PlusCircleOutlined } from "@ant-design/icons-vue";
-import { CHARTTYPES } from "@/charts/index";
+import { CHARTTYPES, DEFAULTOPTIONSDATA, DEFAULTSOURCEDATA } from "@/charts/index";
 import ProjectInfo from "@/stores/projectInfo";
 import { generateUUID } from "@/utils";
 
@@ -32,13 +32,10 @@ const createNewChart = ({ key }) => {
         index: index,
         type: key
       },
-      sourceData: [],
-      // 这里要deepClone一下
-      optionsData: [],
+      sourceData: JSON.parse(JSON.stringify(DEFAULTSOURCEDATA[key])),
+      optionsData: JSON.parse(JSON.stringify(DEFAULTOPTIONSDATA[key])),
     })
-
-}
-
+};
 </script>
 
 <style lang="less" scoped>
