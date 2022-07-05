@@ -18,10 +18,10 @@ const store = userInfo(pinia);
 window.addEventListener("load", async () => {
   if (router.currentRoute.value.name === "Login") return;
   const _account = getCookie("account");
-  if(!_account){
+  if (!_account) {
     message.warn("Cookie is expired", 0.5).then(() => {
-      router.replace({name: "Login"});
-    })
+      router.replace({ name: "Login" });
+    });
     return;
   }
   let { account, name, is_admin } = (await getUserInfo("/user/info", _account)).data;

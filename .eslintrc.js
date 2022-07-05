@@ -13,13 +13,14 @@ module.exports = {
   },
   plugins: ["vue", "@typescript-eslint", "prettier"],
   rules: {
+    "vue/multi-word-component-names": "off",
     "vue/no-v-model-argument": "off",
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/ban-types": "off",
     "prettier/prettier": [
       "error",
       {
-        endOfLine: "ignore",
+        endOfLine: "auto",
       },
     ],
   },

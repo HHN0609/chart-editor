@@ -62,10 +62,13 @@
             <a-form-item
               label="Confirm"
               name="confirm"
-              :rules="[{
-                required: true,
-                validator: validatePassword,
-              }]">
+              :rules="[
+                {
+                  required: true,
+                  validator: validatePassword,
+                },
+              ]"
+            >
               <a-input-password v-model:value="formState.confirm">
                 <template #prefix>
                   <LockOutlined class="site-form-item-icon" />
@@ -106,29 +109,27 @@ const formState = reactive<FormState>({
 // 登录按钮点击后触发
 const submitForm = () => {
   // 向后端发送请求
-  postUserLogin("/user/login", formState.account, formState.password)
-    .then(({ data }) => {
-      message.success(data.message, 0.5).then(() => {
-        router.push({ name: "MyProject" });
-      });
+  postUserLogin("/user/login", formState.account, formState.password).then(({ data }) => {
+    message.success(data.message, 0.5).then(() => {
+      router.push({ name: "MyProject" });
     });
+  });
 };
 
-const validatePassword =async (_rule:Rule, value: string) => {
-  if(formState.password && formState.confirm !== formState.password){
+const validatePassword = async (_rule: Rule, value: string) => {
+  if (formState.password && formState.confirm !== formState.password) {
     return Promise.reject("Two passwords are not match!");
   } else {
     return Promise.resolve();
   }
-}
+};
 
 const submitRegister = () => {
-  postUserRegister("/user/info", formState.account, formState.name, formState.password)
-    .then(({ data }) => {
-      message.success(data.message, 0.5);
-      // 切换到登录框
-      activeKey.value = "1";
-    });
+  postUserRegister("/user/info", formState.account, formState.name, formState.password).then(({ data }) => {
+    message.success(data.message, 0.5);
+    // 切换到登录框
+    activeKey.value = "1";
+  });
 };
 </script>
 <style lang="less" scoped>

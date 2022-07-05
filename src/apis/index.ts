@@ -55,57 +55,57 @@ export const putUserInfo = (relativeUrl: string, account: string, username: stri
 };
 
 /**
-* get方法获取用的project信息
-* @param relativeUrl 请求相对于baseUrl的地址
-* @param account 用户账号
-* @returns Promise 
-*/
-export const getUserProjects = ( relativeUrl: string, account: string ): Promise<AxiosResponse<any, any>> => {
+ * get方法获取用的project信息
+ * @param relativeUrl 请求相对于baseUrl的地址
+ * @param account 用户账号
+ * @returns Promise
+ */
+export const getUserProjects = (relativeUrl: string, account: string): Promise<AxiosResponse<any, any>> => {
   return instance.get(relativeUrl, {
     params: {
       account,
-    }
+    },
   });
 };
 
 /**
-* post方法创建一个project
-* @param relativeUrl 请求相对于baseUrl的地址
-* @param account 用户账号
-* @param projectName 项目名称
-* @returns Promise 
-*/
+ * post方法创建一个project
+ * @param relativeUrl 请求相对于baseUrl的地址
+ * @param account 用户账号
+ * @param projectName 项目名称
+ * @returns Promise
+ */
 export const postUserProjects = (relativeUrl: string, account: string, initInfo: object) => {
   return instance.post(relativeUrl, {
     account,
-    ...initInfo
+    ...initInfo,
   });
 };
 
 /**
-* delete方法删除一个project
-* @param relativeUrl 请求相对于baseUrl的地址
-* @param projectId 项目id
-* @returns Promise
-*/
+ * delete方法删除一个project
+ * @param relativeUrl 请求相对于baseUrl的地址
+ * @param projectId 项目id
+ * @returns Promise
+ */
 export const deleteUserProjects = (relativeUrl: string, projectId: string, account: string) => {
   return instance.delete(relativeUrl, {
     params: {
       projectId,
       account,
-    }
+    },
   });
 };
 
 export const getAllUsersInfo = (relativeUrl: string) => {
   return instance.get(relativeUrl);
-}
+};
 
 export const deleteUserInfo = (relativeUrl: string, account: string) => {
   return instance.delete(relativeUrl, {
     params: {
       account,
-    }
+    },
   });
 };
 
@@ -120,8 +120,8 @@ export const getUserProjectsBasic = (relativeUrl: string, projectId: string) => 
   return instance.get(relativeUrl, {
     params: {
       projectId,
-    }
-  })
+    },
+  });
 };
 
 export const putUserProjectsBasic = (relativeUrl: string, projectId: string, width: number, height: number, initZoom: number, bgColor: string, viewportColor: string) => {
@@ -131,8 +131,8 @@ export const putUserProjectsBasic = (relativeUrl: string, projectId: string, wid
     height,
     initZoom,
     bgColor,
-    viewportColor
-  })
+    viewportColor,
+  });
 };
 
 export const postUserChartDetailInfo = (relativeUrl: string, projectId: string, chartId: string, chartDetail: any) => {
@@ -140,7 +140,7 @@ export const postUserChartDetailInfo = (relativeUrl: string, projectId: string, 
     projectId,
     chartId,
     chartDetail,
-  })
+  });
 };
 
 export const deleteUserChartDetailInfo = (relativeUrl: string, projectId: string, chartId: string) => {
@@ -148,22 +148,22 @@ export const deleteUserChartDetailInfo = (relativeUrl: string, projectId: string
     params: {
       projectId,
       chartId,
-    }
-  })
+    },
+  });
 };
 
 export const getUserChartDetailInfo = (relativeUrl: string, projectId: string) => {
   return instance.get(relativeUrl, {
     params: {
-      projectId
-    }
-  })
+      projectId,
+    },
+  });
 };
 
 export const putUserChartDetailInfo = (relativeUrl: string, projectId: string, chartId: string, chartDetail: any) => {
   return instance.put(relativeUrl, {
     chartId,
     projectId,
-    chartDetail
-  })
-}
+    chartDetail,
+  });
+};

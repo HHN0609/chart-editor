@@ -12,7 +12,6 @@ const ManagePage = () => import("@/components/ManagePage.vue");
 
 const router = createRouter({
   history: createWebHashHistory(),
-  
   routes: [
     {
       path: "/",
@@ -27,7 +26,7 @@ const router = createRouter({
           path: "",
           redirect: {
             name: "MyProject",
-          }
+          },
         },
         {
           name: "MyProject",
@@ -61,7 +60,7 @@ const router = createRouter({
         } else {
           return true;
         }
-      }
+      },
     },
     {
       name: "404",
@@ -69,11 +68,11 @@ const router = createRouter({
       component: NotFound,
     },
     {
-        path:"/:catchAll(.*)",
-        redirect:{
-            name:"404"
-        }
-    }
+      path: "/:catchAll(.*)",
+      redirect: {
+        name: "404",
+      },
+    },
   ],
 });
 

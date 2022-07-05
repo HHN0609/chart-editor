@@ -60,7 +60,7 @@ import userInfo from "@/stores/userInfo";
 import ChartCard from "@/components/ChartCard.vue";
 import { getCookie } from "@/utils";
 import { FormInstance, message } from "ant-design-vue";
-import ColorPicker from "./ColorPicker.vue";
+import ColorPicker from "@/components/rightSideForms/ColorPicker.vue";
 import router from "@/router";
 
 let spinning = ref<boolean>(true);

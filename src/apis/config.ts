@@ -26,8 +26,8 @@ export const needToken = (config: AxiosRequestConfig<any>): boolean => {
 
 instance.interceptors.request.use(
   (config) => {
-    let controller = new AbortController();
-    let signal = controller.signal;
+    const controller = new AbortController();
+    const signal = controller.signal;
     config.signal = signal;
     // 根据请求的类型判断需不需要token
     if (!needToken(config)) {

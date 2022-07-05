@@ -1,47 +1,32 @@
 <template>
   <div class="container">
-    <a-form
-      class="info_form"
-      :model="formState"
-      :labelCol="{ span: 8 }"
-      :wrapperCol="{ span: 16 }"
-      :validate-messages="validateMessages" 
-      @finish="onFinish"
-    >
-      <a-form-item
-        :name="['user', 'userName']"
-        label="Name"
-        :rules="[{ required: true }]"
-      >
+    <a-form class="info_form" :model="formState" :labelCol="{ span: 8 }" :wrapperCol="{ span: 16 }" :validate-messages="validateMessages" @finish="onFinish">
+      <a-form-item :name="['user', 'userName']" label="Name" :rules="[{ required: true }]">
         <a-input v-model:value="formState.user.userName" :maxlength="15" />
       </a-form-item>
 
-      <a-form-item
-        :name="['user', 'account']"
-        label="Account"
-      >
+      <a-form-item :name="['user', 'account']" label="Account">
         <a-input v-model:value="formState.user.account" disabled />
       </a-form-item>
 
-      <a-form-item
-        :name="['user', 'newPassword']"
-        label="New Password"
-      >
+      <a-form-item :name="['user', 'newPassword']" label="New Password">
         <a-input v-model:value="formState.user.newPassword" :maxlength="15" />
       </a-form-item>
 
       <a-form-item
         :name="['user', 'confirmPassword']"
         label="Confirm Password"
-        :rules="[{
-          required: formState.user.newPassword,
-          validator: validatePassword
-        }]"
+        :rules="[
+          {
+            required: formState.user.newPassword,
+            validator: validatePassword,
+          },
+        ]"
       >
         <a-input v-model:value="formState.user.confirmPassword" :maxlength="15" />
       </a-form-item>
 
-      <a-form-item :wrapper-col="{ span: 16 , offset: 8 }">
+      <a-form-item :wrapper-col="{ span: 16, offset: 8 }">
         <a-button type="primary" html-type="submit">Save</a-button>
       </a-form-item>
     </a-form>
@@ -72,46 +57,47 @@ const formState = reactive({
 
 // 两次密码一致性的验证
 const validatePassword = async (_rule: Rule, value: string) => {
-  if(formState.user.newPassword && value !== formState.user.newPassword){
+  if (formState.user.newPassword && value !== formState.user.newPassword) {
     return Promise.reject("newPassword and confirmPassword are not match!");
   } else {
     return Promise.resolve();
   }
-}
+};
 
 const onFinish = () => {
   // 调用修改用户信息的接口
-  putUserInfo("/user/info", store.account, formState.user.userName, formState.user.newPassword)
-    .then(async (value) => {
-      // 修改了密码要重新登陆
-      if (formState.user.newPassword) {
-        localStorage.removeItem("token");
-        clearAllCookies();
-        message.success(value.data.message, 0.5);
-        message.info("Please Login Again", 0.5).then(() => {
-          router.replace({ name: "Login" });
-        });
-        return;
-      }
-      let { account, name, is_admin } = (await getUserInfo("/user/info", store.account)).data;
-      store.$patch({
-        account: account,
-        userName: name,
-        isAdmin: is_admin,
+  putUserInfo("/user/info", store.account, formState.user.userName, formState.user.newPassword).then(async (value) => {
+    // 修改了密码要重新登陆
+    if (formState.user.newPassword) {
+      localStorage.removeItem("token");
+      clearAllCookies();
+      message.success(value.data.message, 0.5);
+      message.info("Please Login Again", 0.5).then(() => {
+        router.replace({ name: "Login" });
       });
+      return;
+    }
+    let { account, name, is_admin } = (await getUserInfo("/user/info", store.account)).data;
+    store.$patch({
+      account: account,
+      userName: name,
+      isAdmin: is_admin,
     });
+  });
 };
 
-watch(() => store.getAccount, ()=>{
-  formState.user.userName = store.getUserName;
-  formState.user.account = store.getAccount;
-});
+watch(
+  () => store.getAccount,
+  () => {
+    formState.user.userName = store.getUserName;
+    formState.user.account = store.getAccount;
+  }
+);
 
 onMounted(() => {
   formState.user.userName = store.getUserName;
   formState.user.account = store.getAccount;
 });
-
 </script>
 <style lang="less" scoped>
 .container {

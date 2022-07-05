@@ -1,11 +1,11 @@
 <template>
-      <Popconfirm placement="left" :showCancel="false">
-        <template #icon></template>
-        <template #okButton>
-          <Sketch :modelValue="modelValue" @update:modelValue="changeColor" @change="changeColor"/>
-        </template>
-        <div class="colorInput" :style="{ backgroundColor: modelValue.hex8 || modelValue }"></div>
-      </Popconfirm>
+  <Popconfirm placement="left" :showCancel="false">
+    <template #icon></template>
+    <template #okButton>
+      <Sketch :modelValue="modelValue" @update:modelValue="changeColor" @change="changeColor" />
+    </template>
+    <div class="colorInput" :style="{ backgroundColor: modelValue.hex8 || modelValue }"></div>
+  </Popconfirm>
 </template>
 
 <script lang="ts" setup>
@@ -18,12 +18,11 @@ const emit = defineEmits(["update:modelValue"]);
 const changeColor = (newColor: any) => {
   console.log("newColor: ", newColor);
   emit("update:modelValue", newColor.hex8);
-}
-
+};
 </script>
 
 <style scoped lang="less">
-.colorInput{
+.colorInput {
   width: 50px;
   height: 24px;
   padding: 4px;
