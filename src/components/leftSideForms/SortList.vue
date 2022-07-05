@@ -32,7 +32,7 @@
 </template>
 
 <script lang="ts" setup>
-import { createVNode, defineEmits, reactive, ref, watch } from "vue";
+import { createVNode, defineEmits, nextTick, reactive, ref, watch } from "vue";
 import { Modal } from "ant-design-vue";
 import { BuildOutlined, DeleteOutlined, ExclamationCircleOutlined } from "@ant-design/icons-vue"; 
 import draggable from "vuedraggable";
@@ -124,18 +124,23 @@ const showConfirm = (_uid: string) => {
 };
 
 const deleteChart = (_uid: string) => {
+    console.log("delete: ", _uid);
     // 删除操作
-    let deleteIndex = projectInfo.chartsDatas.findIndex(({uid}) => {
-        return uid === _uid;
-    });
-    projectInfo.chartsDatas.splice(deleteIndex, 1);
     
+    let newArr = projectInfo.chartsDatas.filter(({uid}) => {
+      return uid !== _uid
+    });
+    projectInfo.chartsDatas.splice(0);
+    nextTick(() => {
+      projectInfo.chartsDatas.push(...newArr);
+    })
+
     // 给每个chartsData重新设置index
     const chartNums = projectInfo.chartsDatas.length;
     projectInfo.chartsDatas.forEach(({uid, basicData }) => {
         let indexInList = list.value.findIndex((item) => {
           return item.uid === uid;
-        });
+        }); 
         basicData.index = chartNums-1-indexInList;
     });
     projectInfo.currChartIndex = 0;

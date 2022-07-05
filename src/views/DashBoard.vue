@@ -28,7 +28,7 @@
             v-for="(item, index) in projectInfo.chartsDatas"
             :data-uid="item.uid"
             :class="`target_${index}`"
-            :key="`target_${index}`"
+            
             :style="{
               width: `${item.basicData.width}px`,
               height: `${item.basicData.height}px`,
