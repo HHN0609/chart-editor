@@ -75,12 +75,12 @@
 <script lang="ts" setup>
 import { Tabs, TabPane } from "ant-design-vue";
 import { ReloadOutlined } from "@ant-design/icons-vue";
-import { nextTick, onBeforeUnmount, onMounted, reactive, Ref, ref, watch, onBeforeMount } from "vue";
+import { nextTick, onBeforeUnmount, onMounted, reactive, Ref, ref, watch, onBeforeMount, onUnmounted } from "vue";
 import InfiniteViewer , { InfiniteViewerOptions, OnPinch, OnDrag, OnScroll } from "infinite-viewer";
 import { VueInfiniteViewer } from "vue3-infinite-viewer";
 import VueMoveable, { MoveableOptions, OnDragEnd, OnResize, OnResizeEnd, OnRotate, OnRotateEnd } from "vue3-moveable";
 import ChartConfigForm from "@/components/rightSideForms/ChartConfigForm.vue";
-import { getUserProjectsBasic } from "@/apis";
+import { getUserChartDetailInfo, getUserProjectsBasic } from "@/apis";
 import { destructTransform, getTargetIndex } from "@/utils";
 import Guides from "@scena/guides";
 import router from "@/router";
@@ -100,7 +100,6 @@ let guideHorizontal: Ref<Guides> = useGuide(".guide.horizontal", "horizontal");
 let guideVertical: Ref<Guides> = useGuide(".guide.vertical", "vertical");
 let Viewer = ref();
 let infiniteViewer: InfiniteViewer;
-let projectId = "";
 let moveable = ref<VueMoveable>();
 
 useDragGetso(".viewer", (e: OnDrag) => {
@@ -231,14 +230,13 @@ function onRotateEnd({lastEvent}: OnRotateEnd){
 // 获取数据
 onBeforeMount(() => {
   // 获取project的信息
-  projectId = router.currentRoute.value.params.projectId as string;
-  getUserProjectsBasic("/user/projectsBasic", projectId)
+  getUserProjectsBasic("/user/projectsBasic", router.currentRoute.value.params.projectId as string)
     .then(({ data }) => {
       projectInfo.$patch({
         width: data.message.width,
         height: data.message.height,
         initZoom: data.message.init_zoom,
-        projectId: data.message.project_Id,
+        projectId: data.message.project_id,
         bgColor: data.message.bg_color,
         viewportColor: data.message.viewport_color
       });
@@ -248,6 +246,16 @@ onBeforeMount(() => {
         guideHorizontal.value.setState({scrollPos: infiniteViewer.getScrollLeft()});
         guideVertical.value.setState({scrollPos: infiniteViewer.getScrollTop()});
       })
+    }).then(() => {
+      getUserChartDetailInfo("/user/chartDetailInfo", projectInfo.projectId)
+        .then(({data}) => {
+          if (data.message && data.message.length) {
+            let arr = data.message.map(({chart_detail}) => {
+              return JSON.parse(chart_detail);
+            })
+            projectInfo.chartsDatas.push(...arr);
+          }
+        })
     });
 });
 
@@ -287,6 +295,10 @@ watch(() => projectInfo.chartsDatas.length, (newLength) => {
 
 onBeforeUnmount(() => {
   // 这里要记录一些图表的数据，回传给服务端
+});
+
+onUnmounted(() => {
+  projectInfo.$reset();
 });
 
 function tipFormatter (value: number) {

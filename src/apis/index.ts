@@ -88,10 +88,11 @@ export const postUserProjects = (relativeUrl: string, account: string, initInfo:
 * @param projectId 项目id
 * @returns Promise
 */
-export const deleteUserProjects = (relativeUrl: string, projectId: string) => {
+export const deleteUserProjects = (relativeUrl: string, projectId: string, account: string) => {
   return instance.delete(relativeUrl, {
     params: {
       projectId,
+      account,
     }
   });
 };
@@ -121,4 +122,29 @@ export const getUserProjectsBasic = (relativeUrl: string, projectId: string) => 
       projectId,
     }
   })
-}
+};
+
+export const postUserChartDetailInfo = (relativeUrl: string, projectId: string, chartId: string, chartDetail: any) => {
+  return instance.post(relativeUrl, {
+    projectId,
+    chartId,
+    chartDetail,
+  })
+};
+
+export const deleteUserChartDetailInfo = (relativeUrl: string, projectId: string, chartId: string) => {
+  return instance.delete(relativeUrl, {
+    params: {
+      projectId,
+      chartId,
+    }
+  })
+};
+
+export const getUserChartDetailInfo = (relativeUrl: string, projectId: string) => {
+  return instance.get(relativeUrl, {
+    params: {
+      projectId
+    }
+  })
+};

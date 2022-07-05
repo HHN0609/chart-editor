@@ -35,7 +35,6 @@ app.use((req, res, next) => {
       res.status(401)
         .clearCookie("account")
         .clearCookie("username")
-        // .clearCookie("isAdmin")
         .send({message: "Token Invalid!"});
     } else {
       next();
@@ -224,17 +223,36 @@ app.route("/api/user/projects")
   })
   .delete((req, res) => {
     const { query } = req;
-    const { projectId } = query;
-    connection.query(`delete from project_info where project_id='${projectId}'`, (error ,results) => {
-      if (error) {
+    const { projectId, account } = query;
+    let sqlArr = [
+      `delete from project_basic where project_id='${projectId}'`,
+      `delete from project_info where project_id='${projectId}' and owner='${account}'`,
+      `delete from chart_detail_info where project_id='${projectId}'`
+    ];
+    connection.beginTransaction((err) => {
+      if(err) return;
+      let tasks = sqlArr.map((value) => {
+        return new Promise((resolve, reject) => {
+          connection.query(value, (error, results) => {
+            if (error) {
+              reject(error);
+            } else {
+              resolve(results);
+            }
+          })
+        })
+      });
+      Promise.all(tasks).then(() => {
+        connection.commit();
+        res.status(200).send({
+          message: "Delete Successfully",
+        });
+      }).catch(() => {
+        connection.rollback();
         res.status(500).send({
           message: "Mysql Error",
         });
-      } else {
-        res.status(200).send({
-          message: "Delete Successfully",
-        })
-      }
+      });
     });
   })
   .put((req, res) => {
@@ -266,6 +284,59 @@ app.route("/api/user/projectsBasic")
       }
     })
   })
+
+/**
+ * 对project里的chart的操作
+ */
+app.route("/api/user/chartDetailInfo")
+  .get((req, res) => {
+    let {projectId,} = req.query;
+    connection.query(`select * from chart_detail_info where project_id='${projectId}'`, (err, results) => {
+      if (err) {
+        res.status(500).send({
+          message: "Mysql Error",
+        })
+      } else {
+        res.status(200).send({
+          message: results,
+        })
+      }
+    });
+  })
+  .delete((req, res) => {
+    let {projectId, chartId} = req.query;
+    connection.query(`delete from chart_detail_info where project_id='${projectId}' and chart_id='${chartId}'`, (err, results) => {
+      if (err) {
+        res.status(500).send({
+          message: "Mysql Error",
+        })
+      } else {
+        res.status(200).send({
+          message: "Delete Successfully",
+        })
+      }
+    });
+  })
+  .post((req, res) => {
+    let { body } = req;
+    console.log(body);
+    connection.query(`insert into chart_detail_info values('${body.projectId}', '${body.chartId}', '${body.chartDetail}')`, (err, results) => {
+      if (err) {
+        console.log(err);
+        res.status(500).send({
+          message: "Mysql Error",
+        });
+      } else {
+        res.status(200).send({
+          message: "Create Successfully",
+        })
+      }
+    });
+  });
+
+
+
+
 /**
 * 用户的对自己信息的接口
 * 1.查询自己信息

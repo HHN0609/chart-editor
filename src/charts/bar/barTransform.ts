@@ -123,7 +123,7 @@ export default function BarTransform (customOption: any, data: any[]) :echarts.E
         if (customOption.chartStyle.isStack) {
             return Object.assign({type: "bar", stack: "total"}, labelOptions);
         } else {
-            console.log(customOption.chartStyle.isStack);
+            // console.log(customOption.chartStyle.isStack);
             return Object.assign({type: "bar", stack: ""}, labelOptions);
         }
     });

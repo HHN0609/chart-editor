@@ -51,7 +51,7 @@
   </a-modal>
 </template>
 <script lang="ts" setup>
-import { onMounted, reactive, ref } from "vue";
+import { onMounted, onUnmounted, reactive, ref } from "vue";
 import { deleteUserProjects, getUserProjects, postUserProjects } from "@/apis/index";
 import userInfo from "@/stores/userInfo";
 import ChartCard from "@/components/ChartCard.vue";
@@ -59,6 +59,7 @@ import { getCookie } from "@/utils";
 import { FormInstance, message } from "ant-design-vue";
 import ColorPicker from "./ColorPicker.vue";
 import router from "@/router";
+import { onBeforeRouteLeave } from "vue-router";
 
 const modalForm = ref<FormInstance>();
 const store = userInfo();
@@ -81,8 +82,8 @@ const goDashboard = (project_Id: string) => {
   router.push({name: "DashBoard", params:{projectId: project_Id}});
 }
 
-const deleteProject = (project_id: string) => {
-  deleteUserProjects("/user/projects", project_id)
+const deleteProject = (project_id: string, ) => {
+  deleteUserProjects("/user/projects", project_id, store.account)
     .then(({ data }) => {
       message.success(data.message, 1);
       getProjectsData();

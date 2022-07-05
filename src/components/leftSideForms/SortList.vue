@@ -37,7 +37,8 @@ import { Modal } from "ant-design-vue";
 import { BuildOutlined, DeleteOutlined, ExclamationCircleOutlined } from "@ant-design/icons-vue"; 
 import draggable from "vuedraggable";
 import ProjectInfo from "@/stores/projectInfo";
-const emitter = defineEmits(["delete", "create"]);
+import { deleteUserChartDetailInfo } from "@/apis";
+// const emitter = defineEmits(["delete", "create"]);
 
 const projectInfo = ProjectInfo();
 const dragOptions = reactive({
@@ -58,11 +59,15 @@ const list = ref(projectInfo.chartsDatas
 
 // 监听数组长度，新增一个卡片,默认新增的图表位于最上层，所以新增的卡片在第一个位置
 watch(() => projectInfo.chartsDatas.length, (newLength, oldLength) => {
+  
   if (newLength > oldLength) {
-    emitter("create");
-    list.value.unshift({ uid: projectInfo.chartsDatas[newLength-1].uid, index: projectInfo.chartsDatas[newLength-1].basicData.index});
+    // emitter("create");
+    for(let i=newLength-oldLength; i>=1; i--){
+      list.value.unshift({ uid: projectInfo.chartsDatas[newLength-i].uid, index: projectInfo.chartsDatas[newLength-i].basicData.index});  
+    }
+    
   } else if (newLength < oldLength) {
-    emitter("delete");
+    // emitter("delete");
     list.value = projectInfo.chartsDatas.map(({uid, basicData}) => {
       return { uid, index: basicData.index };
     })
@@ -107,7 +112,13 @@ const showConfirm = (_uid: string) => {
     icon: createVNode(ExclamationCircleOutlined),
     content: createVNode('div', { style: 'color:red;'}, "Can't restore after deletion!"),
     onOk() {
-        deleteChart(_uid);
+        return new Promise((resolve, reject) => {
+          deleteUserChartDetailInfo("/user/chartDetailInfo", projectInfo.projectId, _uid)
+            .then(() => {
+              deleteChart(_uid);
+              resolve("");
+            })
+        });
     }
     });
 };

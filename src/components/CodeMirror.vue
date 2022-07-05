@@ -30,6 +30,7 @@ export default {
         else code.value = JSON.stringify(projectInfo.currChartData.sourceData, (key, value) => {return value}, 2);
     });
     const onSave = () => {
+        if(!code.value) return;
         try {
             let newValue = JSON.parse(code.value);
             projectInfo.currChartData.sourceData.splice(0);

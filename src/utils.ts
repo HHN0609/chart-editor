@@ -62,7 +62,7 @@ export function getSacleAndDimensions(data: object[]){
     let scale = [];
     let dimensions = [];
     for(let [key, value] of Object.entries(data[0])){
-        console.log(key, value)
+        // console.log(key, value)
         if(typeof value === "string"){
             dimensions.push(key);
         } else {
