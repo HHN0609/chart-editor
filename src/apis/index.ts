@@ -124,6 +124,17 @@ export const getUserProjectsBasic = (relativeUrl: string, projectId: string) => 
   })
 };
 
+export const putUserProjectsBasic = (relativeUrl: string, projectId: string, width: number, height: number, initZoom: number, bgColor: string, viewportColor: string) => {
+  return instance.put(relativeUrl, {
+    projectId,
+    width,
+    height,
+    initZoom,
+    bgColor,
+    viewportColor
+  })
+};
+
 export const postUserChartDetailInfo = (relativeUrl: string, projectId: string, chartId: string, chartDetail: any) => {
   return instance.post(relativeUrl, {
     projectId,
@@ -148,3 +159,11 @@ export const getUserChartDetailInfo = (relativeUrl: string, projectId: string) =
     }
   })
 };
+
+export const putUserChartDetailInfo = (relativeUrl: string, projectId: string, chartId: string, chartDetail: any) => {
+  return instance.put(relativeUrl, {
+    chartId,
+    projectId,
+    chartDetail
+  })
+}

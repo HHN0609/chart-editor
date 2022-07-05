@@ -226,8 +226,8 @@ app.route("/api/user/projects")
     const { projectId, account } = query;
     let sqlArr = [
       `delete from project_basic where project_id='${projectId}'`,
+      `delete from chart_detail_info where project_id='${projectId}'`,
       `delete from project_info where project_id='${projectId}' and owner='${account}'`,
-      `delete from chart_detail_info where project_id='${projectId}'`
     ];
     connection.beginTransaction((err) => {
       if(err) return;
@@ -284,6 +284,21 @@ app.route("/api/user/projectsBasic")
       }
     })
   })
+  .put((req, res) => {
+    let {body} = req;
+    connection.query(`update project_basic set width=${body.width}, height=${body.height}, init_zoom=${body.initZoom}, bg_color='${body.bgColor}', viewport_color='${body.viewportColor}' where project_id='${body.projectId}'`, (err) => {
+      if (err) {
+        console.log(err);
+        res.status(500).send({
+          message: "Mysql Error",
+        })
+      } else {
+        res.status(200).send({
+          message: "Update Successfully",
+        })
+      }
+    })
+  })
 
 /**
  * 对project里的chart的操作
@@ -319,7 +334,6 @@ app.route("/api/user/chartDetailInfo")
   })
   .post((req, res) => {
     let { body } = req;
-    console.log(body);
     connection.query(`insert into chart_detail_info values('${body.projectId}', '${body.chartId}', '${body.chartDetail}')`, (err, results) => {
       if (err) {
         console.log(err);
@@ -329,6 +343,21 @@ app.route("/api/user/chartDetailInfo")
       } else {
         res.status(200).send({
           message: "Create Successfully",
+        })
+      }
+    });
+  })
+  .put((req, res) => {
+    let {body} = req;
+    connection.query(`update chart_detail_info set chart_detail='${body.chartDetail}' where chart_id='${body.chartId}' and project_id='${body.projectId}'`, (err, results) => {
+      if (err) {
+        console.log(err);
+        res.status(500).send({
+          message: "Mysql Error",
+        });
+      } else {
+        res.status(200).send({
+          message: "Update Successfully",
         })
       }
     });

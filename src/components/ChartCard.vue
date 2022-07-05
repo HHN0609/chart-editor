@@ -10,22 +10,15 @@
         </div>
         <div class="overLayout" v-if="showOverLayout">
             <a-button type="primary" @click="goDashBoard">Edit</a-button>
-            <a-button type="danger" @click="showModal = true">Delete</a-button>
+            <a-button type="danger" @click="showDeleteConfirm">Delete</a-button>
         </div>
-        <a-modal
-            v-model:visible="showModal"
-            title="Confirm deletion?"
-            ok-text="Confirm"
-            cancel-text="Cancel"
-            @ok="deleteChart"
-            @cancel="showModal = false"
-        >
-            <span>This operation can not be restored after deletion!</span>
-        </a-modal>
     </div>
 </template>
 <script lang="ts" setup>
+import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
 import { computed, ref } from '@vue/reactivity';
+import { Modal } from 'ant-design-vue';
+import { createVNode } from 'vue';
 
 type cardDataType = {
     project_id: number,
@@ -44,10 +37,19 @@ const create_time = computed(() => {
 });
 const showOverLayout = ref<Boolean>(false);
 const showModal = ref<Boolean>(false);
-const deleteChart = () => {
-    // 发出一个时间，父组件来删
-    emitter("delete-project", props.data.project_id);
-    showModal.value = false;
+
+ const showDeleteConfirm = () => {
+    Modal.confirm({
+        title: 'Are you sure delete this project?',
+        icon: createVNode(ExclamationCircleOutlined),
+        content: 'This operation can not be restored !',
+        okText: 'Yes',
+        okType: 'danger',
+        cancelText: 'No',
+        onOk() {
+            emitter("delete-project", props.data.project_id);
+        }
+    });
 };
 const goDashBoard = () => {
     //会把project_id发过去

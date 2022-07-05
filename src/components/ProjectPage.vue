@@ -1,4 +1,5 @@
 <template>
+<Spin size="large" :spinning="spinning" tip="Loading……" :delay="1000">
   <div class="container" >
     <header class="header">
       <a-button type="primary" style="background-color:green; border: green 1px solid;" @click="modalVisible = true">Create Project</a-button>
@@ -19,6 +20,7 @@
       </ChartCard>
     </main>
   </div>
+</Spin>
   <a-modal v-model:visible="modalVisible" title="Create project" :footer="null" @cancel="closeModal">
     <a-form
       ref="modalForm"
@@ -51,7 +53,8 @@
   </a-modal>
 </template>
 <script lang="ts" setup>
-import { onMounted, onUnmounted, reactive, ref } from "vue";
+import { Spin } from "ant-design-vue"; 
+import { onMounted, reactive, ref } from "vue";
 import { deleteUserProjects, getUserProjects, postUserProjects } from "@/apis/index";
 import userInfo from "@/stores/userInfo";
 import ChartCard from "@/components/ChartCard.vue";
@@ -59,8 +62,8 @@ import { getCookie } from "@/utils";
 import { FormInstance, message } from "ant-design-vue";
 import ColorPicker from "./ColorPicker.vue";
 import router from "@/router";
-import { onBeforeRouteLeave } from "vue-router";
 
+let spinning = ref<boolean>(true);
 const modalForm = ref<FormInstance>();
 const store = userInfo();
 const searchInput = ref<string>("");
@@ -112,6 +115,7 @@ function getProjectsData() {
   getUserProjects("/user/projects", store.account || getCookie("account")).then(({ data }) => {
     projectInfoArr.splice(0);
     projectInfoArr.push(...data);
+    spinning.value = false;
   })
 }
 </script>

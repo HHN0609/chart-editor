@@ -1,5 +1,6 @@
 <template>
-  <div class="mainbox">
+<Spin size="large" :spinning="spinning" tip="Loading……" >
+   <div class="mainbox">
     <div class="left">
       <ChartMenu></ChartMenu>
       <SortList/>
@@ -71,11 +72,12 @@
       </Tabs>
     </div>
   </div>
+</Spin>
 </template>
 <script lang="ts" setup>
-import { Tabs, TabPane } from "ant-design-vue";
+import { Tabs, TabPane, Spin } from "ant-design-vue";
 import { ReloadOutlined } from "@ant-design/icons-vue";
-import { nextTick, onBeforeUnmount, onMounted, reactive, Ref, ref, watch, onBeforeMount, onUnmounted } from "vue";
+import { nextTick, onMounted, reactive, Ref, ref, watch, onBeforeMount, onUnmounted } from "vue";
 import InfiniteViewer , { InfiniteViewerOptions, OnPinch, OnDrag, OnScroll } from "infinite-viewer";
 import { VueInfiniteViewer } from "vue3-infinite-viewer";
 import VueMoveable, { MoveableOptions, OnDragEnd, OnResize, OnResizeEnd, OnRotate, OnRotateEnd } from "vue3-moveable";
@@ -95,6 +97,7 @@ import { CHARTS } from "@/charts/index";
 import CodeMirror from "@/components/CodeMirror.vue";
 const projectInfo = ProjectInfo();
 
+let spinning = ref<boolean>(true)
 let tabActiveKey = ref("1");
 let guideHorizontal: Ref<Guides> = useGuide(".guide.horizontal", "horizontal");
 let guideVertical: Ref<Guides> = useGuide(".guide.vertical", "vertical");
@@ -255,6 +258,7 @@ onBeforeMount(() => {
             })
             projectInfo.chartsDatas.push(...arr);
           }
+          spinning.value = false;
         })
     });
 });
@@ -293,10 +297,6 @@ watch(() => projectInfo.chartsDatas.length, (newLength) => {
   moveableOptions.elementGuidelines = newArr;
 });
 
-onBeforeUnmount(() => {
-  // 这里要记录一些图表的数据，回传给服务端
-});
-
 onUnmounted(() => {
   projectInfo.$reset();
 });
@@ -304,6 +304,7 @@ onUnmounted(() => {
 function tipFormatter (value: number) {
   return `${value}%`;
 };
+
 </script>
 
 <style lang="less" scoped>

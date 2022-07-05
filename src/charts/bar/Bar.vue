@@ -5,14 +5,14 @@
 import { onBeforeUnmount, onMounted, ref, watch } from "vue";
 import * as echarts from "echarts";
 import BarTransform from "./barTransform";
-import ProjectInfo from "@/stores/projectInfo";
+// import ProjectInfo from "@/stores/projectInfo";
 // customOptions会被转化为echart的option
 const props = defineProps(["sourceData", "optionsData", "uid"]);
 let resizeObserver: ResizeObserver;
 let chart: echarts.ECharts;
 const chartDom = ref<HTMLElement>();
 let  option = BarTransform(props.optionsData, props.sourceData);
-const projectInfo = ProjectInfo();
+// const projectInfo = ProjectInfo();
 watch([props.optionsData, props.sourceData], () => {
   // 侧边栏的变化回触发对应的customOption的变化， config变化后重新生成options
   option = BarTransform(props.optionsData, props.sourceData);
