@@ -23,7 +23,7 @@
 </template>
 <script lang="ts" setup>
 import { SaveOutlined, FileImageOutlined, ExportOutlined, FundProjectionScreenOutlined, LoadingOutlined } from "@ant-design/icons-vue";
-import { onMounted, ref } from "vue";
+import { onBeforeUnmount, onMounted, ref } from "vue";
 import ProjectInfo from "@/stores/projectInfo";
 import { putUserChartDetailInfo, putUserProjectsBasic } from "@/apis";
 import { message } from "ant-design-vue";
@@ -52,14 +52,17 @@ const onExit = () => {
         router.replace({name: "MyProject"});
     }
 };
-
+const saveHandle = (e: KeyboardEvent) => {
+    if(e.ctrlKey && e.key === "s"){
+        e.preventDefault();
+        onSave(); 
+    } 
+};
 onMounted(() => {
-    window.addEventListener("keydown", (e: KeyboardEvent) => {
-        if(e.ctrlKey && e.key === "s"){
-            e.preventDefault();
-            onSave(); 
-        } 
-    });
+    window.addEventListener("keydown", saveHandle);
+})
+onBeforeUnmount(() => {
+    window.removeEventListener("keydown", saveHandle);
 })
 </script>
 <style lang="less" scoped>
@@ -67,7 +70,7 @@ onMounted(() => {
     width: 100%;
     height: 50px;
     display: flex;
-    background-color:gainsboro;
+    background-color:rgb(255, 255, 255);
     justify-content: space-evenly;
     align-items: center;
     border-bottom: black 1px solid;
@@ -85,6 +88,7 @@ onMounted(() => {
         }
         &:hover{
             color: #1890ff;
+            font-size: larger;
         }
     }
 }

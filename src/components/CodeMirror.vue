@@ -1,5 +1,5 @@
 <template>
-<div>
+<div class="codemirrorContainer">
     <Codemirror
       v-model:value.lazy="code"
       :options="cmOptions"
@@ -73,3 +73,9 @@ export default {
   },
 };
 </script>
+<style lang="less" scoped>
+.codemirrorContainer{
+  box-sizing: border-box;
+  padding: 0 2px;
+}
+</style>

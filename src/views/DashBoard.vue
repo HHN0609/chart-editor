@@ -1,6 +1,6 @@
 <template>
 <Spin size="large" :spinning="spinning" tip="Loading……" >
-   <div class="mainbox">
+   <div class="dashBoardContainer">
     <div class="left">
       <ChartMenu></ChartMenu>
       <SortList/>
@@ -62,14 +62,17 @@
     </div>
     <div class="right">
       <TopBotton style="position:sticky; top: 0px; z-index: 10;"></TopBotton>
-      <Tabs v-model:activeKey="tabActiveKey" animated class="tabs">
-          <TabPane key="1" tab="Config">
-            <ChartConfigForm></ChartConfigForm>
-          </TabPane>
-          <TabPane key="2" tab="Data">
-            <CodeMirror></CodeMirror>
-          </TabPane>
-      </Tabs>
+      <div  class="tabs">
+        <Tabs v-model:activeKey="tabActiveKey" animated>
+            <TabPane key="1" tab="Config">
+              <ChartConfigForm></ChartConfigForm>
+            </TabPane>
+            <TabPane key="2" tab="Data">
+              <CodeMirror></CodeMirror>
+            </TabPane>
+        </Tabs>
+      </div>
+      
     </div>
   </div>
 </Spin>
@@ -307,14 +310,14 @@ function tipFormatter (value: number) {
 
 </script>
 
-<style lang="less" scoped>
-  .mainbox {
+<style lang="less">
+  .dashBoardContainer {
     width: 100%;
     min-height: 100%;
     display: flex;
     justify-content: center;
     > .left {
-      background: gainsboro;
+      background: rgb(255, 255, 255);
       width: 200px;
       flex-basis: 200px;
       height: 100vh;
@@ -322,17 +325,41 @@ function tipFormatter (value: number) {
       overflow-y: auto;
     }
     > .right{
-      background-color: gainsboro;
+      background-color: rgb(255, 255, 255);
       width: 300px;
       flex-basis: 300px;
       height: 100vh;
       overflow-x: hidden;
       overflow-y: auto;
-    }
-    > .tabs {
-      [role="tablist"] {
-        display: flex;
-        justify-content: center !important;;
+      > .tabs {
+        >.ant-tabs.ant-tabs-top {
+          >.ant-tabs-nav{
+            margin: 0;
+            >.ant-tabs-nav-wrap{
+              >.ant-tabs-nav-list{
+                justify-content: center;
+                >.ant-tabs-tab{
+                  width: 80px;
+                  display: flex;
+                  justify-content: center;
+                  margin: 0px;
+                }
+              }
+            }
+          }
+          >.ant-tabs-content-holder{
+            .container{
+              >.ant-collapse.ant-collapse-icon-position-left{
+                >.ant-collapse-item{
+                  >.ant-collapse-header{
+                    padding-top: 8px;
+                    padding-bottom: 8px;
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     }
     > .editorbox {
@@ -384,7 +411,7 @@ function tipFormatter (value: number) {
         width: 100%;
         height: 30px;
         padding: 0 20px;
-        background-color: gainsboro;
+        background-color: rgb(255, 255, 255);
         position: absolute;
         bottom: 0px;
         border-left: black 2px solid;

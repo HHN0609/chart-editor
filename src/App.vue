@@ -33,7 +33,7 @@ window.addEventListener("load", async () => {
 });
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 .app-root {
   width: 100vw;
   height: 100vh;
