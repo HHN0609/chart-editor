@@ -68,6 +68,12 @@ const router = createRouter({
       path: "/404",
       component: NotFound,
     },
+    {
+        path:"/:catchAll(.*)",
+        redirect:{
+            name:"404"
+        }
+    }
   ],
 });
 
