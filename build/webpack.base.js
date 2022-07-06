@@ -1,5 +1,3 @@
-/* eslint-disable no-undef */
-/* eslint-disable @typescript-eslint/no-var-requires */
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { VueLoaderPlugin } = require("vue-loader");
@@ -18,7 +16,7 @@ module.exports = {
           options: {
             cacheDirectory: true,
           },
-        },
+        }
       },
       {
         test: /\.vue$/,
@@ -32,7 +30,7 @@ module.exports = {
         },
       },
       {
-        test: /\.(eot|svg|ttf|woff2?|)$/,
+        test: /\.(eot|ttf|woff2?|)$/,
         type: "asset/resource",
         generator: {
           filename: "fonts/[name]-[hash][ext]",

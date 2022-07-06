@@ -2,8 +2,8 @@
 <Spin size="large" :spinning="spinning" tip="Loading……" :delay="1000">
   <div class="container" >
     <header class="header">
-      <a-button type="primary" style="background-color:green; border: green 1px solid;" @click="modalVisible = true">Create Project</a-button>
-      <a-input-search
+      <Button type="primary" style="background-color:green; border: green 1px solid;" @click="modalVisible = true">Create Project</Button>
+      <InputSearch
         v-model:value="searchInput"
         placeholder="input search text"
         style="width: 200px"
@@ -21,8 +21,8 @@
     </main>
   </div>
 </Spin>
-  <a-modal v-model:visible="modalVisible" title="Create project" :footer="null" @cancel="closeModal">
-    <a-form
+  <Modal v-model:visible="modalVisible" title="Create project" :footer="null" @cancel="closeModal">
+    <Form
       ref="modalForm"
       class="modalForm"
       :label-col="{span: 10}"
@@ -30,30 +30,30 @@
       :model="newProjectState"
       @finish="createProject"
     >
-      <a-form-item label="Name" name="name" required >
-        <a-input type="text" v-model:value="newProjectState.name" :maxlength="15"/>
-      </a-form-item>
-      <a-form-item label="Width" name="width" required>
-        <a-input type="number" v-model:value="newProjectState.width" suffix="px"/>
-      </a-form-item>
-      <a-form-item label="Height" name="height" required>
-        <a-input type="number" v-model:value="newProjectState.height" suffix="px"/>
-      </a-form-item>
-      <a-form-item label="Background color" name="bgColor" required>
+      <FormItem label="Name" name="name" required >
+        <Input type="text" v-model:value="newProjectState.name" :maxlength="15"/>
+      </FormItem>
+      <FormItem label="Width" name="width" required>
+        <Input type="number" v-model:value="newProjectState.width" suffix="px"/>
+      </FormItem>
+      <FormItem label="Height" name="height" required>
+        <Input type="number" v-model:value="newProjectState.height" suffix="px"/>
+      </FormItem>
+      <FormItem label="Background color" name="bgColor" required>
         <ColorPicker v-model="newProjectState.bgColor"></ColorPicker>
-      </a-form-item>
-      <a-form-item label="Viewport color" name="viewportColor" required>
+      </FormItem>
+      <FormItem label="Viewport color" name="viewportColor" required>
         <ColorPicker v-model="newProjectState.viewportColor"></ColorPicker>
-      </a-form-item>
-      <a-form-item class="buttonItem" :wrapper-col="{span: 12}">
-        <a-button type="primary" html-type="submit">Create</a-button>
-        <a-button style="margin-left: 10px" @click="closeModal">Cancel</a-button>
-      </a-form-item>
-    </a-form>
-  </a-modal>
+      </FormItem>
+      <FormItem class="buttonItem" :wrapper-col="{span: 12}">
+        <Button type="primary" html-type="submit">Create</Button>
+        <Button style="margin-left: 10px" @click="closeModal">Cancel</Button>
+      </FormItem>
+    </Form>
+  </Modal>
 </template>
 <script lang="ts" setup>
-import { Spin } from "ant-design-vue"; 
+import { Spin, Modal, FormItem, Form, Button, Input, InputSearch } from "ant-design-vue"; 
 import { onMounted, reactive, ref } from "vue";
 import { deleteUserProjects, getUserProjects, postUserProjects } from "@/apis/index";
 import userInfo from "@/stores/userInfo";

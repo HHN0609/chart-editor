@@ -1,12 +1,13 @@
-/* eslint-disable no-undef */
-/* eslint-disable @typescript-eslint/no-var-requires */
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
+const TerserPlugin = require("terser-webpack-plugin");
+
 const path = require("path");
 module.exports = {
   mode: "production",
   output: {
-    filename: "[name].js",
+    filename: "script/[name].js",
     path: path.join(__dirname, "../dist"),
     clean: true,
   },
@@ -19,28 +20,20 @@ module.exports = {
     ],
   },
   plugins: [
-    new MiniCssExtractPlugin(),
+    new MiniCssExtractPlugin({
+      filename: 'css/[name].css'
+    }),
     new CopyWebpackPlugin({
       patterns: [{ from: "./public", to: "./public" }],
     }),
   ],
   optimization: {
-    splitChunks: {
-      chunks: "all",
-      minSize: 20000,
-      minChunks: 1,
-      cacheGroups: {
-        defaultVendors: {
-          test: /[\\/]node_modules[\\/]/,
-          name: "vendors",
-          priority: -10,
-        },
-        default: {
-          minChunks: 2,
-          name: "default",
-          priority: -20,
-        },
-      },
-    },
+    minimizer:[
+      new CssMinimizerPlugin(),
+      new TerserPlugin({
+        parallel: true
+      })
+    ],
   },
+ 
 };

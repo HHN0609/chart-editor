@@ -4,62 +4,62 @@
       <img src="../../public/界面研究.svg" />
     </div>
     <div class="tab-box">
-      <a-typography-title :level="3">Welcome to Chart Editor</a-typography-title>
+      <TypographyTitle :level="3">Welcome to Chart Editor</TypographyTitle>
 
-      <a-tabs v-model:activeKey="activeKey" animated>
-        <a-tab-pane key="1" tab="Login">
-          <a-form :model="formState" class="login-form" name="normal_login" @finish="submitForm" :label-col="{ span: 8 }" :wrapper-col="{ span: 16 }">
-            <a-form-item label="Account" name="account" :rules="[{ required: true, message: 'Please input your username!' }]">
-              <a-input v-model:value="formState.account" :maxlength="15">
+      <Tabs v-model:activeKey="activeKey" animated>
+        <TabPane key="1" tab="Login">
+          <Form :model="formState" class="login-form" name="normal_login" @finish="submitForm" :label-col="{ span: 8 }" :wrapper-col="{ span: 16 }">
+            <FormItem label="Account" name="account" :rules="[{ required: true, message: 'Please input your username!' }]">
+              <Input v-model:value="formState.account" :maxlength="15">
                 <template #prefix>
                   <UserOutlined class="site-form-item-icon" />
                 </template>
-              </a-input>
-            </a-form-item>
+              </Input>
+            </FormItem>
 
-            <a-form-item label="Password" name="password" :rules="[{ required: true, message: 'Please input your password!' }]">
-              <a-input-password v-model:value="formState.password" :maxlength="15">
+            <FormItem label="Password" name="password" :rules="[{ required: true, message: 'Please input your password!' }]">
+              <InputPassword v-model:value="formState.password" :maxlength="15">
                 <template #prefix>
                   <LockOutlined class="site-form-item-icon" />
                 </template>
-              </a-input-password>
-            </a-form-item>
+              </InputPassword>
+            </FormItem>
 
-            <a-form-item style="justify-content: center">
-              <a-button type="primary" html-type="submit" class="login-form-button"> Login </a-button>
-            </a-form-item>
-          </a-form>
+            <FormItem style="justify-content: center">
+              <Button type="primary" html-type="submit" class="login-form-button"> Login </Button>
+            </FormItem>
+          </Form>
 
           <a>If you forget your password. Click here!</a>
-        </a-tab-pane>
+        </TabPane>
 
-        <a-tab-pane key="2" tab="Register">
-          <a-form :model="formState" class="login-form" name="normal_login" @finish="submitRegister" :label-col="{ span: 8 }" :wrapper-col="{ span: 16 }">
-            <a-form-item label="Name" name="name" :rules="[{ required: true, message: 'Please input your username!' }]">
-              <a-input v-model:value="formState.name" :maxlength="15">
+        <TabPane key="2" tab="Register">
+          <Form :model="formState" class="login-form" name="normal_login" @finish="submitRegister" :label-col="{ span: 8 }" :wrapper-col="{ span: 16 }">
+            <FormItem label="Name" name="name" :rules="[{ required: true, message: 'Please input your username!' }]">
+              <Input v-model:value="formState.name" :maxlength="15">
                 <template #prefix>
                   <UserOutlined class="site-form-item-icon" />
                 </template>
-              </a-input>
-            </a-form-item>
+              </Input>
+            </FormItem>
 
-            <a-form-item label="Account" name="account" :rules="[{ required: true, message: 'Please input your username!' }]">
-              <a-input v-model:value="formState.account" :maxlength="15">
+            <FormItem label="Account" name="account" :rules="[{ required: true, message: 'Please input your username!' }]">
+              <Input v-model:value="formState.account" :maxlength="15">
                 <template #prefix>
                   <UserOutlined class="site-form-item-icon" />
                 </template>
-              </a-input>
-            </a-form-item>
+              </Input>
+            </FormItem>
 
-            <a-form-item label="Password" name="password" :rules="[{ required: true, message: 'Please input your password!' }]">
-              <a-input-password v-model:value="formState.password" :maxlength="15">
+            <FormItem label="Password" name="password" :rules="[{ required: true, message: 'Please input your password!' }]">
+              <InputPassword v-model:value="formState.password" :maxlength="15">
                 <template #prefix>
                   <LockOutlined class="site-form-item-icon" />
                 </template>
-              </a-input-password>
-            </a-form-item>
+              </InputPassword>
+            </FormItem>
 
-            <a-form-item
+            <FormItem
               label="Confirm"
               name="confirm"
               :rules="[
@@ -69,19 +69,19 @@
                 },
               ]"
             >
-              <a-input-password v-model:value="formState.confirm">
+              <InputPassword v-model:value="formState.confirm">
                 <template #prefix>
                   <LockOutlined class="site-form-item-icon" />
                 </template>
-              </a-input-password>
-            </a-form-item>
+              </InputPassword>
+            </FormItem>
 
-            <a-form-item style="justify-content: center">
-              <a-button type="primary" html-type="submit" class="login-form-button"> Register </a-button>
-            </a-form-item>
-          </a-form>
-        </a-tab-pane>
-      </a-tabs>
+            <FormItem style="justify-content: center">
+              <Button type="primary" html-type="submit" class="login-form-button"> Register </Button>
+            </FormItem>
+          </Form>
+        </TabPane>
+      </Tabs>
     </div>
   </div>
 </template>
@@ -89,7 +89,7 @@
 import { ref, reactive } from "vue";
 import { UserOutlined, LockOutlined } from "@ant-design/icons-vue";
 import { postUserLogin, postUserRegister } from "@/apis/index";
-import { message } from "ant-design-vue";
+import { message , Tabs, TabPane, Form, FormItem, Button, Input, InputPassword, TypographyTitle} from "ant-design-vue";
 import router from "@/router/index";
 import { Rule } from "ant-design-vue/lib/form";
 

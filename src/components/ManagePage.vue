@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <a-table class="table" :data-source="datasource" :columns="columns" bordered>
+    <Table class="table" :data-source="datasource" :columns="columns" bordered>
       <template #bodyCell="{column, record}">
         <template v-if="column.key === 'account'">
 
@@ -9,47 +9,47 @@
 
         </template>
         <template v-else-if="column.key === 'is_admin'">
-          <a-select
+          <Select
             v-if="editingAccount === record.account"
             v-model:value="selectedAuth"
             style="width: 150px;"
             size="small"
           >
-            <a-select-option
+            <SelectOption
               v-for="item in authMap"
               :key="item"
               :value="item"
             >
               {{ item }}
-            </a-select-option>
-          </a-select>
-          <a-tooltip v-else placement="bottom">
+            </SelectOption>
+          </Select>
+          <Tooltip v-else placement="bottom">
             <template #title>
               <span>{{authMap[record.is_admin]}}</span>
             </template>
-            <a-tag
+            <Tag
               :color="tagColors[record.is_admin]"
             >
               {{ record.is_admin ? true: false }}
-            </a-tag>
-          </a-tooltip>
+            </Tag>
+          </Tooltip>
         </template>
 
         <template v-else-if="column.key === 'action'">
           <div v-if="editingAccount === record.account" class="btnBox">
-            <a-typography-link @click="saveChange(record.account)">Save</a-typography-link>
-            <a-typography-link @click="cancelChange">Cancel</a-typography-link>
+            <TypographyLink @click="saveChange(record.account)">Save</TypographyLink>
+            <TypographyLink @click="cancelChange">Cancel</TypographyLink>
           </div>
           <div v-else class="btnBox">
-            <a-button type="primary"
+            <Button type="primary"
               :disabled="!canDelete(record.is_admin)"
               @click="enterEditMode(record)"
               size="small"
             >
               edit
-            </a-button>
+            </Button>
   
-            <a-popconfirm
+            <Popconfirm
               title="Sure to delete?"
               :disabled="!canDelete(record.is_admin)"
               @confirm="deleteUser(record)"
@@ -57,12 +57,12 @@
                 <template #icon>
                   <question-circle-outlined style="color: red" />
                 </template>
-                <a-button type="danger" :disabled="!canDelete(record.is_admin)" size="small" >delete</a-button>
-            </a-popconfirm>
+                <Button type="primary" danger :disabled="!canDelete(record.is_admin)" size="small" >delete</Button>
+            </Popconfirm>
           </div>
         </template>
       </template>
-    </a-table>
+    </Table>
   </div>
 </template>
 <script lang="ts" setup>
@@ -70,7 +70,7 @@ import { getAllUsersInfo, deleteUserInfo, putUserAuth } from "@/apis";
 import userInfo from "@/stores/userInfo";
 import { onMounted, reactive, ref } from "vue";
 import { QuestionCircleOutlined } from '@ant-design/icons-vue';
-import { message } from "ant-design-vue";
+import { message, Table, Select, SelectOption, Button, Popconfirm, TypographyLink, Tooltip, Tag } from "ant-design-vue";
 const store = userInfo();
 const tagColors = ["green", "blue", "pink"];
 const datasource = reactive([]);

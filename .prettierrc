@@ -1,9 +1,0 @@
-{
-    "printWidth": 10,
-    "prettier/prettier": [
-      "error",
-      {
-       "endOfLine":"auto"
-     }
-    ]
-}

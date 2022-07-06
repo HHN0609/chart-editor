@@ -1,49 +1,49 @@
 <template>
-  <a-layout class="home-page">
-    <a-layout-sider class="sider" v-model:collapsed="collapsed" collapsible>
+  <Layout class="home-page">
+    <LayoutSider class="sider" v-model:collapsed="collapsed" collapsible>
       <div class="logo">hi!</div>
-      <a-menu theme="dark" mode="inline" @click="switchTitle" v-model:selectedKeys="selectedKeys">
-        <a-menu-item key="1">
+      <Menu theme="dark" mode="inline" @click="switchTitle" v-model:selectedKeys="selectedKeys">
+        <MenuItem key="1">
           <bar-chart-outlined />
           <span>Projects</span>
-        </a-menu-item>
-        <a-menu-item key="2">
+        </MenuItem>
+        <MenuItem key="2">
           <user-outlined />
           <span>Profile</span>
-        </a-menu-item>
-        <a-menu-item key="3" v-if="store.$state.isAdmin !== 0">
+        </MenuItem>
+        <MenuItem key="3" v-if="store.$state.isAdmin !== 0">
           <cluster-outlined />
           <span>Management</span>
-        </a-menu-item>
-      </a-menu>
-    </a-layout-sider>
+        </MenuItem>
+      </Menu>
+    </LayoutSider>
 
-    <a-layout class="main">
-      <a-layout-header class="header">
+    <Layout class="main">
+      <LayoutHeader class="header">
         <strong>{{ headerTitle }}</strong>
         <strong>
-          <a-avatar>
+          <Avatar>
             <template #icon>
               <user-outlined />
             </template>
-          </a-avatar>
-          <a-popover title="More Operations" trigger="hover" placement="bottomRight">
+          </Avatar>
+          <Popover title="More Operations" trigger="hover" placement="bottomRight">
             <template #content>
               <a @click="logOut">Logout</a>
             </template>
             <a>{{ store.userName || "Not logged in" }}</a>
-          </a-popover>
+          </Popover>
         </strong>
-      </a-layout-header>
-      <a-layout-content class="content">
+      </LayoutHeader>
+      <LayoutContent class="content">
         <router-view></router-view>
-      </a-layout-content>
-    </a-layout>
-  </a-layout>
+      </LayoutContent>
+    </Layout>
+  </Layout>
 </template>
 <script lang="ts" setup>
 import { UserOutlined, BarChartOutlined, ClusterOutlined } from "@ant-design/icons-vue";
-import { message } from "ant-design-vue";
+import { message, Layout, LayoutContent, LayoutHeader, LayoutSider , Popover, Avatar, Menu, MenuItem } from "ant-design-vue";
 import { onMounted, ref } from "vue";
 import router from "@/router/index";
 import userInfo from "@/stores/userInfo";

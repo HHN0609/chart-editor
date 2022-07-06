@@ -48,8 +48,8 @@
           </div>
         </vue-infinite-viewer>
         <div class="bottomBar">
-          <a-input class="zoomInput" v-model:value.lazy.number="infiniteViewZoom" size="small" suffix="%" type="number" :min="10" :max="200"></a-input>
-          <a-slider class="zoomSlider" v-model:value.number="infiniteViewZoom" :tip-formatter="tipFormatter" :min="10" :max="200"></a-slider>
+          <Input class="zoomInput" v-model:value.lazy.number="infiniteViewZoom" size="small" suffix="%" type="number" :min="10" :max="200"></Input>
+          <Slider class="zoomSlider" v-model:value.number="infiniteViewZoom" :tip-formatter="tipFormatter" :min="10" :max="200"></Slider>
           <h3>zoom:</h3>
         </div>
       </div>
@@ -70,7 +70,7 @@
   </Spin>
 </template>
 <script lang="ts" setup>
-import { Tabs, TabPane, Spin } from "ant-design-vue";
+import { Tabs, TabPane, Spin, Input, Slider } from "ant-design-vue";
 import { ReloadOutlined } from "@ant-design/icons-vue";
 import { nextTick, onMounted, reactive, Ref, ref, watch, onBeforeMount, onUnmounted } from "vue";
 import InfiniteViewer, { InfiniteViewerOptions, OnPinch, OnDrag, OnScroll } from "infinite-viewer";

@@ -9,15 +9,15 @@
       <h5>{{ create_time }}</h5>
     </div>
     <div class="overLayout" v-if="showOverLayout">
-      <a-button type="primary" @click="goDashBoard">Edit</a-button>
-      <a-button type="danger" @click="showDeleteConfirm">Delete</a-button>
+      <Button type="primary" @click="goDashBoard">Edit</Button>
+      <Button type="primary" danger @click="showDeleteConfirm">Delete</Button>
     </div>
   </div>
 </template>
 <script lang="ts" setup>
 import { ExclamationCircleOutlined } from "@ant-design/icons-vue";
 import { computed, ref } from "@vue/reactivity";
-import { Modal } from "ant-design-vue";
+import { Modal, Button } from "ant-design-vue";
 import { createVNode } from "vue";
 
 type cardDataType = {

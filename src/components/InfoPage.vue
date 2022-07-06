@@ -1,19 +1,19 @@
 <template>
   <div class="container">
-    <a-form class="info_form" :model="formState" :labelCol="{ span: 8 }" :wrapperCol="{ span: 16 }" :validate-messages="validateMessages" @finish="onFinish">
-      <a-form-item :name="['user', 'userName']" label="Name" :rules="[{ required: true }]">
-        <a-input v-model:value="formState.user.userName" :maxlength="15" />
-      </a-form-item>
+    <Form class="info_form" :model="formState" :labelCol="{ span: 8 }" :wrapperCol="{ span: 16 }" :validate-messages="validateMessages" @finish="onFinish">
+      <FormItem :name="['user', 'userName']" label="Name" :rules="[{ required: true }]">
+        <Input v-model:value="formState.user.userName" :maxlength="15" />
+      </FormItem>
 
-      <a-form-item :name="['user', 'account']" label="Account">
-        <a-input v-model:value="formState.user.account" disabled />
-      </a-form-item>
+      <FormItem :name="['user', 'account']" label="Account">
+        <Input v-model:value="formState.user.account" disabled />
+      </FormItem>
 
-      <a-form-item :name="['user', 'newPassword']" label="New Password">
-        <a-input v-model:value="formState.user.newPassword" :maxlength="15" />
-      </a-form-item>
+      <FormItem :name="['user', 'newPassword']" label="New Password">
+        <Input v-model:value="formState.user.newPassword" :maxlength="15" />
+      </FormItem>
 
-      <a-form-item
+      <FormItem
         :name="['user', 'confirmPassword']"
         label="Confirm Password"
         :rules="[
@@ -23,17 +23,17 @@
           },
         ]"
       >
-        <a-input v-model:value="formState.user.confirmPassword" :maxlength="15" />
-      </a-form-item>
+        <Input v-model:value="formState.user.confirmPassword" :maxlength="15" />
+      </FormItem>
 
-      <a-form-item :wrapper-col="{ span: 16, offset: 8 }">
-        <a-button type="primary" html-type="submit">Save</a-button>
-      </a-form-item>
-    </a-form>
+      <FormItem :wrapper-col="{ span: 16, offset: 8 }">
+        <Button type="primary" html-type="submit">Save</Button>
+      </FormItem>
+    </Form>
   </div>
 </template>
 <script lang="ts" setup>
-import { message } from "ant-design-vue";
+import { message, Form, FormItem, Input, Button } from "ant-design-vue";
 import { onMounted, reactive, watch } from "vue";
 import { getUserInfo, putUserInfo } from "@/apis";
 import router from "@/router";

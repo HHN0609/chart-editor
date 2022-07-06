@@ -1,5 +1,3 @@
-/* eslint-disable no-undef */
-/* eslint-disable @typescript-eslint/no-var-requires */
 const { merge } = require("webpack-merge");
 const WebpackDev = require("./webpack.dev.js");
 const WebpackProd = require("./webpack.prod.js");
