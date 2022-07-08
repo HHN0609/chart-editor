@@ -35,3 +35,4 @@ export const CONFIGTREES = {
     "Bar": BarConfigTree,
     "Line": LineConfigTree
 };
+

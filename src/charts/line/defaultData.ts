@@ -2,10 +2,15 @@
 
 // 默认的数据源
 export const LineDefaultSourceData = [
-    { product: "Matcha Latte", "2015": 43.3, "2016": 85.8, "2017": 93.7 },
-    { product: "Milk Tea", "2015": 83.1, "2016": 73.4, "2017": 55.1 },
-    { product: "Cheese Cocoa", "2015": 86.4, "2016": 65.2, "2017": 82.5 },
-    { product: "Walnut Brownie", "2015": 72.4, "2016": 53.9, "2017": 49.1 },
+    { product: "Mon", "2015": 43.3, "2016": 85.8, "2017": 93.7 },
+    { product: "Tue", "2015": 83.1, "2016": 73.4, "2017": 55.1 },
+    { product: "Wed", "2015": 86.4, "2016": 65.2, "2017": 82.5 },
+    { product: "Thu", "2015": 75.6, "2016": 53.9, "2017": 49.1 },
+    { product: "Fri", "2015": 79.4, "2016": 50.5, "2017": 59.1 },
+    { product: "Sat", "2015": 69.5, "2016": 57.0, "2017": 69.1 },
+    { product: "Sun", "2015": 50.4, "2016": 88.0, "2017": 49.1 },
+    
+
   ];
   
   // 默认的图表配置数据
@@ -16,7 +21,7 @@ export const LineDefaultSourceData = [
     },
     title: {
       show: true,
-      text: "Bar",
+      text: "Line",
       font: {
         color: "#FFFFFF",
         size: "10",
@@ -34,7 +39,7 @@ export const LineDefaultSourceData = [
     },
     xAxis: {
       show: true,
-      // type: "category",
+      type: "category",
       lineType: "solid",
       lineColor: "#FFFFFF",
       lineWidth: 1,
@@ -54,7 +59,7 @@ export const LineDefaultSourceData = [
     },
     yAxis: {
       show: true,
-      // type: "value",
+      type: "value",
       lineType: "solid",
       lineColor: "#FFFFFF",
       lineWidth: 1,
@@ -87,5 +92,8 @@ export const LineDefaultSourceData = [
         family: "sans-serif",
       },
     },
+
+   
+
   };
   

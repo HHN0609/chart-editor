@@ -41,7 +41,7 @@ export default function LineTransform(customOption: any, data: any[]): echarts.E
 
   options.xAxis = {
     show: customOption.xAxis.show,
-    type: customOption.chartStyle.orientation === "vertical" ? "category" : "value",
+    type: customOption.xAxis.type ,
 
     name: customOption.xAxis.name,
     nameTextStyle: {
@@ -77,7 +77,7 @@ export default function LineTransform(customOption: any, data: any[]): echarts.E
   };
   options.yAxis = {
     show: customOption.yAxis.show,
-    type: customOption.chartStyle.orientation === "vertical" ? "value" : "category",
+    type: customOption.yAxis.type,
     axisTick: {
       show: true,
       alignWithLabel: true,
@@ -119,15 +119,30 @@ export default function LineTransform(customOption: any, data: any[]): echarts.E
       position: customOption.seriseLabel.position,
     },
   };
+ 
+
+ 
   options.series = scale.map(() => {
+
+   
+    const temp = {type:"line"};
+    if(customOption.isAreaStyle){
+      temp["areaStyle"] = {opacity:1,};
+    }else{
+      
+      temp["areaStyle"] = {opacity:0,};
+    }
     if (customOption.chartStyle.isStack) {
-      return Object.assign({ type: "line", stack: "total" }, labelOptions);
+      temp["stack"] = "total";
+      // return Object.assign({ type: "line", stack: "total" }, labelOptions);
     } else {
       // console.log(customOption.chartStyle.isStack);
-      return Object.assign({ type: "line", stack: "" }, labelOptions);
+      // return Object.assign({ type: "line", stack: "" }, labelOptions);
+      temp["stack"] = "";
     }
+    return Object.assign(temp,labelOptions);
   });
-
+  
   options.dataset = {
     dimensions: dimensions.concat(scale),
     source: data,

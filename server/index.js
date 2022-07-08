@@ -106,6 +106,7 @@ app.use("/api/admin/", (req, res, next) => {
  */
 app.post("/api/user/login", (req, res) => {
   const { body } = req;
+  console.log(body);
   connection.query(`select * from user_info where account='${body.account}';`, (error, results) => {
     if (error) {
       // 数据库查询错误
