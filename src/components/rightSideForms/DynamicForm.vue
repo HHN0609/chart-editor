@@ -6,6 +6,7 @@ import Position from "./atomElements/Position.vue";
 import Radio from "./atomElements/Radio.vue";
 import Select from "./atomElements/Select.vue";
 import Switch from "./atomElements/Switch.vue";
+import Slider from "./atomElements/Slider.vue";
 import { Collapse, CollapsePanel } from "ant-design-vue";
 export default defineComponent({
   name: "DynamicForm",
@@ -37,6 +38,8 @@ export default defineComponent({
           return h(Select, { label: item.label, dataIndex: item.dataIndex, valueOptions: item.options });
         } else if (item.type === "switch") {
           return h(Switch, { label: item.label, dataIndex: item.dataIndex });
+        } else if (item.type === "slider") {
+          return h(Slider, { label: item.label, dataIndex: item.dataIndex, valueOptions: item.options });
         } else {
           console.error("No such type!");
         }

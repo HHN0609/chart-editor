@@ -9,15 +9,17 @@ export const LineDefaultSourceData = [
     { product: "Fri", "2015": 79.4, "2016": 50.5, "2017": 59.1 },
     { product: "Sat", "2015": 69.5, "2016": 57.0, "2017": 69.1 },
     { product: "Sun", "2015": 50.4, "2016": 88.0, "2017": 49.1 },
-    
-
   ];
   
   // 默认的图表配置数据
   export const LineDefaultOptionsData = {
     chartStyle: {
-      orientation: "horizontal",
       isStack: true,
+      smooth: false,
+      area: {
+        isShow: true,
+        opacity: 0.5
+      }
     },
     title: {
       show: true,
@@ -92,8 +94,5 @@ export const LineDefaultSourceData = [
         family: "sans-serif",
       },
     },
-
-   
-
   };
   

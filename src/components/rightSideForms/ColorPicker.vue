@@ -16,7 +16,7 @@ const props = defineProps(["modelValue"]);
 const emit = defineEmits(["update:modelValue"]);
 
 const changeColor = (newColor: any) => {
-  console.log("newColor: ", newColor);
+  // console.log("newColor: ", newColor);
   emit("update:modelValue", newColor.hex8);
 };
 </script>

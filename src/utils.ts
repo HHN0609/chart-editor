@@ -116,7 +116,9 @@ export function _set(obj, dataIndex: string, newValue): any{
     let lastProperty = indexArr.pop();
     let p = obj;
     for(let property of indexArr){
-        p = obj[property];
+        // debugger
+        console.log("p:", p, "property:", property);
+        p = p[property];
     }
     p[lastProperty] = newValue;
 }
