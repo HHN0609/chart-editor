@@ -10,41 +10,43 @@
         <div class="guide horizontal"></div>
         <div class="guide vertical"></div>
         <vue-infinite-viewer ref="Viewer" class="viewer" :style="{ backgroundColor: projectInfo.bgColor }" v-bind="viewerOptions">
-          <div
-            class="viewport"
-            :style="{
-              backgroundColor: projectInfo.viewportColor,
-              width: projectInfo.width + 'px',
-              height: projectInfo.height + 'px',
-            }"
-          >
+          <div class="pngDom" style="width:fit-content;">
             <div
-              v-for="(item, index) in projectInfo.chartsDatas"
-              :data-uid="item.uid"
-              :key="item.uid"
-              :class="`target_${index}`"
+              class="viewport"
               :style="{
-                width: `${item.basicData.width}px`,
-                height: `${item.basicData.height}px`,
-                transform: projectInfo.transform(item.uid),
-                zIndex: item.basicData.index + 10,
+                backgroundColor: projectInfo.viewportColor,
+                width: projectInfo.width + 'px',
+                height: projectInfo.height + 'px',
               }"
             >
-              <!-- 图表组件的入口 -->
-              <component :is="CHARTS[item.basicData.type]" :uid="item.uid" :sourceData="item.sourceData" :optionsData="item.optionsData"></component>
+              <div
+                v-for="(item, index) in projectInfo.chartsDatas"
+                :data-uid="item.uid"
+                :key="item.uid"
+                :class="`target_${index}`"
+                :style="{
+                  width: `${item.basicData.width}px`,
+                  height: `${item.basicData.height}px`,
+                  transform: projectInfo.transform(item.uid),
+                  zIndex: item.basicData.index + 10,
+                }"
+              >
+                <!-- 图表组件的入口 -->
+                <component :is="CHARTS[item.basicData.type]" :uid="item.uid" :sourceData="item.sourceData" :optionsData="item.optionsData"></component>
+              </div>
+              <VueMoveable
+                ref="moveable"
+                v-bind="moveableOptions"
+                :target="projectInfo.currTarget"
+                @drag="onDrag"
+                @resize="onResize"
+                @rotate="onRotate"
+                @dragEnd="onDragEnd"
+                @resizeEnd="onResizeEnd"
+                @rotateEnd="onRotateEnd"
+                :style="{ zIndex: projectInfo.currChartData?.basicData.index + 10 || 0 }"
+              />
             </div>
-            <VueMoveable
-              ref="moveable"
-              v-bind="moveableOptions"
-              :target="projectInfo.currTarget"
-              @drag="onDrag"
-              @resize="onResize"
-              @rotate="onRotate"
-              @dragEnd="onDragEnd"
-              @resizeEnd="onResizeEnd"
-              @rotateEnd="onRotateEnd"
-              :style="{ zIndex: projectInfo.currChartData?.basicData.index + 10 || 0 }"
-            />
           </div>
         </vue-infinite-viewer>
         <div class="bottomBar">

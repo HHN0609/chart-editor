@@ -21,7 +21,7 @@ watch([props.optionsData, props.sourceData], () => {
 });
 
 onMounted(() => {
-  chart = echarts.init(chartDom.value, {}, { renderer: "canvas" });
+  chart = echarts.init(chartDom.value, {}, { renderer: "svg" });
   option && chart.setOption(option);
   // 用ResizeObserver来监听dom容器的尺寸变化,后续可以添加节流
   resizeObserver = new ResizeObserver(() => {

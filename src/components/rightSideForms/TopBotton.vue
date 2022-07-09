@@ -11,7 +11,7 @@
       <fund-projection-screen-outlined />
       <span>display</span>
     </div>
-    <div @click="$emit('export')">
+    <div @click="onExport">
       <file-image-outlined />
       <span>export</span>
     </div>
@@ -28,6 +28,7 @@ import ProjectInfo from "@/stores/projectInfo";
 import { putUserChartDetailInfo, putUserProjectsBasic } from "@/apis";
 import { message } from "ant-design-vue";
 import router from "@/router";
+import html2canvas from "html2canvas";
 // import { message } from "ant-design-vue";
 const projectInfo = ProjectInfo();
 let saving = ref(false);
@@ -63,6 +64,17 @@ onMounted(() => {
 onBeforeUnmount(() => {
   window.removeEventListener("keydown", saveHandle);
 });
+
+const onExport = () => {
+  const dom = document.querySelector(".pngDom") as HTMLElement;
+  html2canvas(dom)
+    .then((canvas) => {
+      const link = document.createElement("a");
+      link.href = canvas.toDataURL("png", 1);
+      link.download = `${projectInfo.currChartData.uid}.png`;
+      link.click();
+    })
+}
 </script>
 <style lang="less" scoped>
 .container {
