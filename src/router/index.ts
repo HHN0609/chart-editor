@@ -6,6 +6,7 @@ const LoginPage = () => import("@/views/LoginPage.vue");
 const DashBoard = () => import("@/views/DashBoard.vue");
 const NotFound = () => import("@/views/NotFound.vue");
 const HomePage = () => import("@/views/HomePage.vue");
+const Display = () => import("@/views/Display.vue");
 const ProjectPage = () => import("@/components/ProjectPage.vue");
 const InfoPage = () => import("@/components/InfoPage.vue");
 const ManagePage = () => import("@/components/ManagePage.vue");
@@ -54,6 +55,18 @@ const router = createRouter({
       name: "DashBoard",
       path: "/DashBoard/:projectId",
       component: DashBoard,
+      beforeEnter: (to) => {
+        if (!to.params.projectId) {
+          return false;
+        } else {
+          return true;
+        }
+      },
+    },
+    {
+      name: "Display",
+      path: "/Display/:projectId",
+      component: Display,
       beforeEnter: (to) => {
         if (!to.params.projectId) {
           return false;

@@ -7,7 +7,7 @@
       <span v-if="saving">saving</span>
       <span v-else>save</span>
     </div>
-    <div @click="$emit('display')">
+    <div @click="onDisplay">
       <fund-projection-screen-outlined />
       <span>display</span>
     </div>
@@ -74,6 +74,11 @@ const onExport = () => {
       link.download = `${projectInfo.currChartData.uid}.png`;
       link.click();
     })
+}
+const onDisplay = () => {
+  router.push({ name: "Display", params: {
+    projectId: projectInfo.projectId
+  } })
 }
 </script>
 <style lang="less" scoped>

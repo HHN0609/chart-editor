@@ -388,8 +388,6 @@ function tipFormatter(value: number) {
       overflow: hidden;
       .viewport {
         overflow: hidden;
-        // width: 800px;
-        // height: 450px;
         > [data-uid] {
           color: white;
           background-color: rgba(95, 158, 160, 0.24);
