@@ -5,7 +5,11 @@ import echarts from "echarts";
 export default function LineTransform(customOption: any, data: any[]): echarts.EChartsOption {
   const { dimensions, scale } = getSacleAndDimensions(data);
   const options: echarts.EChartsOption = {};
+  options.backgroundColor = customOption.backGround.color;
+  options.color = ['#80FFA5', '#00DDFF', '#37A2FF', '#FF0087', '#FFBF00'];
   options.title = {
+    top: customOption.title.position.split("-")[0],
+    left: customOption.title.position.split("-")[1],
     show: customOption.title.show,
     text: customOption.title.text,
     textStyle: {
@@ -30,6 +34,8 @@ export default function LineTransform(customOption: any, data: any[]): echarts.E
   options.legend = {
     show: customOption.legend.show,
     orient: customOption.legend.orient,
+    top: customOption.legend.position.split("-")[0],
+    left: customOption.legend.position.split("-")[1],
     textStyle: {
       color: customOption.legend.font.color,
       fontSize: customOption.legend.font.size,
@@ -74,6 +80,8 @@ export default function LineTransform(customOption: any, data: any[]): echarts.E
         width: customOption.xAxis.gridLineWidth,
       },
     },
+
+    boundaryGap: customOption.xAxis.boundaryGap
   };
   options.yAxis = {
     show: customOption.yAxis.show,

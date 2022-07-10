@@ -271,8 +271,9 @@ onMounted(() => {
     guideVertical.value.scroll(e.scrollTop);
   });
   // 添加点击事件的委托监听
-  infiniteViewer.getWrapper().addEventListener("click", changeTarget, true);
-  // console.log(infiniteViewer.getWrapper());
+  infiniteViewer.getWrapper().addEventListener("click", changeTarget, {
+    passive: true
+  });
 });
 
 onMounted(() => {
@@ -390,7 +391,6 @@ function tipFormatter(value: number) {
         overflow: hidden;
         > [data-uid] {
           color: white;
-          background-color: rgba(95, 158, 160, 0.24);
           position: absolute;
         }
       }

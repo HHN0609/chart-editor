@@ -5,9 +5,13 @@ import echarts from "echarts";
 export default function BarTransform(customOption: any, data: any[]): echarts.EChartsOption {
   const { dimensions, scale } = getSacleAndDimensions(data);
   const options: echarts.EChartsOption = {};
+  options.backgroundColor = customOption.backGround.color;
+
   options.title = {
     show: customOption.title.show,
     text: customOption.title.text,
+    top: customOption.title.position.split("-")[0],
+    left: customOption.title.position.split("-")[1],
     textStyle: {
       color: customOption.title.font.color,
       fontSize: customOption.title.font.size,
@@ -30,6 +34,8 @@ export default function BarTransform(customOption: any, data: any[]): echarts.EC
   options.legend = {
     show: customOption.legend.show,
     orient: customOption.legend.orient,
+    top: customOption.legend.position.split("-")[0],
+    left: customOption.legend.position.split("-")[1],
     textStyle: {
       color: customOption.legend.font.color,
       fontSize: customOption.legend.font.size,

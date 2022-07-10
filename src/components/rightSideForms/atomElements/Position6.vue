@@ -1,19 +1,10 @@
 <template>
   <Form :label-col="{ span: props.label ? 10 : 0 }" :wrapper-col="{ span: props.label ? 14 : 24 }" class="form">
-    <FormItem v-if="props.positionNum === 4" :label="props.label" class="iconfont">
-      <RadioGroup v-model:value="value" button-style="solid" size="small">
-        <RadioButton title="top" value="top">&#xe67f;</RadioButton>
-        <RadioButton title="left" value="left">&#xe662;</RadioButton>
-        <RadioButton title="bottom" value="bottom">&#xe664;</RadioButton>
-        <RadioButton title="right" value="right">&#xe673;</RadioButton>
-      </RadioGroup>
-    </FormItem>
-
-    <FormItem v-else-if="props.positionNum === 6" :label="props.label" class="iconfont">
+    <FormItem :label="props.label" class="iconfont">
       <RadioGroup v-model:value="value" button-style="solid" size="small">
         <RadioButton title="top-left" value="top-left">&#xe681;</RadioButton>
         <RadioButton title="top-center" value="top-center">&#xe67f;</RadioButton>
-        <RadioButton title="top-right" value="top-right">&#xe680;</RadioButton>
+        <RadioButton title="top-left" value="top-left">&#xe680;</RadioButton>
       </RadioGroup>
       <RadioGroup v-model:value="value" button-style="solid" size="small">
         <RadioButton title="bottom-left" value="bottom-left">&#xe661;</RadioButton>
@@ -28,13 +19,12 @@ import { RadioGroup, RadioButton, FormItem, Form } from "ant-design-vue";
 import { computed } from "vue";
 import { _get, _set } from "@/utils";
 import ProjectInfo from "@/stores/projectInfo";
-type PositionNum = 4 | 6;
 
 const projectInfo = ProjectInfo();
 const props = defineProps<{
-  positionNum: PositionNum,
   label?: string;
   dataIndex: string;
+  kkk?: object;
 }>();
 let value = computed({
   get: () => {
@@ -53,7 +43,7 @@ let value = computed({
 }
 @font-face {
   font-family: "iconfont"; /* Project id  */
-  src: url("../../../../public/iconfont.ttf?t=1655974908929") format("truetype");
+  src: url("../../../../public/p4Iconfont.ttf?t=1657443847141") format("truetype");
 }
 .iconfont {
   font-family: "iconfont" !important;

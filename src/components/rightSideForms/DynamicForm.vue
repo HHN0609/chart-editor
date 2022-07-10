@@ -31,7 +31,7 @@ export default defineComponent({
         } else if (item.type === "inputs") {
           return h(Inputs, { label: item.label, dataIndex: item.dataIndex, type: item.dataType });
         } else if (item.type === "position") {
-          return h(Position, { label: item.label, dataIndex: item.dataIndex });
+          return h(Position, { label: item.label, dataIndex: item.dataIndex, positionNum: item.positionNum });
         } else if (item.type === "radio") {
           return h(Radio, { label: item.label, dataIndex: item.dataIndex, valueOptions: item.options });
         } else if (item.type === "select") {

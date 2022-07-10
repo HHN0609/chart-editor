@@ -10,6 +10,9 @@ export const BarDefaultSourceData = [
 
 // 默认的图表配置数据
 export const BarDefaultOptionsData = {
+  backGround: {
+    color: "#000000"
+  },
   chartStyle: {
     orientation: "horizontal",
     isStack: true,
@@ -22,6 +25,7 @@ export const BarDefaultOptionsData = {
       size: "10",
       family: "sans-serif",
     },
+    position: "top-left",
   },
   legend: {
     show: true,
@@ -31,6 +35,7 @@ export const BarDefaultOptionsData = {
       size: "10",
       family: "sans-serif",
     },
+    position: "top-center",
   },
   xAxis: {
     show: true,

@@ -67,7 +67,6 @@ onUnmounted(() => {
     overflow: hidden;
     > [data-uid] {
         color: white;
-        background-color: rgba(95, 158, 160, 0.24);
         position: absolute;
     }
 }

@@ -13,6 +13,9 @@ export const LineDefaultSourceData = [
   
   // 默认的图表配置数据
   export const LineDefaultOptionsData = {
+    backGround: {
+      color: "#000000"
+    },
     chartStyle: {
       isStack: true,
       smooth: false,
@@ -29,6 +32,7 @@ export const LineDefaultSourceData = [
         size: "10",
         family: "sans-serif",
       },
+      position: "top-left",
     },
     legend: {
       show: true,
@@ -38,6 +42,7 @@ export const LineDefaultSourceData = [
         size: "10",
         family: "sans-serif",
       },
+      position: "top-center",
     },
     xAxis: {
       show: true,

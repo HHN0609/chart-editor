@@ -59,7 +59,7 @@ const saveHandle = (e: KeyboardEvent) => {
   }
 };
 onMounted(() => {
-  window.addEventListener("keydown", saveHandle);
+  window.addEventListener("keydown", saveHandle, {passive: true});
 });
 onBeforeUnmount(() => {
   window.removeEventListener("keydown", saveHandle);

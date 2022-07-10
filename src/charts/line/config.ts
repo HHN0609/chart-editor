@@ -89,6 +89,11 @@ export default [
         label: "Label font",
         dataIndex: "xAxis.labelFont",
       },
+      {
+        type: "switch",
+        label: "Boundary gap",
+        dataIndex: "xAxis.boundaryGap"
+      }
     ],
   },
   {
@@ -163,6 +168,12 @@ export default [
         label: "Font",
         dataIndex: "title.font",
       },
+      {
+        type: "position",
+        positionNum: 6,
+        label: "Position",
+        dataIndex: "title.position",
+      },
     ],
   },
   {
@@ -187,6 +198,12 @@ export default [
           { label: "Horizontal", value: "horizontal" },
           { label: "Vertical", value: "vertical" },
         ],
+      },
+      {
+        type: "position",
+        positionNum: 6,
+        label: "Position",
+        dataIndex: "legend.position",
       },
     ],
   },
@@ -224,6 +241,7 @@ export default [
       },
       {
         type: "position",
+        positionNum: 4,
         label: "Position",
         dataIndex: "seriseLabel.position",
       },
@@ -234,4 +252,16 @@ export default [
       },
     ],
   },
+  {
+    type: "folder",
+    label: "Background",
+    content: [
+      {
+        type: "inputs",
+        dataType: "color",
+        label: "Color",
+        dataIndex: "backGround.color"
+      }
+    ]
+  }
 ]

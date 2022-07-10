@@ -16,7 +16,7 @@ export default function useGuide(selector: string, orient: "vertical" | "horizon
       type: orient,
       rulerStyle: rulerStyle[orient],
     });
-    window.addEventListener("resize", guideResizeHandle);
+    window.addEventListener("resize", guideResizeHandle, {passive: true});
   });
   onUnmounted(() => {
     window.removeEventListener("resize", guideResizeHandle);

@@ -1,5 +1,5 @@
 <template>
-  <Form :label-col="{ span: props.label ? 8 : 0 }" :wrapper-col="{ span: props.label ? 16 : 24 }" class="form">
+  <Form :label-col="{ span: props.label ? 10 : 0 }" :wrapper-col="{ span: props.label ? 14 : 24 }" class="form">
     <FormItem :label="props.label">
       <RadioGroup v-model:value="value" button-style="solid" size="small" class="RadioGroup">
         <RadioButton v-for="item in props.valueOptions" :key="item.label" :title="item.label" :value="item.value">

@@ -13,8 +13,8 @@ export default function useDragGetso(selector: string, callback: (e: OnDrag) => 
     ctrlDown = false;
   };
   onMounted(() => {
-    window.addEventListener("keydown", ctrlKeyDownHandle);
-    window.addEventListener("keyup", ctrlKeyUpHandle);
+    window.addEventListener("keydown", ctrlKeyDownHandle, {passive: true});
+    window.addEventListener("keyup", ctrlKeyUpHandle, {passive: true});
     getso.value = new Gesto(document.querySelector(selector));
     getso.value.on("drag", (e: OnDrag) => {
       if (ctrlDown) {

@@ -1,5 +1,5 @@
 <template>
-  <Form :label-col="{ span: props.label ? 8 : 0 }" :wrapper-col="{ span: props.label ? 16 : 24 }" class="form">
+  <Form :label-col="{ span: props.label ? 10 : 0 }" :wrapper-col="{ span: props.label ? 14 : 24 }" class="form">
     <FormItem :label="props.label">
       <Slider v-model:value="value" :min="props.valueOptions.min" :max="props.valueOptions.max" :step="props.valueOptions.step" size="small"> </Slider>
     </FormItem>
