@@ -8,7 +8,7 @@ A low code chart editor based on vue3 ,echart and g2.
 3. Run `npm install`
 4. Start your local Mysql service 
 5. Change the default Mysql configuration in `./server/config.js` 
-6. Copy the sql in in `./server/sql/chart_editor_db.sql`, and paste it into your Mysql console. It will create a database called .`chart_editor_db`.
+6. Copy the sql in `./server/sql/chart_editor_db.sql`, and paste it into your Mysql console. It will create a database called .`chart_editor_db`.
 7. Run `npm run serve` to start the backend service on port 3000.
 8. Run `npm run dev`. 
 9. The root account is `root`, and the password is `123456`.
