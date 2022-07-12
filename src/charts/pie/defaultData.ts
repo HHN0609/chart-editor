@@ -16,8 +16,10 @@ export const PieDefaultSourceData = [
     },
     chartStyle:{
       isDoughnut: false,
+      isNightingale :false,
       radiusmin:"0",
       radiusmax:"70",
+      
     },
     title: {
       show: true,

@@ -32,51 +32,55 @@ export default [
       },
     ],
   },
-  {  type: "folder",
-  label: "Chart style",
-  content: [
-    {
-      type:"switch",
-      label:"Doughnut",
-      dataIndex:"chartStyle.isDoughnut",
-    },
-    {
-      type:"input",
-      dataType:"number",
-      label:"radiusmin",
-      dataIndex:"chartStyle.radiusmin",
-      Option:{
-        max:100,
-        min:0,
-        Step:1,
+  {  
+    type: "folder",
+    label: "Chart style",
+    content: [
+      {
+        type:"switch",
+        label:"Doughnut",
+        dataIndex:"chartStyle.isDoughnut",
+      },
+      {
+        type:"input",
+        dataType:"number",
+        label:"radiusmin",
+        dataIndex:"chartStyle.radiusmin",
+        Option:{
+          max:100,
+          min:0,
+          Step:1,
+        }
+      },
+      {
+        type: "slider",
+        label: "radiusmin",
+        dataIndex: "chartStyle.radiusmin",
+        options: {
+          // 滑动条的最小值，最大值，以及滑动的步长
+          min: 0,
+          max: 200,
+          step: 1
+        }
+      },
+      {
+        type: "slider",
+        label: "radiusmax",
+        dataIndex: "chartStyle.radiusmax",
+        options: {
+          // 滑动条的最小值，最大值，以及滑动的步长
+          min: 0,
+          max: 200,
+          step: 1
+        }
+      },
+      {
+        type:"switch",
+        label:"Nightingale",
+        dataIndex:"chartStyle.isNightingale",
       }
-    },
-    {
-      type: "slider",
-      label: "radiusmin",
-      dataIndex: "chartStyle.radiusmin",
-      options: {
-        // 滑动条的最小值，最大值，以及滑动的步长
-        min: 0,
-        max: 200,
-        step: 1
-      }
-    },
     
-    {
-      type: "slider",
-      label: "radiusmax",
-      dataIndex: "chartStyle.radiusmax",
-      options: {
-        // 滑动条的最小值，最大值，以及滑动的步长
-        min: 0,
-        max: 200,
-        step: 1
-      }
-    
-    }
-  
-  ]
+    ]
   },
   {
     type: "folder",

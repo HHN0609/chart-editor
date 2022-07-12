@@ -63,6 +63,11 @@ export default function PieTransform(customOption: any, data: any[]): echarts.EC
     } else {
       temp["radius"] =  [0, 70];
     }
+    if (customOption.chartStyle.isNightingale) {
+      temp["roseType"] = "radius";
+    } else {
+      temp["roseType"] =  "";
+    }
     return Object.assign(temp, labelOptions);
   });
 
