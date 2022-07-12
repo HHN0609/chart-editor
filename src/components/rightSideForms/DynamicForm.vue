@@ -44,7 +44,9 @@ export default defineComponent({
           console.error("No such type!");
         }
       });
+      console.log(vNodes);
       return vNodes;
+
     }
 
     return () => generateSideVnodes(props.configTree);

@@ -53,7 +53,7 @@ let value = computed({
 }
 @font-face {
   font-family: "iconfont"; /* Project id  */
-  src: url("../../../../public/iconfont.ttf?t=1655974908929") format("truetype");
+  src: url("../../../../asset/iconfont.ttf") format("truetype");
 }
 .iconfont {
   font-family: "iconfont" !important;

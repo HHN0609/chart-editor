@@ -1,7 +1,7 @@
 <template>
   <div class="mianBox">
     <div class="img-box">
-      <img src="../../public/界面研究.svg" />
+      <img src="../../asset/界面研究.svg" />
     </div>
     <div class="tab-box">
       <TypographyTitle :level="3">Welcome to Chart Editor</TypographyTitle>
