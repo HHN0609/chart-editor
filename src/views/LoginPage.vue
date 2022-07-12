@@ -154,8 +154,6 @@ const submitRegister = () => {
         width: 100%;
       }
     }
-    .register-form {
-    }
   }
 }
 </style>

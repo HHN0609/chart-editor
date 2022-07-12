@@ -32,7 +32,7 @@
 </template>
 
 <script lang="ts" setup>
-import { createVNode, defineEmits, nextTick, reactive, ref, watch } from "vue";
+import { createVNode, nextTick, reactive, ref, watch } from "vue";
 import { Modal } from "ant-design-vue";
 import { BuildOutlined, DeleteOutlined, ExclamationCircleOutlined } from "@ant-design/icons-vue";
 import draggable from "vuedraggable";

@@ -23,9 +23,9 @@ module.exports = {
     new MiniCssExtractPlugin({
       filename: 'css/[name].css'
     }),
-    new CopyWebpackPlugin({
-      patterns: [{ from: "./public", to: "./public" }],
-    }),
+    // new CopyWebpackPlugin({
+    //   patterns: [{ from: "./public", to: "./public" }],
+    // }),
   ],
   optimization: {
     minimizer:[
