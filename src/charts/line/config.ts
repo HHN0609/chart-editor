@@ -36,7 +36,8 @@ export default [
           max: 1,
           step: 0.1
         }
-      }
+      },
+
     ],
   },
   {
