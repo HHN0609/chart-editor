@@ -1,7 +1,7 @@
 <template>
   <div class="box" @mouseenter="showOverLayout = true" @mouseleave="showOverLayout = false">
     <div class="imgBox">
-      <img src="../../public/柱状图.svg" alt="No img" />
+      <img src="../../asset/柱状图.svg" alt="No img" />
     </div>
     <div class="infoBox">
       <strong>{{ data.project_name }}</strong>

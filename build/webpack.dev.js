@@ -6,7 +6,6 @@ module.exports = {
     host: "127.0.0.1",
     port: 8081,
     hot: true,
-    open: true,
     proxy: {
       "/api": "http://127.0.0.1:3000",
     },
