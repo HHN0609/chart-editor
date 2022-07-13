@@ -3,7 +3,7 @@
   <div class="container" ref="chartDom"></div>
 </template>
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref, watch } from "vue";
+import { onBeforeUnmount, onMounted, onUnmounted, ref, watch } from "vue";
 import * as echarts from "echarts";
 import BarTransform from "./barTransform";
 // import ProjectInfo from "@/stores/projectInfo";
@@ -19,6 +19,7 @@ watch([props.optionsData, props.sourceData], () => {
   option = BarTransform(props.optionsData, props.sourceData);
   option && chart.setOption(option);
 });
+
 
 onMounted(() => {
   chart = echarts.init(chartDom.value, {}, { renderer: "svg" });

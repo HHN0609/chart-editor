@@ -21,10 +21,10 @@ export default function BarTransform(customOption: any, data: any[]): echarts.EC
 
   options.grid = {
     show: customOption.grid.show,
-    bottom: 30,
-    top: 40,
-    left: 30,
-    right: 30,
+    bottom: customOption.grid.bottom,
+    top: customOption.grid.top,
+    left: customOption.grid.left,
+    right: customOption.grid.right,
     containLabel: true,
     borderColor: customOption.grid.borderColor,
     borderWidth: customOption.grid.borderWidth,
@@ -36,6 +36,8 @@ export default function BarTransform(customOption: any, data: any[]): echarts.EC
     orient: customOption.legend.orient,
     top: customOption.legend.position.split("-")[0],
     left: customOption.legend.position.split("-")[1],
+    itemHeight: customOption.legend.font.size,
+    itemWidth: customOption.legend.font.size * 2,
     textStyle: {
       color: customOption.legend.font.color,
       fontSize: customOption.legend.font.size,
@@ -55,6 +57,7 @@ export default function BarTransform(customOption: any, data: any[]): echarts.EC
       fontFamily: customOption.xAxis.nameFont.family,
       fontSize: customOption.xAxis.nameFont.size,
     },
+    nameGap:5,
     axisTick: {
       show: true,
       alignWithLabel: true,
@@ -89,6 +92,7 @@ export default function BarTransform(customOption: any, data: any[]): echarts.EC
       alignWithLabel: true,
     },
     name: customOption.yAxis.name,
+    nameGap:5,
     nameTextStyle: {
       color: customOption.yAxis.nameFont.color,
       fontFamily: customOption.yAxis.nameFont.family,

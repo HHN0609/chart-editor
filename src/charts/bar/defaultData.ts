@@ -78,6 +78,10 @@ export const BarDefaultOptionsData = {
     },
   },
   grid: {
+    top: 30,
+    bottom: 30,
+    left: 30,
+    right: 30,
     show: false,
     borderColor: "#FFFFFF",
     borderWidth: 1,

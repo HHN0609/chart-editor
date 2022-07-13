@@ -20,6 +20,7 @@ export default function useGuide(selector: string, orient: "vertical" | "horizon
   });
   onUnmounted(() => {
     window.removeEventListener("resize", guideResizeHandle);
+    guide.value.destroy();
   });
   return guide;
 }

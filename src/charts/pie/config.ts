@@ -5,7 +5,7 @@
 export default [
   {
     type: "folder",
-    label: "图表样式",
+    label: "Chart Style",
     content: [
       {
         type:"switch",
@@ -129,12 +129,6 @@ export default [
         label: "Show",
         dataIndex: "seriesLabel.show",
       },
-      // {
-      //   type: "position",
-      //   positionNum: 4,
-      //   label: "Position",
-      //   dataIndex: "seriesLabel.position",
-      // },
       { 
         type: "font",
         label: "Font",
@@ -142,7 +136,7 @@ export default [
       },
       {
         type: "radio",
-        label: "Orient",
+        label: "Position",
         dataIndex: "seriesLabel.position",
         options: [
           { label: "outside", value: "outside" },
@@ -151,28 +145,14 @@ export default [
 
       },
       {
-        type: "switch",
-        label:"ShowLabelLine",
-        dataIndex: "seriesLabelLine.show",
+        type:"inputs",
+        dataType:"number",
+        label:"Line Length",
+        dataIndex:"seriesLabelLine.length",
         dependOn:{
-          // 表明这个slider依赖于chartStyle.isDoughnut
-          // chartStyle.isDoughnut === true时候，这个slider才显示
           dataIndex: "seriesLabel.position",
           value: "outside",
         }
-      },
-      {
-        type:"inputs",
-        dataType:"number",
-        label:"引导线长度",
-        dataIndex:"seriesLabelLine.length",
-        dependOn:{
-          // 表明这个slider依赖于chartStyle.isDoughnut
-          // chartStyle.isDoughnut === true时候，这个slider才显示
-          dataIndex: "seriesLabelLine.show",
-          value: true,
-        }
-
       },
 
     ]

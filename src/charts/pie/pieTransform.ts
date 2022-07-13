@@ -21,10 +21,10 @@ export default function PieTransform(customOption: any, data: any[]): echarts.EC
 
   options.grid = {
     show: customOption.grid.show,
-    bottom: 30,
-    top: 40,
-    left: 30,
-    right: 30,
+    bottom: "10%",
+    top: "10%",
+    left: "10%",
+    right: "10%",
     containLabel: true,
     borderColor: customOption.grid.borderColor,
     borderWidth: customOption.grid.borderWidth,
@@ -36,6 +36,8 @@ export default function PieTransform(customOption: any, data: any[]): echarts.EC
     orient: customOption.legend.orient,
     top: customOption.legend.position.split("-")[0],
     left: customOption.legend.position.split("-")[1],
+    itemHeight: customOption.legend.font.size,
+    itemWidth: customOption.legend.font.size * 2,
     textStyle: {
       color: customOption.legend.font.color,
       fontSize: customOption.legend.font.size,
@@ -58,7 +60,7 @@ export default function PieTransform(customOption: any, data: any[]): echarts.EC
   };
   const labelLineOptions ={
     labelLine:{
-      show:customOption.seriesLabelLine.show,
+      show: true,
       length:customOption.seriesLabelLine.length,
       length2:customOption.seriesLabelLine.length2,
       maxSurfaceAngle:customOption.seriesLabelLine.maxSurfaceAngle
@@ -71,8 +73,7 @@ export default function PieTransform(customOption: any, data: any[]): echarts.EC
     if (customOption.chartStyle.isDoughnut) {
       temp["radius"] = [customOption.chartStyle.radiusmin,customOption.chartStyle.radiusmax];
     } else {
-      // temp["radius"] =  [0, customOption.chartStyle.radiusmax];
-      temp["radius"] = 70;
+      temp["radius"] =  [0, customOption.chartStyle.radiusmax];
     }
     if (customOption.chartStyle.isNightingale) {
       temp["roseType"] = "radius";
@@ -86,6 +87,5 @@ export default function PieTransform(customOption: any, data: any[]): echarts.EC
     dimensions: dimensions.concat(scale),
     source: data,
   };
-  console.log(options);
   return options;
 }

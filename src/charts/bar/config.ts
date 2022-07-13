@@ -201,6 +201,30 @@ export default [
       },
       {
         type: "inputs",
+        dataType: "number",
+        label: "Top",
+        dataIndex: "grid.top",
+      },
+      {
+        type: "inputs",
+        dataType: "number",
+        label: "Left",
+        dataIndex: "grid.left",
+      },
+      {
+        type: "inputs",
+        dataType: "number",
+        label: "Bottom",
+        dataIndex: "grid.bottom",
+      },
+      {
+        type: "inputs",
+        dataType: "number",
+        label: "Right",
+        dataIndex: "grid.right",
+      },
+      {
+        type: "inputs",
         dataType: "color",
         label: "Border color",
         dataIndex: "grid.borderColor",

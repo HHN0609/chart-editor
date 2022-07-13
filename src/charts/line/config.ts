@@ -35,9 +35,40 @@ export default [
           min: 0,
           max: 1,
           step: 0.1
+        },
+        dependOn: {
+          dataIndex: "chartStyle.area.isShow",
+          value: true
         }
       },
-
+    ],
+  },
+  {
+    type: "folder",
+    label: "Title",
+    content: [
+      {
+        type: "switch",
+        label: "Show title",
+        dataIndex: "title.show",
+      },
+      {
+        type: "inputs",
+        dataType: "text",
+        label: "Text",
+        dataIndex: "title.text",
+      },
+      {
+        type: "font",
+        label: "Font",
+        dataIndex: "title.font",
+      },
+      {
+        type: "position",
+        positionNum: 6,
+        label: "Position",
+        dataIndex: "title.position",
+      },
     ],
   },
   {
@@ -151,34 +182,6 @@ export default [
   },
   {
     type: "folder",
-    label: "Title",
-    content: [
-      {
-        type: "switch",
-        label: "Show title",
-        dataIndex: "title.show",
-      },
-      {
-        type: "inputs",
-        dataType: "text",
-        label: "Text",
-        dataIndex: "title.text",
-      },
-      {
-        type: "font",
-        label: "Font",
-        dataIndex: "title.font",
-      },
-      {
-        type: "position",
-        positionNum: 6,
-        label: "Position",
-        dataIndex: "title.position",
-      },
-    ],
-  },
-  {
-    type: "folder",
     label: "Legend",
     content: [
       {
@@ -216,6 +219,30 @@ export default [
         type: "switch",
         label: "Show Grid",
         dataIndex: "grid.show",
+      },
+      {
+        type: "inputs",
+        dataType: "number",
+        label: "Top",
+        dataIndex: "grid.top",
+      },
+      {
+        type: "inputs",
+        dataType: "number",
+        label: "Left",
+        dataIndex: "grid.left",
+      },
+      {
+        type: "inputs",
+        dataType: "number",
+        label: "Bottom",
+        dataIndex: "grid.bottom",
+      },
+      {
+        type: "inputs",
+        dataType: "number",
+        label: "Right",
+        dataIndex: "grid.right",
       },
       {
         type: "inputs",

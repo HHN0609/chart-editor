@@ -13,3 +13,11 @@ A low code chart editor based on vue3 ,echart and g2.
 8. Run `npm run dev`. 
 9. The root account is `root`, and the password is `123456`.
 10. Let start this project!
+
+# Some runtime Pictures 
+### DashBoard Page
+![DashBoard](./exemples/DashBoard.png "DashBoard") 
+### Home Page
+![projectPage](./exemples/projectPage.png "projectPage")  
+### Export Image
+![exportImg](./exemples/exportImg.png "exportImg") 
