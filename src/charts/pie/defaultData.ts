@@ -87,14 +87,20 @@ export const PieDefaultSourceData = [
       borderWidth: 1,
       backgroundColor: "transparent",
     },
-    seriseLabel: {
+    seriesLabel: {
       show: true,
-      position: "top",
+      position: "inner",
       font: {
         color: "#FFFFFF",
         size: "10",
         family: "sans-serif",
       },
     },
+    seriesLabelLine:{
+      show:false,
+      length: 35,
+      length2: 10,
+      maxSurfaceAngle: 90
+    }
   };
   

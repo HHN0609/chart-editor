@@ -48,32 +48,44 @@ export default function PieTransform(customOption: any, data: any[]): echarts.EC
  
   const labelOptions = {
     label: {
-      show: customOption.seriseLabel.show,
-      color: customOption.seriseLabel.font.color,
-      fontSize: customOption.seriseLabel.font.size,
-      fontFamily: customOption.seriseLabel.font.family,
-      position: customOption.seriseLabel.position,
+      show: customOption.seriesLabel.show,
+      color: customOption.seriesLabel.font.color,
+      fontSize: customOption.seriesLabel.font.size,
+      fontFamily: customOption.seriesLabel.font.family,
+      position: customOption.seriesLabel.position,
+      // position: "inner"
     },
   };
-  
+  const labelLineOptions ={
+    labelLine:{
+      show:customOption.seriesLabelLine.show,
+      length:customOption.seriesLabelLine.length,
+      length2:customOption.seriesLabelLine.length2,
+      maxSurfaceAngle:customOption.seriesLabelLine.maxSurfaceAngle
+    }
+  }
+
   options.series = scale.map(() => {
     const temp = { type: "pie" };
+
     if (customOption.chartStyle.isDoughnut) {
       temp["radius"] = [customOption.chartStyle.radiusmin,customOption.chartStyle.radiusmax];
     } else {
-      temp["radius"] =  [0, customOption.chartStyle.radiusmax];
+      // temp["radius"] =  [0, customOption.chartStyle.radiusmax];
+      temp["radius"] = 70;
     }
     if (customOption.chartStyle.isNightingale) {
       temp["roseType"] = "radius";
     } else {
       temp["roseType"] =  "";
     }
-    return Object.assign(temp, labelOptions);
+    return Object.assign(temp, labelOptions,labelLineOptions);
   });
 
   options.dataset = {
     dimensions: dimensions.concat(scale),
     source: data,
   };
+  console.log(options);
   return options;
 }
