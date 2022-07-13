@@ -1,5 +1,5 @@
 <template>
-  <Form :label-col="{ span: props.label ? 10 : 0 }" :wrapper-col="{ span: props.label ? 14 : 24 }" class="form">
+  <Form :label-col="{ span: props.label ? 10 : 0 }" :wrapper-col="{ span: props.label ? 14 : 24 }" class="form" v-if="isShow">
     <FormItem v-if="props.positionNum === 4" :label="props.label" class="iconfont">
       <RadioGroup v-model:value="value" button-style="solid" size="small">
         <RadioButton title="top" value="top">&#xe67f;</RadioButton>
@@ -32,6 +32,7 @@ type PositionNum = 4 | 6;
 
 const projectInfo = ProjectInfo();
 const props = defineProps<{
+  dependOn?: any,
   positionNum: PositionNum,
   label?: string;
   dataIndex: string;
@@ -43,6 +44,11 @@ let value = computed({
   set: (newValue) => {
     _set(projectInfo.currChartData.optionsData, props.dataIndex, newValue);
   },
+});
+
+let isShow = computed(() => {
+  if(!props.dependOn) return true;
+  else return _get(projectInfo.currChartData.optionsData, props.dependOn.dataIndex) === props.dependOn.value;
 });
 </script>
 <style lang="less" scoped>

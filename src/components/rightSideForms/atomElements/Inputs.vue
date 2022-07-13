@@ -1,5 +1,5 @@
 <template>
-  <Form :label-col="{ span: props.label ? 10 : 0 }" :wrapper-col="{ span: props.label ? 14 : 24 }" class="form">
+  <Form :label-col="{ span: props.label ? 10 : 0 }" :wrapper-col="{ span: props.label ? 14 : 24 }" class="form" v-if="isShow">
     <FormItem :label="props.label" v-if="props.type !== 'color'">
       <Input :type="props.type" v-model:value.lazy="value" size="small"></Input>
     </FormItem>
@@ -18,6 +18,7 @@ import ColorPicker from "@/components/rightSideForms/ColorPicker.vue";
 const projectInfo = ProjectInfo();
 type InputType = "color" | "text" | "number";
 const props = defineProps<{
+  dependOn?: any,
   type: InputType;
   label?: string;
   dataIndex: string;
@@ -29,6 +30,11 @@ let value = computed({
   set: (newValue) => {
     _set(projectInfo.currChartData.optionsData, props.dataIndex, newValue);
   },
+});
+
+let isShow = computed(() => {
+  if(!props.dependOn) return true;
+  else return _get(projectInfo.currChartData.optionsData, props.dependOn.dataIndex) === props.dependOn.value;
 });
 </script>
 <style lang="less" scoped>

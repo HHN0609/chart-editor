@@ -27,24 +27,23 @@ export default defineComponent({
           }
           return h(Collapse, {}, () => h(CollapsePanel, { header: item.label }, () => children));
         } else if (item.type === "font") {
-          return h(Font, { label: item.label, dataIndex: item.dataIndex });
+          return h(Font, { label: item.label, dataIndex: item.dataIndex, dependOn: item?.dependOn });
         } else if (item.type === "inputs") {
-          return h(Inputs, { label: item.label, dataIndex: item.dataIndex, type: item.dataType });
+          return h(Inputs, { label: item.label, dataIndex: item.dataIndex, type: item.dataType, dependOn: item?.dependOn });
         } else if (item.type === "position") {
-          return h(Position, { label: item.label, dataIndex: item.dataIndex, positionNum: item.positionNum });
+          return h(Position, { label: item.label, dataIndex: item.dataIndex, positionNum: item.positionNum, dependOn: item?.dependOn });
         } else if (item.type === "radio") {
-          return h(Radio, { label: item.label, dataIndex: item.dataIndex, valueOptions: item.options });
+          return h(Radio, { label: item.label, dataIndex: item.dataIndex, valueOptions: item.options, dependOn: item?.dependOn });
         } else if (item.type === "select") {
-          return h(Select, { label: item.label, dataIndex: item.dataIndex, valueOptions: item.options });
+          return h(Select, { label: item.label, dataIndex: item.dataIndex, valueOptions: item.options, dependOn: item?.dependOn });
         } else if (item.type === "switch") {
-          return h(Switch, { label: item.label, dataIndex: item.dataIndex });
+          return h(Switch, { label: item.label, dataIndex: item.dataIndex, dependOn: item?.dependOn });
         } else if (item.type === "slider") {
-          return h(Slider, { label: item.label, dataIndex: item.dataIndex, valueOptions: item.options });
+          return h(Slider, { label: item.label, dataIndex: item.dataIndex, valueOptions: item.options, dependOn: item?.dependOn });
         } else {
-          console.error("No such type!");
+          console.error("No such type! " + item.type);
         }
       });
-      console.log(vNodes);
       return vNodes;
 
     }

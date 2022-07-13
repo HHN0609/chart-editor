@@ -1,5 +1,5 @@
 <template>
-  <Form :label-col="{ span: props.label ? 10 : 0 }" :wrapper-col="{ span: props.label ? 14 : 24 }" class="form">
+  <Form :label-col="{ span: props.label ? 10 : 0 }" :wrapper-col="{ span: props.label ? 14 : 24 }" class="form" v-if="isShow">
     <FormItem :label="props.label" v-model="value">
       <div>
         <Row :gutter="5" style="margin-bottom: 5px">
@@ -29,7 +29,7 @@ import { _get, _set } from "@/utils";
 const projectInfo = ProjectInfo();
 
 const props = defineProps<{
-  // value: any,
+  dependOn?: any,
   label?: string;
   dataIndex: string;
 }>();
@@ -43,6 +43,11 @@ const fontFamilyType: { label: GenericFamily; value: GenericFamily }[] = [
 
 let value = computed(() => {
   return _get(projectInfo.currChartData.optionsData, props.dataIndex);
+});
+
+let isShow = computed(() => {
+  if(!props.dependOn) return true;
+  else return _get(projectInfo.currChartData.optionsData, props.dependOn.dataIndex) === props.dependOn.value;
 });
 </script>
 <style lang="less" scoped>

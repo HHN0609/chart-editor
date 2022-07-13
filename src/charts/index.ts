@@ -4,12 +4,10 @@ import Pie from "@/charts/pie/pie.vue";
 import { BarDefaultOptionsData, BarDefaultSourceData } from "@/charts/bar/defaultData";
 import { LineDefaultOptionsData, LineDefaultSourceData } from "@/charts/line/defaultData";
 import { PieDefaultOptionsData, PieDefaultSourceData } from "@/charts/pie/defaultData";
-// import { LineDefaultOptionsData } from "@/charts/line/defaultSourceData";
 
 import BarConfigTree from "@/charts/bar/config";
 import LineConfigTree from "@/charts/line/config";
 import PieConfigTree from "@/charts/pie/config";
-// import LineConfigTree from "@/charts/line/config";
 
 export const CHARTTYPES = [
     "Bar",

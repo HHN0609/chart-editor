@@ -61,7 +61,7 @@ export default function PieTransform(customOption: any, data: any[]): echarts.EC
     if (customOption.chartStyle.isDoughnut) {
       temp["radius"] = [customOption.chartStyle.radiusmin,customOption.chartStyle.radiusmax];
     } else {
-      temp["radius"] =  [0, 70];
+      temp["radius"] =  [0, customOption.chartStyle.radiusmax];
     }
     if (customOption.chartStyle.isNightingale) {
       temp["roseType"] = "radius";
