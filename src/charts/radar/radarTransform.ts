@@ -4,6 +4,7 @@ import echarts from "echarts";
 // 转化自定义的options到echart的options
 export default function RadarTransform(customOption: any, data: any[]): echarts.EChartsOption {
   const { dimensions, scale } = getSacleAndDimensions(data);
+  console.log("dimensions", dimensions);
   const options: echarts.EChartsOption = {};
   options.backgroundColor = customOption.backGround.color;
   options.color = ['#80FFA5', '#00DDFF', '#37A2FF', '#FF0087', '#FFBF00'];
@@ -28,13 +29,22 @@ export default function RadarTransform(customOption: any, data: any[]): echarts.
     containLabel: true,
     borderColor: customOption.grid.borderColor,
     borderWidth: customOption.grid.borderWidth,
-    backgroundColor: customOption.grid.backgroundColor,
+    // backgroundColor: customOption.grid.backgroundColor,
   };
   options.radar={
     shape: customOption.radar.shape,
-    indicator: customOption.radar.indicator,
+    indicator: scale.map((item) => {
+      return { name: item, max: 100 };
+    }),
+    axisName: {
+      color: customOption.radar.axisName.font.color,
+      fontSize: customOption.radar.axisName.font.size,
+      fontFamily: customOption.radar.axisName.font.family,
     },
+    
+  },
   options.legend = {
+    data: data.map((value) => { return value[dimensions[0]] }),
     show: customOption.legend.show,
     orient: customOption.legend.orient,
     top: customOption.legend.position.split("-")[0],
@@ -48,30 +58,14 @@ export default function RadarTransform(customOption: any, data: any[]): echarts.
     },
   };
 
-  const schema = [
-    
-    { name: 'Matcha Latte', index: 0, text: 'Matcha Latte' },
-    { name: 'Milk Tea', index: 1, text: 'Milk Tea' },
-    { name: 'Cheese Cocoa', index: 2, text: 'Cheese Cocoa' },
-    { name: 'Walnut Brownie', index: 3, text: 'Walnut Brownie' },
-
-  ];
   options.tooltip = {
-   
     backgroundColor: 'rgba(255,255,255,0.7)',
     formatter: function (param: any) {
-      var value = param.value;
-      
-      console.log(param)
-      // prettier-ignore
-      return '<div  font-size: 18px;padding-bottom: 7px;margin-bottom: 7px">'
-        + '</div>'
-        + schema[0].text + '：' + value[schema[0].text] + '<br>'
-        + schema[1].text + '：' + value[schema[1].text] + '<br>'
-        + schema[2].text + '：' + value[schema[2].text] + '<br>'
-        + schema[3].text + '：' + value[schema[3].text] + '<br>';
-    }
-
+      let value = param.value;
+      return `${ scale.map((item) => {
+        return `${item}: ${value[item]}`;
+      }).join("<br>") }`;
+    },
   };
 
  
@@ -82,19 +76,15 @@ export default function RadarTransform(customOption: any, data: any[]): echarts.
       fontSize: customOption.seriesLabel.font.size,
       fontFamily: customOption.seriesLabel.font.family,
       position: customOption.seriesLabel.position,
-      // position: "inner"
     },
   };
 
-
-  options.series = scale.map(() => {
-    const temp = { type: "radar" };
+  options.series = data.map((value) => {
+    const temp = { type: "radar", name: value[dimensions[0]] };
     return Object.assign(temp, labelOptions);
   });
-
   options.dataset = {
-    // dimensions: dimensions.concat(scale),
-    dimensions:['Matcha Latte', 'Milk Tea',  'Cheese Cocoa','Walnut Brownie'],
+    dimensions: scale,
     source: data,
   };
   return options;

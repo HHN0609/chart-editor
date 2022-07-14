@@ -2,10 +2,8 @@
 
 // 默认的数据源
 export const RadarDefaultSourceData = [
-
-    {'Matcha Latte': 85,'Milk Tea': 72.4, 'Cheese Cocoa': 53.9, 'Walnut Brownie': 39.1},
-    {'Matcha Latte': 90,'Milk Tea': 54, 'Cheese Cocoa': 30.9, 'Walnut Brownie': 80.1},
-
+    { MatchaLatte: 85, MilkTea: 72.4, CheeseCocoa: 53.9, WalnutBrownie: 39.1, name: "2015"},
+    { MatchaLatte: 90, MilkTea: 54, CheeseCocoa: 30.9, WalnutBrownie: 80.1  , name: "2016"},
   ];
   
   // 默认的图表配置数据
@@ -14,11 +12,11 @@ export const RadarDefaultSourceData = [
       color: "#000000"
     },
     chartStyle:{
-
+      
     },
     title: {
       show: true,
-      text: "Pie",
+      text: "Radar",
       font: {
         color: "#FFFFFF",
         size: "10",
@@ -28,13 +26,13 @@ export const RadarDefaultSourceData = [
     },
     radar:{
       shape: 'polygon',
-      indicator: [
-        { name: 'Matcha Latte', max: 100 },
-        { name:'Milk Tea', max: 100 },
-        { name: 'Cheese Cocoa', max: 100 },
-        { name:'Walnut Brownie', max: 100 }
-       
-      ]
+      axisName: {
+        font: {
+          color: "#FFFFFF",
+          size: "10",
+          family: "sans-serif",
+        }
+      }
     },
     legend: {
       show: true,
@@ -46,46 +44,6 @@ export const RadarDefaultSourceData = [
       },
       position: "top-center",
     },
-    // xAxis: {
-    //   show: true,
-    //   type: "category",
-    //   lineType: "solid",
-    //   lineColor: "#FFFFFF",
-    //   lineWidth: 1,
-  
-    //   name: "",
-    //   nameFont: {
-    //     color: "#FFFFFF",
-    //     size: "10",
-    //     family: "sans-serif",
-    //   },
-  
-    //   labelFont: {
-    //     color: "#FFFFFF",
-    //     size: "10",
-    //     family: "sans-serif",
-    //   },
-    // },
-    // yAxis: {
-    //   show: true,
-    //   type: "value",
-    //   lineType: "solid",
-    //   lineColor: "#FFFFFF",
-    //   lineWidth: 1,
-  
-    //   name: "",
-    //   nameFont: {
-    //     color: "#FFFFFF",
-    //     size: "10",
-    //     family: "sans-serif",
-    //   },
-  
-    //   labelFont: {
-    //     color: "#FFFFFF",
-    //     size: "10",
-    //     family: "sans-serif",
-    //   },
-    // },
     grid: {
       show: false,
       borderColor: "#FFFFFF",

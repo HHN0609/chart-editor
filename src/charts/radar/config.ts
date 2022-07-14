@@ -20,6 +20,17 @@ export default [
   },
   {
     type: "folder",
+    label: "Axis",
+    content: [
+      {
+        type: "font",
+        label: "Font",
+        dataIndex: "radar.axisName.font",
+      },
+    ]
+  },
+  {
+    type: "folder",
     label: "Title",
     content: [
       {
