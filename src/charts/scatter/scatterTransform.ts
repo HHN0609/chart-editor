@@ -41,6 +41,7 @@ export default function ScatterTransform(customOption: any, data: any[]): echart
       fontSize: customOption.legend.font.size,
       fontFamily: customOption.legend.font.family,
     },
+    
   };
 
   options.tooltip= {
@@ -142,17 +143,56 @@ export default function ScatterTransform(customOption: any, data: any[]): echart
   //   const temp = { type: "scatter", name: "value"};
   //   return Object.assign(temp, labelOptions);
   // });
-  options.series = {
-    type: "scatter",
-    name: "value",
-    data: data,
-    symbolSize: function (data) {
-      return data[2];
+  // options.series = {
+  //   type: "scatter",
+  //   name: "value",
+  //   data: data,
+  //   symbolSize: function (data) {
+  //     return data[2];
+  //   },
+
+
+  //   ...labelOptions
+  // }
+
+  options.visualMap ={
+  
+    show:false,
+    dimension: 2,
+    min: customOption.chartStyle.visualMap.min,
+    max: customOption.chartStyle.visualMap.max,
+    inRange: {
+      symbolSize: [10,70]
     },
 
-
-    ...labelOptions
   }
+  
+
+  
+  
+  options.series = data.map((value, index) => {
+    const temp = { 
+      type: "scatter",
+      
+      datasetIndex: index,
+      data:data[index],
+      name:data[0][3]
+      // colorBy: "series",
+      // areaStyle: {
+      //   opacity: customOption.chartStyle.area.isShow === false ? 0 : customOption.chartStyle.area.opacity
+      // }
+    };
+   
+    
+    
+    return Object.assign(temp, labelOptions);
+  });
+  options.dataset = data.map((value) => {
+    return {
+      dimensions: scale,
+      source: [value],
+    }
+  });
 
   // console.log("serise: ", options.series);
 

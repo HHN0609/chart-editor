@@ -7,7 +7,30 @@ export default [
     type: "folder",
     label: "Chart style",
     content: [
-
+      {
+        type:"inputs",
+        datatype:"number",
+        label:"DataMin",
+        dataIndex:"chartStyle.visualMap.min",
+      },
+      {
+        type:"inputs",
+        datatype:"number",
+        label:"DataMax",
+        dataIndex:"chartStyle.visualMap.max",
+      },
+      // {
+      //   type:"inputs",
+      //   datatype:"number",
+      //   label:"symbolSizeMin",
+      //   dataIndex:"chartStyle.visualMap.symbolSizeMin",
+      // },
+      // {
+      //   type:"inputs",
+      //   datatype:"number",
+      //   label:"symbolSizeMax",
+      //   dataIndex:"chartStyle.visualMap.symbolSizeMax",
+      // }
 
     ],
   },

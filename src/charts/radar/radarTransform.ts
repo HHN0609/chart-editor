@@ -88,6 +88,8 @@ export default function RadarTransform(customOption: any, data: any[]): echarts.
         opacity: customOption.chartStyle.area.isShow === false ? 0 : customOption.chartStyle.area.opacity
       }
     };
+    console.log(dimensions)
+    
     return Object.assign(temp, labelOptions);
   });
   options.dataset = data.map((value) => {
