@@ -4,7 +4,7 @@ import echarts from "echarts";
 // 转化自定义的options到echart的options
 export default function RadarTransform(customOption: any, data: any[]): echarts.EChartsOption {
   const { dimensions, scale } = getSacleAndDimensions(data);
-  console.log("dimensions", dimensions);
+  // console.log("dimensions", dimensions);
   const options: echarts.EChartsOption = {};
   options.backgroundColor = customOption.backGround.color;
   options.color = ['#80FFA5', '#00DDFF', '#37A2FF', '#FF0087', '#FFBF00'];
@@ -79,13 +79,21 @@ export default function RadarTransform(customOption: any, data: any[]): echarts.
     },
   };
 
-  options.series = data.map((value) => {
-    const temp = { type: "radar", name: value[dimensions[0]] };
+  options.series = data.map((value, index) => {
+    const temp = { type: "radar", name: value[dimensions[0]], datasetIndex: index, colorBy: "series" };
     return Object.assign(temp, labelOptions);
   });
-  options.dataset = {
-    dimensions: scale,
-    source: data,
-  };
+
+  options.dataset = data.map((value, index) => {
+    return {
+      dimensions: scale,
+      source: [value],
+    }
+  });
+
+  // options.dataset = {
+  //   dimensions: scale,
+  //   source: data,
+  // };
   return options;
 }

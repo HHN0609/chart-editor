@@ -9,11 +9,11 @@ export default [
     content: [
       {
           type: "radio",
-          label: "Orient",
+          label: "Radar shape",
           dataIndex: "radar.shape",
           options: [
-            { label: "circle", value: "circle" },
-            { label: "polygon", value: "polygon" },
+            { label: "Circle", value: "circle" },
+            { label: "Polygon", value: "polygon" },
           ],
         },
     ]
@@ -71,15 +71,15 @@ export default [
         label: "Font",
         dataIndex: "legend.font",
       },
-      // {
-      //   type: "radio",
-      //   label: "Orient",
-      //   dataIndex: "legend.orient",
-      //   options: [
-      //     { label: "Horizontal", value: "horizontal" },
-      //     { label: "Vertical", value: "vertical" },
-      //   ],
-      // },
+      {
+        type: "radio",
+        label: "Orient",
+        dataIndex: "legend.orient",
+        options: [
+          { label: "Horizontal", value: "horizontal" },
+          { label: "Vertical", value: "vertical" },
+        ],
+      },
       {
         type: "position",
         positionNum: 6,
