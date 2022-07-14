@@ -106,43 +106,6 @@ export default [
   },
   {
     type: "folder",
-    label: "Label",
-    content: [
-      // {
-      //   type: "switch",
-      //   label: "Show",
-      //   dataIndex: "seriesLabel.show",
-      // },
-      // { 
-      //   type: "font",
-      //   label: "Font",
-      //   dataIndex: "seriesLabel.font",
-      // },
-      // {
-      //   type: "radio",
-      //   label: "Position",
-      //   dataIndex: "seriesLabel.position",
-      //   options: [
-      //     { label: "outside", value: "outside" },
-      //     { label: "inner", value: "inner" },
-      //   ],
-
-      // },
-      // {
-      //   type:"inputs",
-      //   dataType:"number",
-      //   label:"Line Length",
-      //   dataIndex:"seriesLabelLine.length",
-      //   dependOn:{
-      //     dataIndex: "seriesLabel.position",
-      //     value: "outside",
-      //   }
-      // },
-
-    ]
-  },
-  {
-    type: "folder",
     label: "Background",
     content: [
       {

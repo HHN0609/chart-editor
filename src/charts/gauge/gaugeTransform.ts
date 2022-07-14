@@ -31,43 +31,9 @@ export default function GaugeTransform(customOption: any, data: any[]): echarts.
     backgroundColor: customOption.grid.backgroundColor,
   };
 
-  // options.legend = {
-  //   show: customOption.legend.show,
-  //   orient: customOption.legend.orient,
-  //   top: customOption.legend.position.split("-")[0],
-  //   left: customOption.legend.position.split("-")[1],
-  //   itemHeight: customOption.legend.font.size,
-  //   itemWidth: customOption.legend.font.size * 2,
-  //   textStyle: {
-  //     color: customOption.legend.font.color,
-  //     fontSize: customOption.legend.font.size,
-  //     fontFamily: customOption.legend.font.family,
-  //   },
-  // };
-
-  // options.tooltip = {
-    
-  //     formatter: '{a} <br/>{b} : {c}%'
-    
-  // };
 
  
-  // options.series ={
-    
-    // title: {
-    //   show:true,
-    // },
-    type :"gauge",
-    // name : "111",
-    // progress: {
-    //   show: true
-    // },
-    // radius: customOption.chartStyle.radius + "%",
-    // detail: {
-    //   valueAnimation: true,
-    //   formatter: '{value}'
-    // },
-  // }
+ 
   options.series = 
     {
       name: 'Pressure',
@@ -85,10 +51,7 @@ export default function GaugeTransform(customOption: any, data: any[]): echarts.
       data: data
   };
   
-  // options.dataset = {
-  //   source: data,
-   
-  // };
+
  
   return options;
 }
