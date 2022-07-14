@@ -12,7 +12,11 @@ export const RadarDefaultSourceData = [
       color: "#000000"
     },
     chartStyle:{
-      
+      shape: "polygon",
+      area: {
+        isShow: false,
+        opacity: 0.5,
+      }
     },
     title: {
       show: true,
@@ -32,7 +36,9 @@ export const RadarDefaultSourceData = [
           size: "10",
           family: "sans-serif",
         }
-      }
+      },
+      axisMax: 100,
+      axisMin: 0,
     },
     legend: {
       show: true,
@@ -52,18 +58,12 @@ export const RadarDefaultSourceData = [
     },
     seriesLabel: {
       show: true,
-      position: "inner",
+      position: "top",
       font: {
         color: "#FFFFFF",
         size: "10",
         family: "sans-serif",
       },
     },
-    seriesLabelLine:{
-      show:false,
-      length: 35,
-      length2: 10,
-      maxSurfaceAngle: 90
-    }
   };
   

@@ -10,12 +10,32 @@ export default [
       {
           type: "radio",
           label: "Radar shape",
-          dataIndex: "radar.shape",
+          dataIndex: "chartStyle.shape",
           options: [
             { label: "Circle", value: "circle" },
             { label: "Polygon", value: "polygon" },
           ],
+      },
+      {
+        type: "switch",
+        label: "Show area",
+        dataIndex: "chartStyle.area.isShow"
+      },
+      {
+        type: "slider",
+        label: "Area opacity",
+        dataIndex: "chartStyle.area.opacity",
+        options: {
+          // 滑动条的最小值，最大值，以及滑动的步长
+          min: 0,
+          max: 1,
+          step: 0.1
         },
+        dependOn: {
+          dataIndex: "chartStyle.area.isShow",
+          value: true
+        }
+      },
     ]
   },
   {
@@ -27,6 +47,18 @@ export default [
         label: "Font",
         dataIndex: "radar.axisName.font",
       },
+      {
+        type: "inputs",
+        label: "Min value",
+        dataType: "number",
+        dataIndex: "radar.axisMin"
+      },
+      {
+        type: "inputs",
+        dataType: "number",
+        label: "Max value",
+        dataIndex: "radar.axisMax"
+      }
     ]
   },
   {
@@ -125,27 +157,12 @@ export default [
         label: "Font",
         dataIndex: "seriesLabel.font",
       },
-      // {
-      //   type: "radio",
-      //   label: "Position",
-      //   dataIndex: "seriesLabel.position",
-      //   options: [
-      //     { label: "outside", value: "outside" },
-      //     { label: "inner", value: "inner" },
-      //   ],
-
-      // },
       {
-        type:"inputs",
-        dataType:"number",
-        label:"Line Length",
-        dataIndex:"seriesLabelLine.length",
-        dependOn:{
-          dataIndex: "seriesLabel.position",
-          value: "outside",
-        }
+        type: "position",
+        positionNum: 4,
+        label: "Position",
+        dataIndex: "seriesLabel.position",
       },
-
     ]
   },
   {

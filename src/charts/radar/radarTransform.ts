@@ -29,19 +29,17 @@ export default function RadarTransform(customOption: any, data: any[]): echarts.
     containLabel: true,
     borderColor: customOption.grid.borderColor,
     borderWidth: customOption.grid.borderWidth,
-    // backgroundColor: customOption.grid.backgroundColor,
   };
   options.radar={
-    shape: customOption.radar.shape,
+    shape: customOption.chartStyle.shape,
     indicator: scale.map((item) => {
-      return { name: item, max: 100 };
+      return { name: item, min: customOption.radar.axisMin ,max: customOption.radar.axisMax };
     }),
     axisName: {
       color: customOption.radar.axisName.font.color,
       fontSize: customOption.radar.axisName.font.size,
       fontFamily: customOption.radar.axisName.font.family,
     },
-    
   },
   options.legend = {
     data: data.map((value) => { return value[dimensions[0]] }),
@@ -59,7 +57,8 @@ export default function RadarTransform(customOption: any, data: any[]): echarts.
   };
 
   options.tooltip = {
-    backgroundColor: 'rgba(255,255,255,0.7)',
+    backgroundColor: 'rgba(255,255,255)',
+    borderWidth: 3,
     formatter: function (param: any) {
       let value = param.value;
       return `${ scale.map((item) => {
@@ -80,11 +79,18 @@ export default function RadarTransform(customOption: any, data: any[]): echarts.
   };
 
   options.series = data.map((value, index) => {
-    const temp = { type: "radar", name: value[dimensions[0]], datasetIndex: index, colorBy: "series" };
+    const temp = { 
+      type: "radar",
+      name: value[dimensions[0]],
+      datasetIndex: index,
+      colorBy: "series",
+      areaStyle: {
+        opacity: customOption.chartStyle.area.isShow === false ? 0 : customOption.chartStyle.area.opacity
+      }
+    };
     return Object.assign(temp, labelOptions);
   });
-
-  options.dataset = data.map((value, index) => {
+  options.dataset = data.map((value) => {
     return {
       dimensions: scale,
       source: [value],
