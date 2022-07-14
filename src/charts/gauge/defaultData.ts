@@ -5,7 +5,6 @@ export const GaugeDefaultSourceData = [{
       value: 50,
       name: 'SCORE',
   },
-  
 ];
   
   // 默认的图表配置数据
@@ -14,14 +13,15 @@ export const GaugeDefaultSourceData = [{
       color: "#000000"
     },
     chartStyle:{
-      radius: 75,
       progress: {
-          show: true
+          show: true,
+          color: "#FF0000FF"
       },
       detail: {
         valueAnimation: true,
         formatter: '{value}'
       },
+      radius: 100,
     },
     title: {
       show: true,
@@ -32,6 +32,17 @@ export const GaugeDefaultSourceData = [{
         family: "sans-serif",
       },
       position: "top-left",
+    },
+    range: {
+      min: 0,
+      max: 100,
+      angle: 270,
+    },
+    pointer: {
+      show: true,
+      length: 50,
+      width: 6,
+      color: "#FF0000"
     },
     legend: {
       show: true,
@@ -49,7 +60,5 @@ export const GaugeDefaultSourceData = [{
       borderWidth: 1,
       backgroundColor: "transparent",
     },
-
-
   };
   

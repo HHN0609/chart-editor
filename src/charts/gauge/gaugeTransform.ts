@@ -6,7 +6,7 @@ export default function GaugeTransform(customOption: any, data: any[]): echarts.
   const { dimensions, scale } = getSacleAndDimensions(data);
   const options: echarts.EChartsOption = {};
   options.backgroundColor = customOption.backGround.color;
-  options.color = ['#80FFA5', '#00DDFF', '#37A2FF', '#FF0087', '#FFBF00'];
+
   options.title = {
     top: customOption.title.position.split("-")[0],
     left: customOption.title.position.split("-")[1],
@@ -31,16 +31,13 @@ export default function GaugeTransform(customOption: any, data: any[]): echarts.
     backgroundColor: customOption.grid.backgroundColor,
   };
 
-
- 
- 
   options.series = 
     {
-      name: 'Pressure',
       type: 'gauge',
       detail: {
         valueAnimation: customOption.chartStyle.detail.valueAnimation,
-        formatter: '{value}'
+        formatter: '{value}',
+        fontSize: 50,
       },
       title:{
         show:true,
@@ -78,7 +75,25 @@ export default function GaugeTransform(customOption: any, data: any[]): echarts.
       },
       progress: {
           show: customOption.chartStyle.progress.show,
-        },
+          itemStyle: {
+            color: customOption.chartStyle.progress.color,
+          }
+      },
+      radius: customOption.chartStyle.radius,
+      min: customOption.range.min,
+      max: customOption.range.max,
+      startAngle: customOption.range.angle / 2 + 90,
+      endAngle: -1 * (customOption.range.angle / 2 - 90),
+
+      pointer: {
+        show: customOption.pointer.show,
+        length: customOption.pointer.length + "%",
+        width: customOption.pointer.width,
+        itemStyle: {
+          color: customOption.pointer.color
+        }
+      },
+      animationDelay: 500,
       data: data
   };
   

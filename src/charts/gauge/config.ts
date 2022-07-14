@@ -7,19 +7,32 @@ export default [
     type: "folder",
     label: "Chart Style",
     content: [
-     {
+      {
+        type: "inputs",
+        label: "Radius",
+        dataType: "number",
+        dataIndex: "chartStyle.radius"
+      },
+      {
         type:"switch",
-        label:"progress",
+        label:"Progress",
         dataIndex:"chartStyle.progress.show",
       },
       {
-    
+        type: "inputs",
+        dataType: "color",
+        label: "Progress color",
+        dataIndex: "chartStyle.progress.color",
+        dependOn: {
+          dataIndex: "chartStyle.progress.show",
+          value: true
+        }
+      },
+      {
         type:"switch",
-        label:"valueAnimation",
+        label:"Animation",
         dataIndex:"chartStyle.detail.valueAnimation",
-
       }
-
     ]
   },
   {
@@ -52,34 +65,61 @@ export default [
   },
   {
     type: "folder",
-    label: "Legend",
+    label: "Range",
+    content: [
+      {
+        type: "inputs",
+        dataType: "number",
+        label: "Min",
+        dataIndex: "range.min"
+      },
+      {
+        type: "inputs",
+        dataType: "number",
+        label: "Max",
+        dataIndex: "range.max"
+      },
+      {
+        type: "slider",
+        label: "Angle",
+        dataIndex: "range.angle",
+        options: {
+          // 滑动条的最小值，最大值，以及滑动的步长
+          min: 0,
+          max: 360,
+          step: 1
+        },
+      },
+    
+    ]
+  },
+  {
+    type: "folder",
+    label: "Pointer",
     content: [
       {
         type: "switch",
         label: "Show",
-        dataIndex: "legend.show",
+        dataIndex: "pointer.show",
       },
       {
-        type: "font",
-        label: "Font",
-        dataIndex: "legend.font",
+        type: "slider",
+        label: "Length",
+        dataIndex: "pointer.length",
+        options: {
+          // 滑动条的最小值，最大值，以及滑动的步长
+          min: 0,
+          max: 100,
+          step: 1
+        },
       },
       {
-        type: "radio",
-        label: "Orient",
-        dataIndex: "legend.orient",
-        options: [
-          { label: "Horizontal", value: "horizontal" },
-          { label: "Vertical", value: "vertical" },
-        ],
+        type: "inputs",
+        dataType: "color",
+        label: "Color",
+        dataIndex: "pointer.color",
       },
-      {
-        type: "position",
-        positionNum: 6,
-        label: "Position",
-        dataIndex: "legend.position",
-      },
-    ],
+    ]
   },
   {
     type: "folder",
