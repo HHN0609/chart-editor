@@ -19,7 +19,12 @@ export const GaugeDefaultSourceData = [{
       },
       detail: {
         valueAnimation: true,
-        formatter: '{value}'
+        formatter: '{value}',
+        font:{
+          color: '#67e0e3',
+          Size: "20",
+          fontFamily: "sans-serif",
+        }
       },
       axisTick:{
         distance:-30,
@@ -40,6 +45,14 @@ export const GaugeDefaultSourceData = [{
           size: "10",
           family: "sans-serif",
         }
+      },
+      title:{
+        font:{
+          color: '#67e0e3',
+          Size: "20",
+          fontFamily: "sans-serif",
+        }
+       
       },
      
 

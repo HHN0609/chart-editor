@@ -37,10 +37,16 @@ export default function GaugeTransform(customOption: any, data: any[]): echarts.
       detail: {
         valueAnimation: customOption.chartStyle.detail.valueAnimation,
         formatter: '{value}',
-        fontSize: 50,
+        color: customOption.chartStyle.detail.font.color,
+        fontSize: customOption.chartStyle.detail.font.size,
+        fontFamily: customOption.chartStyle.detail.font.fontFamily,
+        
       },
       title:{
         show:true,
+        color: customOption.chartStyle.title.font.color,
+        fontSize: customOption.chartStyle.title.font.size,
+        fontFamily: customOption.chartStyle.title.font.family,
       },
       axisLine: {
         lineStyle: {

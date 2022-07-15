@@ -96,6 +96,18 @@ export default [
         dataType:"color",
         dataIndex:"chartStyle.splitLine.color",
       },
+      {
+        // datatitle font
+        type: "font",
+        label: "DataTitle Font",
+        dataIndex: "chartStyle.title.font",
+      },
+      {
+        // value font
+        type: "font",
+        label: "Value Font",
+        dataIndex: "chartStyle.detail.font",
+      }
 
     ]
   },
