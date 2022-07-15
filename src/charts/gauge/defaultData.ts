@@ -21,6 +21,28 @@ export const GaugeDefaultSourceData = [{
         valueAnimation: true,
         formatter: '{value}'
       },
+      axisTick:{
+        distance:-30,
+        color:'#fff',
+
+      },
+      splitLine:{
+        distance:-30,
+        color:'#000000',
+      },
+      axisLine:{
+        color:'#67e0e3',
+      },
+      axisLabel:{
+        distance: 30,
+        font:{
+          color: "#FFFFFF",
+          size: "10",
+          family: "sans-serif",
+        }
+      },
+     
+
       radius: 100,
     },
     title: {

@@ -46,32 +46,34 @@ export default function GaugeTransform(customOption: any, data: any[]): echarts.
         lineStyle: {
           width: 30,
           color: [
-            [0.3, '#67e0e3'],
-            [0.6, '#37a2da'],
-            [1, '#fd666d']
+            [1, customOption.chartStyle.axisLine.color],
+            // [0.6, '#37a2da'],
+            // [1, '#fd666d']
           ]
         }
       },
       axisTick: {
-        distance: -30,
+        distance: customOption.chartStyle.axisTick.distance,
         length: 8,
         lineStyle: {
-          color: '#fff',
+          color: customOption.chartStyle.axisTick.color,
           width: 2
         }
       },
       splitLine: {
-        distance: -30,
+        distance: customOption.chartStyle.splitLine.distance
+        ,
         length: 30,
         lineStyle: {
-          color: '#000000',
+          color: customOption.chartStyle.splitLine.color,
           width: 4
         }
       },
       axisLabel: {
-        color: 'auto',
-        distance: 40,
-        fontSize: 20
+        distance: customOption.chartStyle.axisLabel.distance,
+        color: customOption.chartStyle.axisLabel.font.color,
+        fontSize: customOption.chartStyle.axisLabel.font.size,
+        fontFamily: customOption.chartStyle.axisLabel.font.family,
       },
       progress: {
           show: customOption.chartStyle.progress.show,

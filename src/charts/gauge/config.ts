@@ -32,7 +32,71 @@ export default [
         type:"switch",
         label:"Animation",
         dataIndex:"chartStyle.detail.valueAnimation",
-      }
+      },
+      {
+        type: "slider",
+        label:"AxisTick Distance",
+        dataIndex:"chartStyle.axisTick.distance",
+        options:{
+          max:90,
+          min:-90,
+          step:1,
+        }
+      },
+      {
+        // axisTick Color
+        type:"inputs",
+        label:"AxisTick Color",
+        dataType:"color",
+        dataIndex:"chartStyle.axisTick.color",
+        
+      },
+      {
+        // axisLine color
+        type:"inputs",
+        label:"AxisLine Color",
+        dataType:"color",
+        dataIndex:"chartStyle.axisLine.color",
+
+      },
+      {
+        // axisLabel distance
+        type: "slider",
+        label:"AxisLabel Distance",
+        // dataType:"number",
+        dataIndex:"chartStyle.axisLabel.distance",
+        options:{
+          max:90,
+          min:-90,
+          step:1,
+        }
+      },
+      {
+        // axisLabel font
+        type: "font",
+        label: "AxisLabel Font",
+        dataIndex: "chartStyle.axisLabel.font",
+      },
+      {
+        // splitLine distance
+        type: "slider",
+        label:"SplitLine Distance",
+        // dataType:"number",
+        dataIndex:"chartStyle.splitLine.distance",
+        options:{
+          max:90,
+          min:-90,
+          step:1,
+        }
+      },
+      {
+        // splitLine color
+        type:"inputs",
+        label:"SplitLine Color",
+        dataType:"color",
+        dataIndex:"chartStyle.splitLine.color",
+      },
+
     ]
   },
   {
