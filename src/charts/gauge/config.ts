@@ -8,56 +8,9 @@ export default [
     label: "Chart Style",
     content: [
       {
-        type: "inputs",
-        label: "Radius",
-        dataType: "number",
-        dataIndex: "chartStyle.radius"
-      },
-      {
-        type:"switch",
-        label:"Progress",
-        dataIndex:"chartStyle.progress.show",
-      },
-      {
-        type: "inputs",
-        dataType: "color",
-        label: "Progress color",
-        dataIndex: "chartStyle.progress.color",
-        dependOn: {
-          dataIndex: "chartStyle.progress.show",
-          value: true
-        }
-      },
-      {
         type:"switch",
         label:"Animation",
         dataIndex:"chartStyle.detail.valueAnimation",
-      },
-      {
-        type: "slider",
-        label:"AxisTick Distance",
-        dataIndex:"chartStyle.axisTick.distance",
-        options:{
-          max:90,
-          min:-90,
-          step:1,
-        }
-      },
-      {
-        // axisTick Color
-        type:"inputs",
-        label:"AxisTick Color",
-        dataType:"color",
-        dataIndex:"chartStyle.axisTick.color",
-        
-      },
-      {
-        // axisLine color
-        type:"inputs",
-        label:"AxisLine Color",
-        dataType:"color",
-        dataIndex:"chartStyle.axisLine.color",
-
       },
       {
         // axisLabel distance
@@ -78,25 +31,6 @@ export default [
         dataIndex: "chartStyle.axisLabel.font",
       },
       {
-        // splitLine distance
-        type: "slider",
-        label:"SplitLine Distance",
-        // dataType:"number",
-        dataIndex:"chartStyle.splitLine.distance",
-        options:{
-          max:90,
-          min:-90,
-          step:1,
-        }
-      },
-      {
-        // splitLine color
-        type:"inputs",
-        label:"SplitLine Color",
-        dataType:"color",
-        dataIndex:"chartStyle.splitLine.color",
-      },
-      {
         // datatitle font
         type: "font",
         label: "DataTitle Font",
@@ -109,6 +43,120 @@ export default [
         dataIndex: "chartStyle.detail.font",
       }
 
+    ]
+  },
+  {
+    type: "folder",
+    label: "Axis line",
+    content: [
+      {
+        type:"switch",
+        label:"Show",
+        dataIndex:"chartStyle.axisLine.show",
+      },
+      {
+        // axisLine color
+        type:"inputs",
+        label:"AxisLine Color",
+        dataType:"color",
+        dataIndex:"chartStyle.axisLine.color",
+      },
+      {
+        type: "inputs",
+        label: "Width",
+        dataType: "number",
+        dataIndex: "chartStyle.axisLine.width",
+      },
+      {
+        type: "inputs",
+        label: "Radius",
+        dataType: "number",
+        dataIndex: "chartStyle.axisLine.radius",
+      },
+    ],
+  },
+  {
+    type: "folder",
+    label: "Progress",
+    content: [
+      {
+        type:"switch",
+        label:"Show",
+        dataIndex:"chartStyle.progress.show",
+      },
+      {
+        type: "inputs",
+        dataType: "number",
+        label: "Width",
+        dataIndex: "chartStyle.progress.width"
+      },
+      {
+        type: "inputs",
+        dataType: "color",
+        label: "Progress color",
+        dataIndex: "chartStyle.progress.color",
+        // dependOn: {
+        //   dataIndex: "chartStyle.progress.show",
+        //   value: true
+        // }
+      },
+    ]
+  },
+  {
+    type: "folder",
+    label: "Split line",
+    content: [
+      {
+        type: "switch",
+        label: "Show",
+        dataIndex: "chartStyle.splitLine.show"
+      },
+      {
+        // splitLine distance
+        type: "slider",
+        label:"Distance",
+        dataIndex:"chartStyle.splitLine.distance",
+        options:{
+          max:90,
+          min:-90,
+          step:1,
+        }
+      },
+      {
+        // splitLine color
+        type:"inputs",
+        label:"Color",
+        dataType:"color",
+        dataIndex:"chartStyle.splitLine.color",
+      },
+    ]
+  },
+  {
+    type: "folder",
+    label: "Axis tick",
+    content: [
+      {
+        type: "switch",
+        label: "Show",
+        dataIndex: "chartStyle.axisTick.show"
+      },
+      {
+        type: "slider",
+        label:"Distance",
+        dataIndex:"chartStyle.axisTick.distance",
+        options:{
+          max:90,
+          min:-90,
+          step:1,
+        },
+      },
+      {
+        // axisTick Color
+        type:"inputs",
+        label:"Color",
+        dataType:"color",
+        dataIndex:"chartStyle.axisTick.color",
+      },
     ]
   },
   {

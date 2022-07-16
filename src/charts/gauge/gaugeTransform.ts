@@ -3,7 +3,7 @@ import echarts from "echarts";
 
 // 转化自定义的options到echart的options
 export default function GaugeTransform(customOption: any, data: any[]): echarts.EChartsOption {
-  const { dimensions, scale } = getSacleAndDimensions(data);
+  // const { dimensions, scale } = getSacleAndDimensions(data);
   const options: echarts.EChartsOption = {};
   options.backgroundColor = customOption.backGround.color;
 
@@ -39,8 +39,7 @@ export default function GaugeTransform(customOption: any, data: any[]): echarts.
         formatter: '{value}',
         color: customOption.chartStyle.detail.font.color,
         fontSize: customOption.chartStyle.detail.font.size,
-        fontFamily: customOption.chartStyle.detail.font.fontFamily,
-        
+        fontFamily: customOption.chartStyle.detail.font.family,
       },
       title:{
         show:true,
@@ -49,16 +48,16 @@ export default function GaugeTransform(customOption: any, data: any[]): echarts.
         fontFamily: customOption.chartStyle.title.font.family,
       },
       axisLine: {
+        show: customOption.chartStyle.axisLine.show,
         lineStyle: {
-          width: 30,
+          width: customOption.chartStyle.axisLine.width,
           color: [
             [1, customOption.chartStyle.axisLine.color],
-            // [0.6, '#37a2da'],
-            // [1, '#fd666d']
           ]
         }
       },
       axisTick: {
+        show: customOption.chartStyle.axisTick.show,
         distance: customOption.chartStyle.axisTick.distance,
         length: 8,
         lineStyle: {
@@ -67,12 +66,12 @@ export default function GaugeTransform(customOption: any, data: any[]): echarts.
         }
       },
       splitLine: {
-        distance: customOption.chartStyle.splitLine.distance
-        ,
+        show: customOption.chartStyle.splitLine.show,
+        distance: customOption.chartStyle.splitLine.distance,
         length: 30,
         lineStyle: {
           color: customOption.chartStyle.splitLine.color,
-          width: 4
+          width: 3
         }
       },
       axisLabel: {
@@ -83,11 +82,12 @@ export default function GaugeTransform(customOption: any, data: any[]): echarts.
       },
       progress: {
           show: customOption.chartStyle.progress.show,
+          width: customOption.chartStyle.progress.width,
           itemStyle: {
             color: customOption.chartStyle.progress.color,
           }
       },
-      radius: customOption.chartStyle.radius,
+      radius: customOption.chartStyle.axisLine.radius,
       min: customOption.range.min,
       max: customOption.range.max,
       startAngle: customOption.range.angle / 2 + 90,

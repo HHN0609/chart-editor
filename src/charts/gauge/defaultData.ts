@@ -14,29 +14,34 @@ export const GaugeDefaultSourceData = [{
     },
     chartStyle:{
       progress: {
-          show: true,
-          color: "#FF0000FF"
+        show: true,
+        color: "#FF0000FF",
+        width: 5,
       },
       detail: {
         valueAnimation: true,
         formatter: '{value}',
         font:{
-          color: '#67e0e3',
-          Size: "20",
-          fontFamily: "sans-serif",
+          size: 20,
+          color: "#67e0e3",
+          family: "sans-serif",
         }
       },
       axisTick:{
-        distance:-30,
-        color:'#fff',
-
+        show: true,
+        distance: -30,
+        color:'#FFFFFF',
       },
       splitLine:{
+        show: false,
         distance:-30,
         color:'#000000',
       },
       axisLine:{
-        color:'#67e0e3',
+        show: true,
+        color:'#37a2da',
+        width: 30,
+        radius: 100,
       },
       axisLabel:{
         distance: 30,
@@ -49,14 +54,11 @@ export const GaugeDefaultSourceData = [{
       title:{
         font:{
           color: '#67e0e3',
-          Size: "20",
-          fontFamily: "sans-serif",
+          size: 20,
+          family: "sans-serif",
         }
        
       },
-     
-
-      radius: 100,
     },
     title: {
       show: true,
