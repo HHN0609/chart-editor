@@ -340,7 +340,7 @@ function tipFormatter(value: number) {
         }
         > .ant-tabs-content-holder {
           .container {
-            > .ant-collapse.ant-collapse-icon-position-left {
+            .ant-collapse.ant-collapse-icon-position-left {
               > .ant-collapse-item {
                 > .ant-collapse-header {
                   padding-top: 8px;

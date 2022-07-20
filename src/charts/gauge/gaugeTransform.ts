@@ -70,8 +70,8 @@ export default function GaugeTransform(customOption: any, data: any[]): echarts.
         distance: customOption.chartStyle.splitLine.distance,
         length: 30,
         lineStyle: {
+          width: 3,
           color: customOption.chartStyle.splitLine.color,
-          width: 3
         }
       },
       axisLabel: {

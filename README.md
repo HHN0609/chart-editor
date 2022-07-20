@@ -41,6 +41,11 @@ You can use it draw various charts easily.
 ### Radar chart with area  
 ![radarChartWithArea](./exemples//radarChartWithArea.png "radarChartWithArea")
 
+### Scatter chart 
+![scatterChart](./exemples//scatter.png "scatterChart") 
+
+### Gague chart 
+![gagueChart](./exemples/gague.png "gagueChart")
 # Some runtime Pictures 
 ### DashBoard Page
 ![DashBoard](./exemples/DashBoard.png "DashBoard") 
