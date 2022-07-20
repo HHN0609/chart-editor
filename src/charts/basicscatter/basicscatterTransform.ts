@@ -2,7 +2,7 @@ import { getSacleAndDimensions } from "@/utils";
 import echarts from "echarts";
 
 // 转化自定义的options到echart的options
-export default function ScatterTransform(customOption: any, data: any[]): echarts.EChartsOption {
+export default function BasicScatterTransform(customOption: any, data: any[]): echarts.EChartsOption {
   const { dimensions, scale } = getSacleAndDimensions(data);
   const options: echarts.EChartsOption = {};
   options.backgroundColor = customOption.backGround.color;
@@ -53,7 +53,7 @@ export default function ScatterTransform(customOption: any, data: any[]): echart
         + '</div>'
         + 'X : ' + value[0] + '<br>'
         + 'Y : ' + value[1] + '<br>'
-        + 'Value : ' + value[2] + '<br>'
+       
     }
   };
   options.xAxis = {
@@ -136,37 +136,12 @@ export default function ScatterTransform(customOption: any, data: any[]): echart
       fontSize: customOption.seriesLabel.font.size,
       fontFamily: customOption.seriesLabel.font.family,
       position: customOption.seriesLabel.position,
-      formatter:'{@[2]}',
+      
     },
   };
-  // console.log(scale, "scale")
-  // options.series = scale.map(() => {
-  //   const temp = { type: "scatter", name: "value"};
-  //   return Object.assign(temp, labelOptions);
-  // });
-  // options.series = {
-  //   type: "scatter",
-  //   name: "value",
-  //   data: data,
-  //   symbolSize: function (data) {
-  //     return data[2];
-  //   },
+ 
 
 
-  //   ...labelOptions
-  // }
-
-  options.visualMap ={
-  
-    show:false,
-    dimension: 2,
-    min: customOption.chartStyle.visualMap.min,
-    max: customOption.chartStyle.visualMap.max,
-    inRange: {
-      symbolSize: [10,70]
-    },
-
-  }
   
 
   
@@ -174,7 +149,11 @@ export default function ScatterTransform(customOption: any, data: any[]): echart
   options.series = data.map((value, index) => {
     const temp = { 
       type: "scatter",
-      
+      symbolSize: customOption.chartStyle.symbolSize,
+      // label:{
+      //   show:true,
+      //   position:'inside',
+      // },
       datasetIndex: index,
       data:data[index],
       name:data[0][3]

@@ -8,31 +8,18 @@ export default [
     label: "Chart style",
     content: [
       {
-        type:"inputs",
-        datatype:"number",
-        label:"DataMin",
-        dataIndex:"chartStyle.visualMap.min",
+           // axisLabel distance
+           type: "slider",
+           label:"symbolSize",
+           dataIndex:"chartStyle.symbolSize",
+           options:{
+             max:40,
+             min:1,
+             step:1,
+           }
       },
-      {
-        type:"inputs",
-        datatype:"number",
-        label:"DataMax",
-        dataIndex:"chartStyle.visualMap.max",
-      },
-      // {
-      //   type:"inputs",
-      //   datatype:"number",
-      //   label:"symbolSizeMin",
-      //   dataIndex:"chartStyle.visualMap.symbolSizeMin",
-      // },
-      // {
-      //   type:"inputs",
-      //   datatype:"number",
-      //   label:"symbolSizeMax",
-      //   dataIndex:"chartStyle.visualMap.symbolSizeMax",
-      // }
-
-    ],
+    
+    ]
   },
   {
     type: "folder",
