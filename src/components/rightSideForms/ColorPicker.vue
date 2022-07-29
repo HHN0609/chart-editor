@@ -1,5 +1,5 @@
 <template>
-  <Popconfirm placement="left" :showCancel="false">
+  <Popconfirm :placement=" props.placement || 'left' " :showCancel="false">
     <template #icon></template>
     <template #okButton>
       <Sketch :modelValue="modelValue" @update:modelValue="changeColor" @change="changeColor" />
@@ -10,13 +10,15 @@
 
 <script lang="ts" setup>
 import { Sketch } from "@ckpack/vue-color";
-import { Popconfirm } from "ant-design-vue";
+import { Popconfirm, PopconfirmProps } from "ant-design-vue";
 
-const props = defineProps(["modelValue"]);
+const props = defineProps<{
+  modelValue: any,
+  placement?: PopconfirmProps["placement"],
+}>();
 const emit = defineEmits(["update:modelValue"]);
 
 const changeColor = (newColor: any) => {
-  // console.log("newColor: ", newColor);
   emit("update:modelValue", newColor.hex8);
 };
 </script>

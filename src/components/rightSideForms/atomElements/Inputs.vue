@@ -9,7 +9,7 @@
   </Form>
 </template>
 <script lang="ts" setup>
-import { Input, FormItem, Form } from "ant-design-vue";
+import { Input, FormItem, Form, PopconfirmProps } from "ant-design-vue";
 import ProjectInfo from "@/stores/projectInfo";
 import { computed } from "@vue/reactivity";
 import { _get, _set } from "@/utils";
@@ -22,6 +22,7 @@ const props = defineProps<{
   type: InputType;
   label?: string;
   dataIndex: string;
+  // placement?: PopconfirmProps["placement"];
 }>();
 let value = computed({
   get: () => {

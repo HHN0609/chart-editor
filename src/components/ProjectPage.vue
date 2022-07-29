@@ -40,15 +40,15 @@
         <Input type="number" v-model:value="newProjectState.height" suffix="px"/>
       </FormItem>
       <FormItem label="Background color" name="bgColor" required>
-        <ColorPicker v-model="newProjectState.bgColor"></ColorPicker>
+        <ColorPicker v-model="newProjectState.bgColor" placement="right"></ColorPicker>
       </FormItem>
       <FormItem label="Viewport color" name="viewportColor" required>
-        <ColorPicker v-model="newProjectState.viewportColor"></ColorPicker>
+        <ColorPicker v-model="newProjectState.viewportColor" placement="right"></ColorPicker>
       </FormItem>
-      <FormItem class="buttonItem" :wrapper-col="{span: 12}">
+      <div class="buttonItem">
         <Button type="primary" html-type="submit">Create</Button>
         <Button style="margin-left: 10px" @click="closeModal">Cancel</Button>
-      </FormItem>
+      </div>
     </Form>
   </Modal>
 </template>

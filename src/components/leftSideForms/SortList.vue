@@ -151,8 +151,22 @@ const deleteChart = (_uid: string) => {
 
 <style lang="less" scoped>
 .sortlist {
-  width: 90%;
-  margin: 0 auto;
+  box-sizing: border-box;
+  overflow-y: auto;
+  height: calc(100% - 50px);
+  width: 100%;
+  padding: 0 10px;
+  &::-webkit-scrollbar {
+    width: 10px;
+  }
+  &::-webkit-scrollbar-track {
+      border-radius: 5px;
+  }
+  &::-webkit-scrollbar-thumb {
+      border-radius: 10px;
+      background: rgba(96, 96, 96, 0.4);
+      box-shadow: inset006pxrgba(0, 0, 0, 0.5);
+  }
 }
 .flip-list-move {
   transition: transform 0.5s;

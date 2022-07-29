@@ -57,7 +57,6 @@ const isChart = computed(() => projectInfo.currTarget.slice(0, 7) === ".target")
 <style scoped lang="less">
 .container {
   width: 100%;
-
   .ant-form-item {
     margin-bottom: 0px;
   }

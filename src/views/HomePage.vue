@@ -31,7 +31,7 @@
             <template #content>
               <a @click="logOut">Logout</a>
             </template>
-            <a>{{ store.userName || "Not logged in" }}</a>
+            <a style="margin-left: 5px;">{{ store.userName || "Not logged in" }}</a>
           </Popover>
         </strong>
       </LayoutHeader>

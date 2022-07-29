@@ -322,6 +322,17 @@ function tipFormatter(value: number) {
     height: 100vh;
     overflow-x: hidden;
     overflow-y: auto;
+      &::-webkit-scrollbar {
+        width: 10px;
+      }
+      &::-webkit-scrollbar-track {
+        border-radius: 5px;
+      }
+      &::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        background: rgba(96, 96, 96, 0.4);
+        box-shadow: inset006pxrgba(0, 0, 0, 0.5);
+      }
     > .tabs {
       > .ant-tabs.ant-tabs-top {
         > .ant-tabs-nav {
