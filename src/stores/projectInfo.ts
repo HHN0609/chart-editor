@@ -15,7 +15,7 @@ type chartDataType = {
     y: number;
     rotate: number;
     index: number;
-    type: "Bar" | "Line" | "Dot" | "Pie" | "Area";
+    type: string;
   };
   sourceData: Array<any>;
   optionsData: any;

@@ -1,7 +1,7 @@
 // 下面数据都是新增图表时候的默认数据
 
 // 默认的数据源
-export const ScatterDefaultSourceData = [  
+export const BubbleDefaultSourceData = [  
   [
     [10.0, 8.04, 15],
     [8.07, 6.95, 25 ],
@@ -38,7 +38,7 @@ export const ScatterDefaultSourceData = [
 ];
 
 // 默认的图表配置数据
-export const ScatterDefaultOptionsData = {
+export const BubbleDefaultOptionsData = {
   backGround: {
     color: "#000000"
   },
@@ -54,7 +54,7 @@ export const ScatterDefaultOptionsData = {
   },
   title: {
     show: true,
-    text: "scatter",
+    text: "Bubble",
     font: {
       color: "#FFFFFF",
       size: "10",

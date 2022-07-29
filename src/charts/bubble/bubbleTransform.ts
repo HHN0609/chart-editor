@@ -2,7 +2,7 @@ import { getSacleAndDimensions } from "@/utils";
 import echarts from "echarts";
 
 // 转化自定义的options到echart的options
-export default function ScatterTransform(customOption: any, data: any[]): echarts.EChartsOption {
+export default function BubbleTransform(customOption: any, data: any[]): echarts.EChartsOption {
   const { dimensions, scale } = getSacleAndDimensions(data);
   const options: echarts.EChartsOption = {};
   options.backgroundColor = customOption.backGround.color;

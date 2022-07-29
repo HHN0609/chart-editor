@@ -5,18 +5,18 @@
 import { onBeforeUnmount, onMounted, ref, watch } from "vue";
 import * as echarts from "echarts";
 
-import ScatterTransform from "./scatterTransform";
+import BubbleTransform from "./bubbleTransform";
 // import ProjectInfo from "@/stores/projectInfo";
 // customOptions会被转化为echart的option
 const props = defineProps(["sourceData", "optionsData", "uid"]);
 let resizeObserver: ResizeObserver;
 let chart: echarts.ECharts;
 const chartDom = ref<HTMLElement>();
-let option = ScatterTransform(props.optionsData, props.sourceData);
+let option = BubbleTransform(props.optionsData, props.sourceData);
 // const projectInfo = ProjectInfo();
 watch([props.optionsData, props.sourceData], () => {
   // 侧边栏的变化回触发对应的customOption的变化， config变化后重新生成options
-  option = ScatterTransform(props.optionsData, props.sourceData);
+  option = BubbleTransform(props.optionsData, props.sourceData);
   option && chart.setOption(option);
 });
 
