@@ -61,7 +61,7 @@ const goDashBoard = () => {
   width: 200px;
   height: 200px;
   margin: 10px;
-  // border: 1px solid black;
+  position: relative;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -71,6 +71,7 @@ const goDashBoard = () => {
   box-shadow: 2px 2px 4px 1px gainsboro;
   transition: 0.5s;
   cursor: pointer;
+
   &:hover {
     box-shadow: 4px 4px 4px 3px gainsboro;
   }
@@ -86,7 +87,7 @@ const goDashBoard = () => {
   }
   > .overLayout {
     position: absolute;
-    width: 200px;
+    width: 100%;
     height: 200px;
     background: rgba(0, 0, 0, 0.3);
     border-radius: inherit;

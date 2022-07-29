@@ -10,7 +10,8 @@
         @search="onSearch"
       />
     </header>
-    <main class="main">
+    <Empty class="empty" v-if="projectInfoArr.length === 0" description="No Projects"></Empty>
+    <main v-else class="main">
       <ChartCard
         v-for="data in projectInfoArr"
         :key="data.project_id"
@@ -53,7 +54,7 @@
   </Modal>
 </template>
 <script lang="ts" setup>
-import { Spin, Modal, FormItem, Form, Button, Input, InputSearch } from "ant-design-vue"; 
+import { Spin, Modal, FormItem, Form, Button, Input, InputSearch, Empty } from "ant-design-vue"; 
 import { onMounted, reactive, ref } from "vue";
 import { deleteUserProjects, getUserProjects, postUserProjects } from "@/apis/index";
 import userInfo from "@/stores/userInfo";
@@ -122,10 +123,10 @@ function getProjectsData() {
 <style lang="less" scoped>
 .container {
   width: 100%;
-  height: 100%;
+  height: calc(100vh - 64px);
+  position: relative;
   padding: 10px;
-  overflow-x: hidden;
-  overflow-y: auto;
+  overflow: hidden;
   > .header{
     width: 100%;
     height: 50px;
@@ -134,11 +135,29 @@ function getProjectsData() {
     align-items: center;
     justify-content:space-between;
   }
+  >.empty{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateY(-50%) translateX(-50% - 8px);
+  }
   > .main{
+    height: calc(100% - 50px);
+    overflow-x: hidden;
+    overflow-y: auto;
     display: flex;
-    justify-content: left;
-    align-items: center;
-    justify-items: center;
+    flex-wrap: wrap;
+      &::-webkit-scrollbar {
+        width: 10px;
+      }
+      &::-webkit-scrollbar-track {
+        border-radius: 5px;
+      }
+      &::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        background: rgba(96, 96, 96, 0.4);
+        box-shadow: inset006pxrgba(0, 0, 0, 0.5);
+      }
   }
 }
 .modalForm{
