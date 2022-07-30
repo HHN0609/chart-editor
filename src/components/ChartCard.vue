@@ -1,5 +1,5 @@
 <template>
-  <div class="box" @mouseenter="showOverLayout = true" @mouseleave="showOverLayout = false">
+  <div class="box">
     <div class="imgBox">
       <img src="../../asset/柱状图.svg" alt="No img" />
     </div>
@@ -8,15 +8,15 @@
       <h5>create time:</h5>
       <h5>{{ create_time }}</h5>
     </div>
-    <div class="overLayout" v-if="showOverLayout">
-      <Button type="primary" @click="goDashBoard">Edit</Button>
-      <Button type="primary" danger @click="showDeleteConfirm">Delete</Button>
+    <div class="overLayout">
+      <Button class="button" type="primary" @click="goDashBoard">Edit</Button>
+      <Button class="button" type="primary" danger @click="showDeleteConfirm">Delete</Button>
     </div>
   </div>
 </template>
 <script lang="ts" setup>
 import { ExclamationCircleOutlined } from "@ant-design/icons-vue";
-import { computed, ref } from "@vue/reactivity";
+import { computed } from "@vue/reactivity";
 import { Modal, Button } from "ant-design-vue";
 import { createVNode } from "vue";
 
@@ -35,8 +35,6 @@ const create_time = computed(() => {
   const arr = props.data.create_time.split("T");
   return arr[0] + " " + arr[1].split(".")[0];
 });
-const showOverLayout = ref<Boolean>(false);
-const showModal = ref<Boolean>(false);
 
 const showDeleteConfirm = () => {
   Modal.confirm({
@@ -89,11 +87,22 @@ const goDashBoard = () => {
     position: absolute;
     width: 100%;
     height: 200px;
-    background: rgba(0, 0, 0, 0.3);
+    background-color: rgba(0, 0, 0, 0.0);
     border-radius: inherit;
     display: flex;
     justify-content: space-evenly;
     align-items: center;
+    transition-property: background-color opacity;
+    transition-duration: 0.5s;
+    > .button {
+      opacity: 0;
+    }
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.5);
+      > .button {
+        opacity: 1;
+      }
+    }
   }
 }
 </style>
