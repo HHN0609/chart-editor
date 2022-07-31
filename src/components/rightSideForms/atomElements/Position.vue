@@ -59,7 +59,7 @@ let isShow = computed(() => {
 }
 @font-face {
   font-family: "iconfont"; /* Project id  */
-  src: url("../../../../asset/iconfont.ttf") format("truetype");
+  src: url("@/assets/iconfont.ttf") format("truetype");
 }
 .iconfont {
   font-family: "iconfont" !important;

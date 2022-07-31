@@ -1,10 +1,10 @@
-import BarPng from "../../asset/chartExamples/Bar.png";
-import BubblePng from "../../asset/chartExamples/Bubble.png";
-import GaugePng from "../../asset/chartExamples/Gauge.png";
-import LinePng from "../../asset/chartExamples/Line.png";
-import PiePng from "../../asset/chartExamples/Pie.png";
-import RadarPng from "../../asset/chartExamples/Radar.png";
-import ScatterPng from "../../asset/chartExamples/Scatter.png";
+import BarPng from "@/assets/chartExamples/Bar.png";
+import BubblePng from "@/assets/chartExamples/Bubble.png";
+import GaugePng from "@/assets/chartExamples/Gauge.png";
+import LinePng from "@/assets/chartExamples/Line.png";
+import PiePng from "@/assets/chartExamples/Pie.png";
+import RadarPng from "@/assets/chartExamples/Radar.png";
+import ScatterPng from "@/assets/chartExamples/Scatter.png";
 
 
 import Bar from "@/charts/bar/Bar.vue";

@@ -1,12 +1,12 @@
 <template>
   <div class="mianBox">
     <div class="img-box">
-      <img src="../../asset/界面研究.svg" />
+      <img src="@/assets/LoginPageImg.svg" />
     </div>
     <div class="tab-box">
       <TypographyTitle :level="3">Welcome to Chart Editor</TypographyTitle>
 
-      <Tabs v-model:activeKey="activeKey" animated>
+      <Tabs v-model:activeKey="activeKey" @change="cleanForm" animated>
         <TabPane key="1" tab="Login">
           <Form :model="formState" class="login-form" name="normal_login" @finish="submitForm" :label-col="{ span: 8 }" :wrapper-col="{ span: 16 }">
             <FormItem label="Account" name="account" :rules="[{ required: true, message: 'Please input your username!' }]">
@@ -99,6 +99,7 @@ interface FormState {
   confirm?: string;
   name?: string;
 }
+
 const activeKey = ref("1");
 const formState = reactive<FormState>({
   account: "",
@@ -116,6 +117,7 @@ const submitForm = () => {
   });
 };
 
+// 注册表单密码验证部分
 const validatePassword = async (_rule: Rule, value: string) => {
   if (formState.password && formState.confirm !== formState.password) {
     return Promise.reject("Two passwords are not match!");
@@ -124,6 +126,7 @@ const validatePassword = async (_rule: Rule, value: string) => {
   }
 };
 
+// 注册部分
 const submitRegister = () => {
   postUserRegister("/user/info", formState.account, formState.name, formState.password).then(({ data }) => {
     message.success(data.message, 0.5);
@@ -131,6 +134,15 @@ const submitRegister = () => {
     activeKey.value = "1";
   });
 };
+
+// 切换选项卡片时候清空输入框
+const cleanForm = () => {
+  formState.account = "";
+  formState.confirm = "";
+  formState.name = "";
+  formState.password = "";
+}
+
 </script>
 <style lang="less" scoped>
 .mianBox {

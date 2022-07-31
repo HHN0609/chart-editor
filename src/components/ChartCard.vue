@@ -1,7 +1,7 @@
 <template>
   <div class="box">
     <div class="imgBox">
-      <img src="../../asset/柱状图.svg" alt="No img" />
+      <img src="@/assets/chartCardImg.svg" alt="No img" />
     </div>
     <div class="infoBox">
       <strong>{{ data.project_name }}</strong>

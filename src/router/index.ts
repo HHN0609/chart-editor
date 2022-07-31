@@ -1,15 +1,15 @@
-import { createRouter, createWebHashHistory, createWebHistory } from "vue-router";
+import { createRouter, createWebHashHistory } from "vue-router";
 // import userInfo from "@/stores/userInfo";
 // import pinia from "@/stores/store";
 // import { getCookie } from "@/utils";
 const LoginPage = () => import("@/views/LoginPage.vue");
 const DashBoard = () => import("@/views/DashBoard.vue");
 const NotFound = () => import("@/views/NotFound.vue");
-const HomePage = () => import("@/views/HomePage.vue");
+const HomePage = () => import("@/views/HomePage/HomePage.vue");
 const Display = () => import("@/views/Display.vue");
-const ProjectPage = () => import("@/components/ProjectPage.vue");
-const InfoPage = () => import("@/components/InfoPage.vue");
-const ManagePage = () => import("@/components/ManagePage.vue");
+const ProjectPage = () => import("@/views/HomePage/ProjectPage.vue");
+const InfoPage = () => import("@/views/HomePage/InfoPage.vue");
+const ManagePage = () => import("@/views/HomePage/ManagePage.vue");
 
 const router = createRouter({
   history: createWebHashHistory(),
