@@ -145,19 +145,24 @@ function getProjectsData() {
     height: calc(100% - 50px);
     overflow-x: hidden;
     overflow-y: auto;
-    display: flex;
-    flex-wrap: wrap;
-      &::-webkit-scrollbar {
-        width: 10px;
-      }
-      &::-webkit-scrollbar-track {
-        border-radius: 5px;
-      }
-      &::-webkit-scrollbar-thumb {
-        border-radius: 10px;
-        background: rgba(96, 96, 96, 0.4);
-        box-shadow: inset006pxrgba(0, 0, 0, 0.5);
-      }
+    // display: flex;
+    // flex-wrap: wrap;
+    display: grid;
+    gap: 10px;
+    grid-template-columns: repeat(auto-fill, 200px);
+    grid-template-rows:repeat(auto-fill, 200px);
+    justify-content: space-evenly;
+    &::-webkit-scrollbar {
+      width: 10px;
+    }
+    &::-webkit-scrollbar-track {
+      border-radius: 5px;
+    }
+    &::-webkit-scrollbar-thumb {
+      border-radius: 10px;
+      background: rgba(96, 96, 96, 0.4);
+      box-shadow: inset006pxrgba(0, 0, 0, 0.5);
+    }
   }
 }
 .modalForm{

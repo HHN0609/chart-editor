@@ -1,5 +1,5 @@
 <template>
-  <Spin size="large" :spinning="spinning" tip="Loading……">
+  <Spin class="spin" size="large" :spinning="spinning" tip="Loading……">
     <div class="dashBoardContainer">
       <div class="left">
         <ChartMenu></ChartMenu>
