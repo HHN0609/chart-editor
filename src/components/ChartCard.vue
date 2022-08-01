@@ -5,8 +5,8 @@
     </div>
     <div class="infoBox">
       <strong>{{ data.project_name }}</strong>
-      <h5>create time:</h5>
-      <h5>{{ create_time }}</h5>
+      <p>create time: {{ props.data.create_time }}</p>
+      <p>last modify: {{ props.data.create_time }}</p>
     </div>
     <div class="overLayout">
       <Button class="button" type="primary" @click="goDashBoard">Edit</Button>
@@ -16,7 +16,7 @@
 </template>
 <script lang="ts" setup>
 import { ExclamationCircleOutlined } from "@ant-design/icons-vue";
-import { computed } from "@vue/reactivity";
+// import { computed } from "@vue/reactivity";
 import { Modal, Button } from "ant-design-vue";
 import { createVNode } from "vue";
 
@@ -31,10 +31,6 @@ const props = defineProps<{
   data: cardDataType;
 }>();
 const emitter = defineEmits(["delete-project", "go-dashboard"]);
-const create_time = computed(() => {
-  const arr = props.data.create_time.split("T");
-  return arr[0] + " " + arr[1].split(".")[0];
-});
 
 const showDeleteConfirm = () => {
   Modal.confirm({
@@ -63,7 +59,7 @@ const goDashBoard = () => {
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
   border-radius: 10px;
   box-shadow: 2px 2px 4px 1px gainsboro;
@@ -82,6 +78,10 @@ const goDashBoard = () => {
     overflow: hidden;
     height: fit-content;
     width: 80%;
+    > p{
+      margin-bottom: 0;
+      font-size: 11px;
+    }
   }
   > .overLayout {
     position: absolute;

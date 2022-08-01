@@ -9,5 +9,6 @@ module.exports = {
         user: "root",
         password: "hhnhhn",
         database: "chart_editor_db",
+        timezone: '08:00',
     }
 }
