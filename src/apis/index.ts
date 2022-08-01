@@ -86,6 +86,7 @@ export const postUserProjects = (relativeUrl: string, account: string, initInfo:
  * delete方法删除一个project
  * @param relativeUrl 请求相对于baseUrl的地址
  * @param projectId 项目id
+ * @param account 账号
  * @returns Promise
  */
 export const deleteUserProjects = (relativeUrl: string, projectId: string, account: string) => {
@@ -96,6 +97,19 @@ export const deleteUserProjects = (relativeUrl: string, projectId: string, accou
     },
   });
 };
+
+/**
+* 修改project的last-modify时间
+* @param relativeUrl 请求相对于baseUrl的地址
+* @param projectId 项目id
+* @param account 账号
+* @returns Promise
+*/
+export const putProjectLastModify = (relativeUrl: string, projectId: string) => {
+  return instance.put(relativeUrl, {
+    projectId
+  })
+}
 
 export const getAllUsersInfo = (relativeUrl: string) => {
   return instance.get(relativeUrl);

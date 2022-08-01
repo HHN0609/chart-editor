@@ -25,11 +25,10 @@
 import { SaveOutlined, FileImageOutlined, ExportOutlined, FundProjectionScreenOutlined, LoadingOutlined } from "@ant-design/icons-vue";
 import { onBeforeUnmount, onMounted, ref } from "vue";
 import ProjectInfo from "@/stores/projectInfo";
-import { putUserChartDetailInfo, putUserProjectsBasic } from "@/apis";
+import { putUserChartDetailInfo, putUserProjectsBasic, putProjectLastModify } from "@/apis";
 import { message } from "ant-design-vue";
 import router from "@/router";
 import html2canvas from "html2canvas";
-// import { message } from "ant-design-vue";
 const projectInfo = ProjectInfo();
 let saving = ref(false);
 const onSave = () => {
@@ -43,6 +42,9 @@ const onSave = () => {
     message.success("Saved", 1).then(() => {
       saving.value = false;
     });
+  }).then(() => {
+    // 修改项目的最后修改时间
+    putProjectLastModify("/user/projects", projectInfo.projectId);
   });
 };
 
@@ -52,18 +54,18 @@ const onExit = () => {
     router.replace({ name: "MyProject" });
   }
 };
-const saveHandle = (e: KeyboardEvent) => {
-  if (e.ctrlKey && e.key === "s") {
-    e.preventDefault();
-    onSave();
-  }
-};
-onMounted(() => {
-  window.addEventListener("keydown", saveHandle, {passive: true});
-});
-onBeforeUnmount(() => {
-  window.removeEventListener("keydown", saveHandle);
-});
+// const saveHandle = (e: KeyboardEvent) => {
+//   if (e.ctrlKey && e.key === "s") {
+//     e.preventDefault();
+//     onSave();
+//   }
+// };
+// onMounted(() => {
+//   window.addEventListener("keydown", saveHandle, {passive: true});
+// });
+// onBeforeUnmount(() => {
+//   window.removeEventListener("keydown", saveHandle);
+// });
 
 const onExport = () => {
   const dom = document.querySelector(".pngDom") as HTMLElement;

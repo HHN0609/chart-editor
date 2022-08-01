@@ -6,7 +6,7 @@
     <div class="infoBox">
       <strong>{{ data.project_name }}</strong>
       <p>create time: {{ props.data.create_time }}</p>
-      <p>last modify: {{ props.data.create_time }}</p>
+      <p>last modify: {{ props.data.last_modify }}</p>
     </div>
     <div class="overLayout">
       <Button class="button" type="primary" @click="goDashBoard">Edit</Button>

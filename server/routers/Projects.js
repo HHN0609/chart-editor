@@ -99,8 +99,10 @@ projectsRouter.delete("/api/user/projects", (req, res) => {
 });
 
 projectsRouter.put("/api/user/projects", (req, res) => {
-  connection.query(``, (error, results) => {
+  const { body } = req;
+  connection.query(`update project_info set last_modify=NOW() where project_id='${body.projectId}'`, (error, results) => {
     if (error) {
+      console.log(error);
       res.status(500).send({
         message: "Mysql Error",
       });
