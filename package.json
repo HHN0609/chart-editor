@@ -8,6 +8,7 @@
     "dev": "webpack serve --config ./build/webpack.config.js --env development",
     "start": "npm run dev",
     "build": "webpack --config ./build/webpack.config.js --env production",
+    "build:dll": "webpack --config ./build/webpack.dll.js",
     "serve": "node ./server/index.js"
   },
   "repository": {
@@ -33,6 +34,7 @@
     "@babel/core": "^7.18.2",
     "@babel/preset-env": "^7.18.2",
     "@babel/preset-typescript": "^7.17.12",
+    "add-asset-html-webpack-plugin": "^5.0.2",
     "babel-loader": "^8.2.5",
     "copy-webpack-plugin": "^11.0.0",
     "css-loader": "^6.7.1",

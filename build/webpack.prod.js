@@ -4,6 +4,8 @@ const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 const PurgecssPlugin = require('purgecss-webpack-plugin');
 const glob = require('glob');
+const webpack = require('webpack');
+const AddAssetHtmlPlugin = require('add-asset-html-webpack-plugin');
 
 const path = require("path");
 module.exports = {
@@ -31,6 +33,15 @@ module.exports = {
     // new CopyWebpackPlugin({
     //   patterns: [{ from: "./public", to: "./public" }],
     // }),
+    new webpack.DllReferencePlugin({
+      context: __dirname,
+      manifest: require('../dll/vue-library.json'),
+    }),
+    // 打包后的 .dll.js 文件需要引入到 html中，可以通过 add-asset-html-webpack-plugin 插件自动引入
+    new AddAssetHtmlPlugin({ 
+      filepath: path.resolve(__dirname, '../dll/vue-library.dll.js'),
+      publicPath: '',
+    }),
   ],
   optimization: {
     minimizer:[
