@@ -1,5 +1,5 @@
 <template>
-  <Spin class="spin" size="large" :spinning="spinning" tip="Loading……">
+    <LoginPage :show="showLoading" size="large" description="Loading……"></LoginPage>
     <div class="dashBoardContainer">
       <div class="left">
         <ChartMenu></ChartMenu>
@@ -69,10 +69,9 @@
         </div>
       </div>
     </div>
-  </Spin>
 </template>
 <script lang="ts" setup>
-import { Tabs, TabPane, Spin, Input, Slider } from "ant-design-vue";
+import { Tabs, TabPane, Input, Slider } from "ant-design-vue";
 import { ReloadOutlined } from "@ant-design/icons-vue";
 import { nextTick, onMounted, reactive, Ref, ref, watch, onBeforeMount, onUnmounted } from "vue";
 import InfiniteViewer, { InfiniteViewerOptions, OnPinch, OnDrag, OnScroll } from "infinite-viewer";
@@ -92,9 +91,10 @@ import ChartMenu from "@/components/leftSideForms/ChartMenu.vue";
 import SortList from "@/components/leftSideForms/SortList.vue";
 import { CHARTS } from "@/charts/index";
 import CodeMirror from "@/components/rightSideForms/CodeMirror.vue";
+import LoginPage from "@/views/LoadingPage.vue";
 const projectInfo = ProjectInfo();
 
-let spinning = ref<boolean>(true);
+let showLoading = ref<boolean>(true);
 let tabActiveKey = ref("1");
 let guideHorizontal: Ref<Guides> = useGuide(".guide.horizontal", "horizontal");
 let guideVertical: Ref<Guides> = useGuide(".guide.vertical", "vertical");
@@ -250,7 +250,7 @@ onBeforeMount(() => {
           });
           projectInfo.chartsDatas.push(...arr);
         }
-        spinning.value = false;
+        showLoading.value = false;
       });
     });
 });
