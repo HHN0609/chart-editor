@@ -16,8 +16,6 @@ You can use it draw various charts easily.
 9. The root account is `root`, and the password is `123456`.
 10. Let start this project!
 
-### Gague chart 
-![gagueChart](./exemples/gague.png "gagueChart")
 # Some runtime Pictures 
 ### DashBoard Page
 ![DashBoard](./exemples/DashBoard.png "DashBoard") 
@@ -53,3 +51,6 @@ You can use it draw various charts easily.
 
 ### Scatter chart 
 ![scatterChart](./exemples//scatter.png "scatterChart") 
+
+### Gague chart 
+![gagueChart](./exemples/gague.png "gagueChart")
