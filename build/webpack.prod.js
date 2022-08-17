@@ -6,15 +6,35 @@ const PurgecssPlugin = require('purgecss-webpack-plugin');
 const glob = require('glob');
 const webpack = require('webpack');
 const AddAssetHtmlPlugin = require('add-asset-html-webpack-plugin');
+const CleanEmptyCssFilesPlugin = require("./webpack-plugins/clean-empty-css-files-plugin");
 
 const path = require("path");
-module.exports = {
+
+const prod = {
   mode: "production",
   output: {
     filename: "script/[name].js",
     path: path.join(__dirname, "../dist"),
     clean: true,
   },
+}
+
+const devAsProd = {
+  mode: "development",
+  target: "web",
+  devtool: "eval",
+  devServer: {
+    host: "127.0.0.1",
+    port: 8081,
+    hot: true,
+    proxy: {
+      "/api": "http://127.0.0.1:3000",
+    },
+  },
+}
+
+module.exports = {
+  ...prod,
   module: {
     rules: [
       {
@@ -42,6 +62,7 @@ module.exports = {
       filepath: path.resolve(__dirname, '../dll/vue-library.dll.js'),
       publicPath: '',
     }),
+    new CleanEmptyCssFilesPlugin(),
   ],
   optimization: {
     minimizer:[
