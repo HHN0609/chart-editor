@@ -160,7 +160,7 @@ watch([() => projectInfo.height, () => projectInfo.width], ([newH, newW]) => {
 
 // 点击切换moveable选中的元素
 const changeTarget = (e) => {
-  for (let el of e.path) {
+  for (let el of e.composedPath()) {
     if (el === infiniteViewer.getWrapper()) {
       projectInfo.$patch({
         currTarget: "",

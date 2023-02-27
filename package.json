@@ -6,11 +6,11 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "webpack serve --config ./build/webpack.config.js --env development",
-    "devAsProd": "webpack serve --config ./build/webpack.config.js --env production",
     "start": "npm run dev",
     "build": "webpack --config ./build/webpack.config.js --env production",
     "build:dll": "webpack --config ./build/webpack.dll.js",
-    "serve": "node ./server/index.js"
+    "serve": "node ./server/index.js",
+    "preview": "webpack serve --config ./build/webpack.preview.js"
   },
   "repository": {
     "type": "git",
