@@ -121,6 +121,34 @@ export function _set(obj, dataIndex: string, newValue): any{
     p[lastProperty] = newValue;
 }
 
-export function deepClone(obj): any {
-    
+// @numbers 包含所有数字的一维数组
+// @digit 保留数值精度小数位数，默认两位小数
+export function getBebeQ(numbers, digit = 2) {
+    // 修复js浮点数精度误差问题
+    function formulaCalc(formula, digit) {
+        let pow = Math.pow(10, digit);
+        return parseInt(formula * pow, 10) / pow;
+    };
+    let len = numbers.length;
+    let sum = (a, b) => formulaCalc(a + b, digit);
+    let max = Math.max.apply(null, numbers);
+    let min = Math.min.apply(null, numbers);
+    // 平均值
+    let avg = numbers.reduce(sum) / len;
+    // 计算中位数
+    // 将数值从大到小顺序排列好，赋值给新数组用于计算中位数
+    let sequence = [].concat(numbers).sort((a,b) => b-a);
+    let mid = (len & 1) === 0 ?
+        (sequence[len/2] + sequence[len/2+1]) / 2 :
+        sequence[(len+1)/2];
+    // 计算标准差
+    // 所有数减去其平均值的平方和，再除以数组个数（或个数减一，即变异数）再把所得值开根号
+    let stdDev = Math.sqrt(numbers.map(n=> (n-avg) * (n-avg)).reduce(sum) / len);
+    return {
+        max,
+        min,
+        avg: avg.toFixed(digit),
+        mid: parseFloat(mid).toFixed(digit),
+        stdDev : stdDev.toFixed(digit)
+    }
 }

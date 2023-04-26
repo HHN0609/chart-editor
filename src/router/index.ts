@@ -10,6 +10,8 @@ const Display = () => import("@/views/Display.vue");
 const ProjectPage = () => import("@/views/HomePage/ProjectPage.vue");
 const InfoPage = () => import("@/views/HomePage/InfoPage.vue");
 const ManagePage = () => import("@/views/HomePage/ManagePage.vue");
+const DataPreView = () => import("@/views/HomePage/DataPreview.vue");
+const DataDraw = () => import("@/views/HomePage/DataDraw.vue");
 
 const router = createRouter({
   history: createWebHashHistory(),
@@ -44,6 +46,16 @@ const router = createRouter({
           path: "/Home/Manage",
           component: ManagePage,
         },
+        {
+          name: "DataPreview",
+          path: "/Home/DataPreview",
+          component: DataPreView
+        },
+        {
+          name: "DataDraw",
+          path: "/Home/DataDraw",
+          component: DataDraw
+        }
       ],
     },
     {

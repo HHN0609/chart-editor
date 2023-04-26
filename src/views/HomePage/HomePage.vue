@@ -3,17 +3,9 @@
     <LayoutSider class="sider" v-model:collapsed="collapsed" collapsible>
       <div class="logo">hi!</div>
       <Menu theme="dark" mode="inline" @click="switchTitle" v-model:selectedKeys="selectedKeys">
-        <MenuItem key="1">
-          <bar-chart-outlined />
-          <span>Projects</span>
-        </MenuItem>
-        <MenuItem key="2">
-          <user-outlined />
-          <span>Profile</span>
-        </MenuItem>
-        <MenuItem key="3" v-if="store.$state.isAdmin !== 0">
-          <cluster-outlined />
-          <span>Management</span>
+        <MenuItem v-for="{key, name, icon} in filterSiderConfig" :key="key">
+          <Component :is="icon"></Component>
+          <span>{{ name }}</span>
         </MenuItem>
       </Menu>
     </LayoutSider>
@@ -36,41 +28,42 @@
         </strong>
       </LayoutHeader>
       <LayoutContent class="content">
-        <router-view></router-view>
+        <router-view v-slot="{ Component }">
+          <keep-alive>
+            <component :is="Component" />
+          </keep-alive>
+        </router-view>
       </LayoutContent>
     </Layout>
   </Layout>
 </template>
 <script lang="ts" setup>
-import { UserOutlined, BarChartOutlined, ClusterOutlined } from "@ant-design/icons-vue";
+import { UserOutlined } from "@ant-design/icons-vue";
 import { message, Layout, LayoutContent, LayoutHeader, LayoutSider , Popover, Avatar, Menu, MenuItem } from "ant-design-vue";
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import router from "@/router/index";
 import userInfo from "@/stores/userInfo";
 import { clearAllCookies } from "@/utils";
+import siderConfig from "./siderConfig";
 
 const store = userInfo();
 const collapsed = ref<boolean>(false);
 const selectedKeys = ref<string[]>(["1"]);
 const headerTitle = ref<string>("Projects");
 
+const filterSiderConfig = computed(() => {
+  return siderConfig.filter(({key}) => {
+    return key === "3" && store.$state.isAdmin === 0 ? false : true;
+  })
+})
+
 const switchTitle = (event) => {
-  switch (event.key) {
-    case "1":
-      headerTitle.value = "Projects";
-      router.push({ name: "MyProject" });
-      break;
-    case "2":
-      headerTitle.value = "Profile";
-      router.push({ name: "MyProfile" });
-      break;
-    case "3":
-      headerTitle.value = "Management";
-      router.push({ name: "Manage" });
-      break;
-    default:
-      break;
-  }
+  siderConfig.forEach((value) => {
+    if(event.key === value.key){
+      headerTitle.value = value.name;
+      router.push({ name: value.routeName });
+    }
+  });
 };
 
 const logOut = () => {
@@ -84,16 +77,12 @@ const logOut = () => {
 
 // 刷新页面，侧边栏不变
 onMounted(() => {
-  if (router.currentRoute.value.name === "MyProject") {
-    selectedKeys.value = ["1"];
-    headerTitle.value = "Projects";
-  } else if (router.currentRoute.value.name === "MyProfile") {
-    selectedKeys.value = ["2"];
-    headerTitle.value = "Profile";
-  } else if (router.currentRoute.value.name === "Manage") {
-    selectedKeys.value = ["3"];
-    headerTitle.value = "Management";
-  }
+  siderConfig.forEach((value) => {
+    if(router.currentRoute.value.name === value.routeName){
+      selectedKeys.value = [`${value.key}`];
+      headerTitle.value = value.name;
+    }
+  });
 });
 </script>
 <style lang="less" scoped>
@@ -117,10 +106,12 @@ onMounted(() => {
   }
   .main {
     > .header {
-      padding: 0px 20px;
+      padding: 0px 10px;
+      height: 50px;
       background: #fff;
       display: flex;
       justify-content: space-between;
+      align-items: center;
     }
     > .content {
       overflow-x: hidden;
