@@ -39,7 +39,6 @@ import { Popover, Radio, RadioGroup } from "ant-design-vue";
 import { DownOutlined } from "@ant-design/icons-vue"
 import useChartData from "@/stores/chartData";
 import { defineEmits, onMounted, ref } from "vue";
-// import inputData from "@/stores/inputData";
 
 // index代表该标签在X_axis or Y_axis中的下标
 // axis代表该标签那个轴

@@ -1,10 +1,11 @@
 import { defineStore } from "pinia";
 import { Ref } from "vue";
-export type MarkType = "circle" | "bar" | "line" | "scatter" | "area" | "arc" | "trail" | "auto";
+export type MarkType = "circle" | "bar" | "line" | "scatter" | "area" | "arc" | "trail";
 export type aggregateMethod = "sum" | "count" | "mean" | "min" | "max" | "median" | "variance" | "stdev" | "";
 export type ListType = {
     fieldName: string,
-    aggregateMethod?: aggregateMethod
+    aggregateMethod?: aggregateMethod,
+    id?: string
 }
 export type ChartData = {
     id: string,
@@ -16,7 +17,7 @@ export type ChartData = {
     size: ListType,
     opacity: ListType,
     shape: ListType,
-    stack?: "normalize" | null | "zero" | "center",
+    stack?: "normalize" | "" | "zero" | "center",
     X_axis: ListType[],
     Y_axis: ListType[],
     dimensionLists: ListType[],
@@ -33,7 +34,7 @@ export default defineStore("chartData", {
                     id: (function(){ return new Date().getTime().toString()})(),
                     name: "chart-0",
                     isAggregation: true,
-                    markType: "auto",
+                    markType: "bar",
                     color: { fieldName: "", aggregateMethod: "sum" },
                     size: { fieldName: "", aggregateMethod: "sum" },
                     opacity: { fieldName: "", aggregateMethod: "sum" },

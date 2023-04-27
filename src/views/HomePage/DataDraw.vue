@@ -262,18 +262,19 @@
                 </Row>
 
                 <Row class="chartArea">
-                    <!-- <div>
-                        {{ chartData.datas[chartData.activeIndex].X_axis }}
-                    </div>
-                    <div>
-                        {{ chartData.datas[chartData.activeIndex].Y_axis }}
-                    </div>
-                    <div style="width: 100%;">
-                        {{ chartData.datas[chartData.activeIndex].color }}
-                        {{ chartData.datas[chartData.activeIndex].shape }}
-                        {{ chartData.datas[chartData.activeIndex].size }}
-                        {{ chartData.datas[chartData.activeIndex].opacity }}
-                    </div> -->
+                    <AutoVega
+                        :dataSource="inputData.inputData"
+                        :X_axis="chartData.datas[chartData.activeIndex].X_axis"
+                        :Y_axis="chartData.datas[chartData.activeIndex].Y_axis"
+                        :shape="chartData.datas[chartData.activeIndex].shape"
+                        :size="chartData.datas[chartData.activeIndex].size"
+                        :color="chartData.datas[chartData.activeIndex].color"
+                        :opacity="chartData.datas[chartData.activeIndex].opacity"
+                        :markType="chartData.datas[chartData.activeIndex].markType"
+                        :stack="chartData.datas[chartData.activeIndex].stack"
+                    >
+
+                    </AutoVega>
                 </Row>
             </div>
         </div>
@@ -301,6 +302,7 @@ import useInputData from "@/stores/inputData";
 import { computed, onMounted, ref, watch } from "vue";
 import FieldTag from "@/components/dataDraw/fieldTag.vue";
 import Draggable from "vuedraggable";
+import AutoVega from "@/components/dataDraw/autoVega.vue";
 
 const chartData = useChartData();
 const inputData = useInputData();

@@ -3,19 +3,18 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, watch, watchEffect } from 'vue';
-// import * as vega from 'vega';
+import { WatchStopHandle, computed, onMounted, onUnmounted, ref, watch, watchEffect } from 'vue';
 // import * as vegeLite from 'vega-lite';
 import vegaEmbed from 'vega-embed';
 let chart = ref();
-
+let stop: WatchStopHandle;
 const props = defineProps<{
     colName: string,
     data: any[]
 }>();
 
 onMounted(() => {
-  watchEffect(() => {
+  stop = watchEffect(() => {
     vegaEmbed(chart.value, {
       $schema: 'https://vega.github.io/schema/vega-lite/v5.json',
       data: {
@@ -30,6 +29,10 @@ onMounted(() => {
       }
     })
   });    
+});
+
+onUnmounted(() => {
+  stop();
 });
 
 </script>
