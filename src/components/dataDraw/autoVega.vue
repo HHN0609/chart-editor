@@ -5,27 +5,33 @@
 </template>
 
 <script setup lang="ts">
-import { ListType, MarkType } from "@/stores/chartData";
+import { ListType, MarkType, AggregateMethod } from "@/stores/chartData";
 import { WatchStopHandle, computed, onMounted, onUnmounted, watchEffect, ref } from "vue";
 import vegaEmbed from "vega-embed";
 import useInputData from "@/stores/inputData";
 import useChartData from "@/stores/chartData"
-import { id, renderModule } from "vega";
 const inputData = useInputData();
 const chartData = useChartData();
 
-type axisType = ListType;
-type legendType = ListType;
-
+type  AxisType = ListType;
+type Legend = ListType;
+type VegaEncodingConfig = {
+    field: string,
+    title: string,
+    type: "quantitative" | "nominal",
+    aggregate?: AggregateMethod | null,
+    axis?: any
+}
+type LegendTypes = "color" | "size" | "shape" | "opacity";
 
 const props = defineProps<{
     dataSource: any[],
-    X_axis: axisType[],
-    Y_axis: axisType[],
-    shape: legendType,
-    opacity: legendType,
-    color: legendType,
-    size: legendType,
+    X_axis:  AxisType[],
+    Y_axis:  AxisType[],
+    shape: Legend,
+    opacity: Legend,
+    color: Legend,
+    size: Legend,
     markType: MarkType,
     stack?: "normalize" | "" | "zero" | "center",
 }>();
@@ -34,29 +40,27 @@ let stop: WatchStopHandle;
 
 let chart = ref();
 
-let tooltip = computed<any>(() => {
-    let p1 = chartData.datas[chartData.activeIndex].X_axis.map(({fieldName}) => {
-        if(inputData.dataColumnsInfo[fieldName] === "measure") {
-            return {
-                field: fieldName,
-                type: "quantitative",
-                title: fieldName
-            }
-        } else {
-            return {
-                field: fieldName,
-                type: "nominal",
-                title: fieldName
-            }
-        }
-    });
+// 当前被激活的图标(当前编辑的)
+const activeChart = computed(() => {
+    return chartData.datas[chartData.activeIndex];
+});
 
-    let p2 = chartData.datas[chartData.activeIndex].Y_axis.map(({fieldName}) => {
+function generateTooltip(axis: "X_axis" | "Y_axis"): VegaEncodingConfig[] {
+    return activeChart.value[axis].map(({fieldName, aggregateMethod}) => {
         if(inputData.dataColumnsInfo[fieldName] === "measure") {
-            return {
-                field: fieldName,
-                type: "quantitative",
-                title: fieldName
+            if(activeChart.value.isAggregation) {
+                return {
+                    field: fieldName,
+                    type: "quantitative",
+                    title: `${aggregateMethod}(${fieldName})`,
+                    aggregate: aggregateMethod
+                }
+            } else {
+                return {
+                    field: fieldName,
+                    type: "quantitative",
+                    title: fieldName
+                }
             }
         } else {
             return {
@@ -66,127 +70,71 @@ let tooltip = computed<any>(() => {
             }
         }
     });
+}
+
+let tooltip = computed<VegaEncodingConfig[]>(() => {
+    let p1 = generateTooltip("X_axis");
+
+    let p2 = generateTooltip("Y_axis");
 
     return [
         ...p1,
         ...p2
-    ]
+    ];
 });
 
 let mark = computed<any>(() => {
     return {
-        type: chartData.datas[chartData.activeIndex].markType,
+        type: activeChart.value.markType,
         opacity: 0.96,
         tooltip: { content: "data"}
     }
 });
 
-let vegaSpec = computed(() => {
-
-});
-
-let color = computed<any>(() => {
-    let fieldName = chartData.datas[chartData.activeIndex].color.fieldName;
-    let aggregateMethod = chartData.datas[chartData.activeIndex].color.aggregateMethod;
+function generateLegend(legendName: LegendTypes): VegaEncodingConfig {
+    let fieldName = activeChart.value[legendName].fieldName;
+    let aggregateMethod = activeChart.value[legendName].aggregateMethod;
     if(fieldName) {
         if(aggregateMethod && inputData.dataColumnsInfo[fieldName] === "measure"){
             // 开了数据聚合
             return {
                 title: aggregateMethod + `(${fieldName})`,
                 field: fieldName,
-                type: "quantitative"
+                type: "quantitative",
+                aggregate: aggregateMethod
             }
         } else {
             return {
                 title: fieldName,
                 field: fieldName,
                 type: "nominal",
-                aggregate: null
+                 
             }
         }
     } else {
-        return {};
+        return {} as any;
     }
+}
+
+let color = computed<VegaEncodingConfig>(() => {
+   return generateLegend("color");
 });
 
-let size = computed<any>(() => {
-    let fieldName = chartData.datas[chartData.activeIndex].size.fieldName;
-    let aggregateMethod = chartData.datas[chartData.activeIndex].size.aggregateMethod;
-    if(fieldName) {
-        if(aggregateMethod && inputData.dataColumnsInfo[fieldName] === "measure"){
-            // 开了数据聚合
-            return {
-                title: aggregateMethod + `(${fieldName})`,
-                field: fieldName,
-                type: "quantitative"
-            }
-        } else {
-            return {
-                title: fieldName,
-                field: fieldName,
-                type: "nominal",
-                aggregate: null
-            }
-        }
-    } else {
-        return {};
-    }
+let size = computed<VegaEncodingConfig>(() => {
+    return generateLegend("size");
 });
 
-let opacity = computed<any>(() => {
-    let fieldName = chartData.datas[chartData.activeIndex].opacity.fieldName;
-    let aggregateMethod = chartData.datas[chartData.activeIndex].opacity.aggregateMethod;
-    if(fieldName) {
-        if(aggregateMethod && inputData.dataColumnsInfo[fieldName] === "measure"){
-            // 开了数据聚合
-            return {
-                title: aggregateMethod + `(${fieldName})`,
-                field: fieldName,
-                type: "quantitative"
-            }
-        } else {
-            return {
-                title: fieldName,
-                field: fieldName,
-                type: "nominal",
-                aggregate: null
-            }
-        }
-    } else {
-        return {};
-    }
+let opacity = computed<VegaEncodingConfig>(() => {
+   return generateLegend("opacity");
 });
 
-let shape = computed<any>(() => {
-    let fieldName = chartData.datas[chartData.activeIndex].shape.fieldName;
-    let aggregateMethod = chartData.datas[chartData.activeIndex].shape.aggregateMethod;
-    if(fieldName) {
-        if(aggregateMethod && inputData.dataColumnsInfo[fieldName] === "measure"){
-            // 开了数据聚合
-            return {
-                title: aggregateMethod + `(${fieldName})`,
-                field: fieldName,
-                type: "quantitative"
-            }
-        } else {
-            return {
-                title: fieldName,
-                field: fieldName,
-                type: "nominal",
-                aggregate: null
-            }
-        }
-    } else {
-        return {};
-    }
+let shape = computed<VegaEncodingConfig>(() => {
+    return generateLegend("shape");
 });
 
-let x = computed<any>(() => {
-    let len = chartData.datas[chartData.activeIndex].X_axis.length;
-    if(len === 0) return {};
-    // X_axis的最后一个
-    let { fieldName, aggregateMethod } = chartData.datas[chartData.activeIndex].X_axis[len - 1];
-    if(inputData.inputData[fieldName] !== "measure") {
+
+function generateAxis(fieldName: string, aggregateMethod: AggregateMethod): VegaEncodingConfig {
+    if(inputData.dataColumnsInfo[fieldName] !== "measure") {
         return {
             title: fieldName,
             field: fieldName,
@@ -194,13 +142,48 @@ let x = computed<any>(() => {
             aggregate: null
         }
     }
-    if(chartData.datas[chartData.activeIndex].isAggregation) {
+    if(activeChart.value.isAggregation) {
         // 数据聚合
         return {
             title: aggregateMethod + `(${fieldName})`,
             field: fieldName,
             type: "quantitative",
+            axis: { labelOverlap: true },
+            aggregate: aggregateMethod
+        }
+    } else {
+        // 数据没聚合
+        return {
+            title: fieldName,
+            field: fieldName,
+            type: "quantitative",
             axis: { labelOverlap: true }
+        }
+    }
+}
+
+
+let x = computed<any>(() => {
+    let len = activeChart.value.X_axis.length;
+    if(len === 0) return {};
+    // X_axis的最后一个
+    let { fieldName, aggregateMethod } = activeChart.value.X_axis[len - 1];
+    if(inputData.dataColumnsInfo[fieldName] !== "measure") {
+        return {
+            title: fieldName,
+            field: fieldName,
+            type: "nominal",
+            aggregate: null
+        }
+    }
+    if(activeChart.value.isAggregation) {
+        // 数据聚合
+        return {
+            title: aggregateMethod + `(${fieldName})`,
+            field: fieldName,
+            type: "quantitative",
+            axis: { labelOverlap: true },
+            aggregate: aggregateMethod
         }
     } else {
         // 数据没聚合
@@ -214,11 +197,11 @@ let x = computed<any>(() => {
 });
 
 let column = computed<any>(() => {
-    let len = chartData.datas[chartData.activeIndex].X_axis.length;
+    let len = activeChart.value.X_axis.length;
     if(len <= 1) return {};
     // X_axis的倒数第二个
-    let { fieldName, aggregateMethod } = chartData.datas[chartData.activeIndex].X_axis[len - 2];
-    if(inputData.inputData[fieldName] !== "measure") {
+    let { fieldName, aggregateMethod } = activeChart.value.X_axis[len - 2];
+    if(inputData.dataColumnsInfo[fieldName] !== "measure") {
         return {
             title: fieldName,
             field: fieldName,
@@ -226,29 +209,32 @@ let column = computed<any>(() => {
             aggregate: null
         }
     }
-    if(chartData.datas[chartData.activeIndex].isAggregation) {
+    if(activeChart.value.isAggregation) {
         // 数据聚合
         return {
             title: aggregateMethod + `(${fieldName})`,
             field: fieldName,
-            type: "quantitative"
+            type: "quantitative",
+            axis: { labelOverlap: true },
+            aggregate: aggregateMethod
         }
     } else {
         // 数据没聚合
         return {
             title: fieldName,
             field: fieldName,
-            type: "quantitative"
+            type: "quantitative",
+            axis: { labelOverlap: true }
         }
     }
 });
 
 let y = computed<any>(() => {
-    let len = chartData.datas[chartData.activeIndex].Y_axis.length;
+    let len = activeChart.value.Y_axis.length;
     if(len === 0) return {};
     // Y_axis的最后一个
-    let { fieldName, aggregateMethod } = chartData.datas[chartData.activeIndex].Y_axis[len - 1];
-    if(inputData.inputData[fieldName] !== "measure") {
+    let { fieldName, aggregateMethod } = activeChart.value.Y_axis[len - 1];
+    if(inputData.dataColumnsInfo[fieldName] !== "measure") {
         return {
             title: fieldName,
             field: fieldName,
@@ -256,13 +242,14 @@ let y = computed<any>(() => {
             aggregate: null
         }
     }
-    if(chartData.datas[chartData.activeIndex].isAggregation) {
+    if(activeChart.value.isAggregation) {
         // 数据聚合
         return {
             title: aggregateMethod + `(${fieldName})`,
             field: fieldName,
             type: "quantitative",
-            axis: { labelOverlap: true }
+            axis: { labelOverlap: true },
+            aggregate: aggregateMethod
         }
     } else {
         // 数据没聚合
@@ -276,55 +263,71 @@ let y = computed<any>(() => {
 });
 
 let row = computed<any>(() => {
-    let len = chartData.datas[chartData.activeIndex].Y_axis.length;
+    let len = activeChart.value.Y_axis.length;
     if(len <= 1) return {};
     // Y_axis的倒数第二个
-    let { fieldName, aggregateMethod } = chartData.datas[chartData.activeIndex].Y_axis[len - 2];
-    if(inputData.inputData[fieldName] !== "measure") {
+    let { fieldName, aggregateMethod } = activeChart.value.Y_axis[len - 2];
+    if(inputData.dataColumnsInfo[fieldName] !== "measure") {
         return {
             title: fieldName,
             field: fieldName,
-            type: "nominal"
+            type: "nominal",
+            aggregate: null
         }
     }
-    if(chartData.datas[chartData.activeIndex].isAggregation) {
+    if(activeChart.value.isAggregation) {
         // 数据聚合
         return {
             title: aggregateMethod + `(${fieldName})`,
             field: fieldName,
-            type: "quantitative"
+            type: "quantitative",
+            axis: { labelOverlap: true },
+            aggregate: aggregateMethod
         }
     } else {
         // 数据没聚合
         return {
             title: fieldName,
             field: fieldName,
-            type: "quantitative"
+            type: "quantitative",
+            axis: { labelOverlap: true }
         }
     }
 });
 
 
+let vegaEncoding = () => {
+    let spec = {
+        tooltip: tooltip.value,
+        color,
+        opacity,
+        shape,
+        size,
+    };
+    if(Object.keys(x.value).length){
+        spec["x"] = x.value;
+    }
+    if(Object.keys(y.value).length){
+        spec["y"] = y.value;
+    }
+    if(Object.keys(row.value).length){
+        spec["row"] = row.value;
+    }
+    if(Object.keys(column.value).length){
+        spec["column"] = column.value;
+    }
+    return spec;
+}
+
 onMounted(() => {
     stop = watchEffect(() => {
-        console.log("draw chart");
         vegaEmbed("#chart", {
             $schema: 'https://vega.github.io/schema/vega-lite/v5.json',
             data: {
                 values: props.dataSource
             },
             mark: mark.value,
-            encoding: {
-                color: color.value,
-                opacity: opacity.value,
-                size: size.value,
-                shape: shape.value,
-                x: x.value,
-                y: y.value,
-                row: row.value,
-                column: column.value,
-                tooltip: tooltip.value
-            },
+            encoding: vegaEncoding() as any,
         });
     });
 })

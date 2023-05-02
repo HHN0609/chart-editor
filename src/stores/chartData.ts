@@ -1,10 +1,10 @@
 import { defineStore } from "pinia";
 import { Ref } from "vue";
 export type MarkType = "circle" | "bar" | "line" | "scatter" | "area" | "arc" | "trail";
-export type aggregateMethod = "sum" | "count" | "mean" | "min" | "max" | "median" | "variance" | "stdev" | "";
+export type AggregateMethod = "sum" | "count" | "mean" | "min" | "max" | "median" | "variance" | "stdev" | "";
 export type ListType = {
     fieldName: string,
-    aggregateMethod?: aggregateMethod,
+    aggregateMethod?: AggregateMethod,
     id?: string
 }
 export type ChartData = {

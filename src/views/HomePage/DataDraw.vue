@@ -212,7 +212,7 @@
                 </div>
             </div>
 
-            <div style="flex-grow: 1; align-self: stretch;">
+            <div style="flex-grow: 1; align-self: stretch; overflow: auto;">
                 <Row class="aixs">
                     <div>X轴</div>
                     <div class="colBox">
@@ -299,7 +299,7 @@ import {
 } from "@ant-design/icons-vue";
 import useChartData, { ChartData } from "@/stores/chartData";
 import useInputData from "@/stores/inputData";
-import { computed, onMounted, ref, watch } from "vue";
+import { computed, ref, watch } from "vue";
 import FieldTag from "@/components/dataDraw/fieldTag.vue";
 import Draggable from "vuedraggable";
 import AutoVega from "@/components/dataDraw/autoVega.vue";
@@ -396,7 +396,7 @@ const markTypes = [
     { type: "line", icon: LineChartOutlined },
     { type: "area", icon: AreaChartOutlined },
     { type: "arc", icon: PieChartOutlined },
-    { type: "dot", icon: DotChartOutlined },
+    { type: "point", icon: DotChartOutlined },
 ];
 
 const stackTypes = [
@@ -484,7 +484,7 @@ const stackTypes = [
         border: 1px solid black;
         height: 100%;
         width: 100%;
-        overflow: scroll;
+        overflow: auto;
     }
 }
 </style>
