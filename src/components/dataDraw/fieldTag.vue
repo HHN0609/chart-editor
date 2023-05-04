@@ -1,6 +1,6 @@
 <template>
-    <div class="tagContainer" :style="{ width: props.axis ? '150px' : '110px', borderStyle: 'solid' }">
-        <div style="font-size: x-small;" :title="props.fieldName">{{ props.fieldName }}</div>
+    <div class="tagContainer">
+        <div class="fieldName" style="font-size: x-small;" :title="props.fieldName">{{ props.fieldName }}</div>
 
         <div class="aggregateState" v-if="props.isAggregation">
             <Popover placement="bottom" @update:visible="rotate">
@@ -38,7 +38,7 @@
 import { Popover, Radio, RadioGroup } from "ant-design-vue";
 import { DownOutlined } from "@ant-design/icons-vue"
 import useChartData from "@/stores/chartData";
-import { defineEmits, onMounted, ref } from "vue";
+import { defineEmits, ref } from "vue";
 
 // index代表该标签在X_axis or Y_axis中的下标
 // axis代表该标签那个轴
@@ -71,18 +71,18 @@ const aggregateMethods = [
 
 <style lang="less" scoped>
 .tagContainer {
-    transition: 0.3s;
+    width: 150px;
     height: 25px;
     font-size: small;
     display: flex;
     justify-content: space-around;
     align-items: center;
-    border: 1px black;
+    border: 1px black solid;
     border-radius: 5%;
-    margin: 0 auto;
+    margin: 0 5px;
     padding:0px 5px;
-    > div:first-child{
-        width: 60px;
+    .fieldName {
+        max-width: 120px;
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;

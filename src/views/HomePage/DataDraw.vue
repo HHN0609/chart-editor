@@ -12,10 +12,10 @@
     </Tabs>
     <div class="tabCard">
         <Row class="cardHeader">
-            <div style="width: fit-content;"><Checkbox v-model:checked="chartData.datas[chartData.activeIndex].isAggregation">聚合数据</Checkbox></div>
+            <div style="width: fit-content;"><Checkbox v-model:checked="activeChart.isAggregation">聚合数据</Checkbox></div>
             <div>
                 <span>标记类型:</span>
-                <Select size="small" style="width: 100px" v-model:value="chartData.datas[chartData.activeIndex].markType">
+                <Select size="small" style="width: 100px" v-model:value="activeChart.markType">
                     <SelectOption v-for="mark in markTypes" :value="mark.type" :key="mark.type">
                         <span><Component :is="mark.icon"></Component></span>
                         <span>-{{ mark.type }}</span>
@@ -24,7 +24,7 @@
             </div>
             <div>
                 <span>堆叠类型:</span>
-                <Select size="small" style="width: 100px" v-model:value="chartData.datas[chartData.activeIndex].stack">
+                <Select size="small" style="width: 100px" v-model:value="activeChart.stack">
                     <SelectOption v-for="stack in stackTypes" :value="stack.type" :key="stack.type">
                         <span><Component :is="stack.icon"></Component></span>
                         <span>-{{ (stack.type || "null").toString() }}</span>
@@ -130,7 +130,7 @@
                     <div>颜色</div>
                     <Select 
                         style="width: 120px" 
-                        v-model:value="chartData.datas[chartData.activeIndex].color.fieldName"
+                        v-model:value="activeChart.color.fieldName"
                         size="middle"
                     >
                         <SelectOption 
@@ -141,12 +141,12 @@
                             <span>{{ fieldName ? fieldName : "Empty"}}</span>
                         </SelectOption>
                     </Select>
-                    <div v-if="isAggregation && inputData.dataColumnsInfo[chartData.datas[chartData.activeIndex].color.fieldName] === 'measure'">聚合方法</div>
+                    <div v-if="activeChart.isAggregation && inputData.dataColumnsInfo[activeChart.color.fieldName] === 'measure'">聚合方法</div>
                     <Select
                         style="width: 120px" 
-                        v-model:value="chartData.datas[chartData.activeIndex].color.aggregateMethod"
+                        v-model:value="activeChart.color.aggregateMethod"
                         size="middle"
-                        v-if="isAggregation && inputData.dataColumnsInfo[chartData.datas[chartData.activeIndex].color.fieldName] === 'measure'"
+                        v-if="activeChart.isAggregation && inputData.dataColumnsInfo[activeChart.color.fieldName] === 'measure'"
                     >
                         <SelectOption v-for="aggregateMethod of aggregateMethods" :value="aggregateMethod" :key="aggregateMethod">
                             <span>{{ aggregateMethod }}</span>
@@ -155,17 +155,17 @@
                 </div>
                 <div class="opacity">
                     <div>透明度</div>
-                    <Select style="width: 120px" v-model:value="chartData.datas[chartData.activeIndex].opacity.fieldName" size="middle">
+                    <Select style="width: 120px" v-model:value="activeChart.opacity.fieldName" size="middle">
                         <SelectOption v-for="fieldName of ['', ...fieldNames]" :value="fieldName" :key="fieldName">
                             <span>{{ fieldName ? fieldName : "Empty"}}</span>
                         </SelectOption>
                     </Select>
-                    <div v-if="isAggregation && inputData.dataColumnsInfo[chartData.datas[chartData.activeIndex].opacity.fieldName] === 'measure'">聚合方法</div>
+                    <div v-if="activeChart.isAggregation && inputData.dataColumnsInfo[activeChart.opacity.fieldName] === 'measure'">聚合方法</div>
                     <Select
                         style="width: 120px"
-                        v-model:value="chartData.datas[chartData.activeIndex].opacity.aggregateMethod"
+                        v-model:value="activeChart.opacity.aggregateMethod"
                         size="middle"
-                        v-if="isAggregation && inputData.dataColumnsInfo[chartData.datas[chartData.activeIndex].opacity.fieldName] === 'measure'"
+                        v-if="activeChart.isAggregation && inputData.dataColumnsInfo[activeChart.opacity.fieldName] === 'measure'"
                     >
                         <SelectOption v-for="aggregateMethod of aggregateMethods" :value="aggregateMethod" :key="aggregateMethod">
                             <span>{{ aggregateMethod }}</span>
@@ -174,17 +174,17 @@
                 </div>
                 <div class="size">
                     <div>大小</div>
-                    <Select style="width: 120px" v-model:value="chartData.datas[chartData.activeIndex].size.fieldName" size="middle">
+                    <Select style="width: 120px" v-model:value="activeChart.size.fieldName" size="middle">
                         <SelectOption v-for="fieldName of ['', ...fieldNames]" :value="fieldName" :key="fieldName">
                             <span>{{ fieldName ? fieldName : "Empty"}}</span>
                         </SelectOption>
                     </Select>
-                    <div v-if="isAggregation && inputData.dataColumnsInfo[chartData.datas[chartData.activeIndex].size.fieldName] === 'measure'">聚合方法</div>
+                    <div v-if="activeChart.isAggregation && inputData.dataColumnsInfo[activeChart.size.fieldName] === 'measure'">聚合方法</div>
                     <Select
                         style="width: 120px"
-                        v-model:value="chartData.datas[chartData.activeIndex].size.aggregateMethod"
+                        v-model:value="activeChart.size.aggregateMethod"
                         size="middle"
-                        v-if="isAggregation && inputData.dataColumnsInfo[chartData.datas[chartData.activeIndex].size.fieldName] === 'measure'"
+                        v-if="activeChart.isAggregation && inputData.dataColumnsInfo[activeChart.size.fieldName] === 'measure'"
                     >
                         <SelectOption v-for="aggregateMethod of aggregateMethods" :value="aggregateMethod" :key="aggregateMethod">
                             <span>{{ aggregateMethod }}</span>
@@ -193,17 +193,17 @@
                 </div>
                 <div class="shape">
                     <div>形状</div>
-                    <Select style="width: 120px" v-model:value="chartData.datas[chartData.activeIndex].shape.fieldName" size="middle">
+                    <Select style="width: 120px" v-model:value="activeChart.shape.fieldName" size="middle">
                         <SelectOption v-for="fieldName of ['', ...fieldNames]" :value="fieldName" :key="fieldName">
                             <span>{{ fieldName ? fieldName : "Empty"}}</span>
                         </SelectOption>
                     </Select>
-                    <div v-if="isAggregation && inputData.dataColumnsInfo[chartData.datas[chartData.activeIndex].shape.fieldName] === 'measure'">聚合方法</div>
+                    <div v-if="activeChart.isAggregation && inputData.dataColumnsInfo[activeChart.shape.fieldName] === 'measure'">聚合方法</div>
                     <Select
                         style="width: 120px"
-                        v-model:value="chartData.datas[chartData.activeIndex].shape.aggregateMethod"
+                        v-model:value="activeChart.shape.aggregateMethod"
                         size="middle"
-                        v-if="isAggregation && inputData.dataColumnsInfo[chartData.datas[chartData.activeIndex].shape.fieldName] === 'measure'"
+                        v-if="activeChart.isAggregation && inputData.dataColumnsInfo[activeChart.shape.fieldName] === 'measure'"
                     >
                         <SelectOption v-for="aggregateMethod of aggregateMethods" :value="aggregateMethod" :key="aggregateMethod">
                             <span>{{ aggregateMethod }}</span>
@@ -220,7 +220,7 @@
                         <Draggable
                             class="broadwiseList"
                             group="fieldList"
-                            :list="chartData.datas[chartData.activeIndex].X_axis"
+                            :list="activeChart.X_axis"
                             itemKey="id"
                         >
                             <template #item="{element, index}">
@@ -229,7 +229,7 @@
                                     :index="index"
                                     :axis="'X_axis'"
                                     :fieldName="element.fieldName"
-                                    :isAggregation="isAggregation && inputData.dataColumnsInfo[element.fieldName] === 'measure'"
+                                    :isAggregation="activeChart.isAggregation && inputData.dataColumnsInfo[element.fieldName] === 'measure'"
                                 ></FieldTag>
                             </template>
                         </Draggable>
@@ -244,7 +244,7 @@
                         <Draggable
                             class="broadwiseList"
                             group="fieldList"
-                            :list="chartData.datas[chartData.activeIndex].Y_axis"
+                            :list="activeChart.Y_axis"
                             itemKey="id"
                         >
                             <template #item="{element, index}">
@@ -253,7 +253,7 @@
                                     :index="index"
                                     :axis="'Y_axis'"
                                     :fieldName="element.fieldName"
-                                    :isAggregation="isAggregation  && inputData.dataColumnsInfo[element.fieldName] === 'measure'"
+                                    :isAggregation="activeChart.isAggregation  && inputData.dataColumnsInfo[element.fieldName] === 'measure'"
                                 ></FieldTag>
                             </template>
                         </Draggable>
@@ -262,19 +262,19 @@
                 </Row>
 
                 <Row class="chartArea">
-                    <AutoVega
+                    <vegaGrid
                         :dataSource="inputData.inputData"
-                        :X_axis="chartData.datas[chartData.activeIndex].X_axis"
-                        :Y_axis="chartData.datas[chartData.activeIndex].Y_axis"
-                        :shape="chartData.datas[chartData.activeIndex].shape"
-                        :size="chartData.datas[chartData.activeIndex].size"
-                        :color="chartData.datas[chartData.activeIndex].color"
-                        :opacity="chartData.datas[chartData.activeIndex].opacity"
-                        :markType="chartData.datas[chartData.activeIndex].markType"
-                        :stack="chartData.datas[chartData.activeIndex].stack"
+                        :X_axis="activeChart.X_axis"
+                        :Y_axis="activeChart.Y_axis"
+                        :shape="activeChart.shape"
+                        :size="activeChart.size"
+                        :color="activeChart.color"
+                        :opacity="activeChart.opacity"
+                        :markType="activeChart.markType"
+                        :stack="activeChart.stack"
+                        :isAggregation="activeChart.isAggregation"
                     >
-
-                    </AutoVega>
+                    </vegaGrid>
                 </Row>
             </div>
         </div>
@@ -302,10 +302,14 @@ import useInputData from "@/stores/inputData";
 import { computed, ref, watch } from "vue";
 import FieldTag from "@/components/dataDraw/fieldTag.vue";
 import Draggable from "vuedraggable";
-import AutoVega from "@/components/dataDraw/autoVega.vue";
+import vegaGrid from "@/components/dataDraw/vegaGrid.vue";
 
 const chartData = useChartData();
 const inputData = useInputData();
+
+const activeChart = computed(() => {
+    return chartData.datas[chartData.activeIndex];
+});
 
 // 激活的tab id和该tab在全局状态管理datas中的下标
 const activeKey = ref<string>(chartData.datas[0].id);
@@ -322,14 +326,6 @@ watch(activeKey, (currId) => {
     chartData.activeIndex = chartData.datas.findIndex((data) => data.id === currId);
 });
 
-// de
-// const legendAggregate = computed(() => {
-//     return 
-// });
-
-const isAggregation = computed<boolean>(() => {
-    return chartData.datas[chartData.activeIndex].isAggregation;
-})
 
 // 拿到导入数据的属性
 const fieldNames = computed(() => {
@@ -371,8 +367,11 @@ const updetaChart = () => {
 
 };
 
-const reversal = (e) => {
-
+const reversal = () => {
+    let temp;
+    temp = activeChart.value.X_axis;
+    activeChart.value.X_axis = activeChart.value.Y_axis;
+    activeChart.value.Y_axis = temp;
 };
 
 
@@ -382,9 +381,6 @@ const tabCardMounted = (e) => {
     console.log(e);
 };
 
-// onMounted(() => {
-    
-    // });
     
 const aggregateMethods = [
     "sum", "mean", "median", "variance", "stdev", "count", "max", "min"
