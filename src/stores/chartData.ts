@@ -43,7 +43,7 @@ export default defineStore("chartData", {
                     X_axis: [],
                     Y_axis: [],
                     dimensionLists: [],
-                    measureLists: [],
+                    measureLists: [], 
                 }
             ] as ChartData[]
         }

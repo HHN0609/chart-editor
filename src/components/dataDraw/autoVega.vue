@@ -1,7 +1,5 @@
 <template>
-<div class="container">
-    <div class="chart" ref="chart" :id="'chart' + props.chartId.toString()"></div>
-</div>
+    <div ref="chart" :id="'chart' + props.chartId.toString()"></div>
 </template>
 
 <script setup lang="ts">
@@ -225,7 +223,7 @@ onMounted(() => {
     // ob.observe(container.value);
 
     stop = watchEffect(() => {
-        nextTick(() => {
+        // nextTick(() => {
             chart.value && vegaEmbed(`#chart${props.chartId}`, {
                 $schema: 'https://vega.github.io/schema/vega-lite/v5.json',
                 data: {
@@ -244,7 +242,7 @@ onMounted(() => {
             }).catch((reason) => {
                 console.log("render error ", reason);
             });
-        });
+        // });
     });
 })
 
@@ -257,14 +255,14 @@ onUnmounted(() => {
 </script>
 
 <style lang="less" scoped>
-.container {
-    width: fit-content;
-    height: fit-content;
-    > .chart{
-        // width: 200px;
-        // height: 200px;
-        // overflow: hidden;
-        // resize: both;
-    }
-}
+// .container {
+//     width: fit-content;
+//     height: fit-content;
+//     > .chart{
+//         // width: 200px;
+//         // height: 200px;
+//         // overflow: hidden;
+//         // resize: both;
+//     }
+// }
 </style>

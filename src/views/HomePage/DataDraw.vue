@@ -377,8 +377,6 @@ const reversal = () => {
 
 const tabCardMounted = (e) => {
     // 监听卡片挂载，进行卡片的初始化
-    
-    console.log(e);
 };
 
     
@@ -477,8 +475,9 @@ const stackTypes = [
     }
     .chartArea {
         margin-top: 10px;
+        padding: 30px;
         border: 1px solid black;
-        height: 100%;
+        height: fit-content;
         width: 100%;
         overflow: auto;
     }
