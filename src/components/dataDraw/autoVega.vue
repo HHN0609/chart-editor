@@ -17,7 +17,8 @@ type VegaEncodingConfig = {
     title: string,
     type: "quantitative" | "nominal",
     aggregate?: AggregateMethod | null,
-    axis?: any
+    axis?: any,
+    stack?: "normalize" | "" | "zero" | "center"
 }
 type LegendTypes = "color" | "size" | "shape" | "opacity";
 
@@ -32,9 +33,9 @@ const props = defineProps<{
     color: Legend,
     size: Legend,
     markType: MarkType,
-    stack?: "normalize" | "" | "zero" | "center",
     isAggregation: boolean,
-    chartId: number
+    chartId: number,
+    stack?: "normalize" | "" | "zero" | "center",
 }>();
 
 let stop: WatchStopHandle;
@@ -137,7 +138,7 @@ function generateAxis(fieldName: string, aggregateMethod: AggregateMethod): Vega
             title: fieldName,
             field: fieldName,
             type: "nominal",
-            aggregate: null
+            aggregate: null,
         }
     }
     if(props.isAggregation) {
@@ -155,7 +156,8 @@ function generateAxis(fieldName: string, aggregateMethod: AggregateMethod): Vega
             title: fieldName,
             field: fieldName,
             type: "quantitative",
-            axis: { labelOverlap: true }
+            axis: { labelOverlap: true },
+            stack: props.stack
         }
     }
 }
@@ -197,11 +199,19 @@ let row = computed<any>(() => {
 let vegaEncoding = () => {
     let spec = {
         tooltip: tooltip.value,
-        color: color.value,
-        opacity: opacity.value,
-        shape: shape.value,
-        size: size.value,
     };
+    if(Object.keys(color.value).length){
+        spec["color"] = color.value;
+    }
+    if(Object.keys(opacity.value).length){
+        spec["opacity"] = opacity.value;
+    }
+    if(Object.keys(shape.value).length){
+        spec["shape"] = shape.value;
+    }
+    if(Object.keys(size.value).length){
+        spec["size"] = size.value;
+    }
     if(Object.keys(x.value).length){
         spec["x"] = x.value;
     }

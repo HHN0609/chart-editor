@@ -25,7 +25,7 @@
                 <Select size="small" style="width: 100px" v-model:value="activeChart.stack">
                     <SelectOption v-for="stack in stackTypes" :value="stack.type" :key="stack.type">
                         <span><Component :is="stack.icon"></Component></span>
-                        <span>-{{ (stack.type || "null").toString() }}</span>
+                        <span>-{{ stack.type ? stack.type : "null" }}</span>
                     </SelectOption>
                 </Select>
             </div>
@@ -373,7 +373,7 @@ const markTypes = [
 ]; 
 
 const stackTypes = [
-    { type: null, icon: CloseOutlined },
+    { type: "", icon: CloseOutlined },
     { type: "zero", icon: VerticalAlignBottomOutlined },
     { type: "center", icon: VerticalAlignMiddleOutlined },
     { type: "normalize", icon: ColumnHeightOutlined },
