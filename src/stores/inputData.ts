@@ -24,15 +24,6 @@ export default defineStore("inputData", {
                 return ans;
             }
         },
-        // getUniqueCount: (state) => {
-        //     let that = this;
-        //     return (colName: string) => {
-        //         return new Set(that.getColDatas(colName));
-        //     }
-        // },
-        // getMax: () => {
-
-        // }
     }
 });
 

@@ -1,6 +1,6 @@
 <template>
     <div class="tagContainer">
-        <div class="fieldName" style="font-size: x-small;" :title="props.fieldName">{{ props.fieldName }}</div>
+        <div class="fieldName" :title="props.fieldName">{{ props.fieldName }}</div>
 
         <div class="aggregateState" v-if="props.isAggregation">
             <Popover placement="bottom" @update:visible="rotate">
@@ -11,7 +11,6 @@
                     <RadioGroup
                         v-model:value="chartData.datas[chartData.activeIndex][props.axis][props.index].aggregateMethod"
                         style="width: 40px;"
-                        @change="emit('changeAggregation')"
                     >
 
                         <Radio
@@ -60,10 +59,6 @@ const rotate = () => {
     }
 };
 
-const emit = defineEmits<{
-  (event: 'changeAggregation'): void
-}>();
-
 const aggregateMethods = [
     "sum", "mean", "median", "variance", "stdev", "count", "max", "min"
 ];
@@ -86,6 +81,7 @@ const aggregateMethods = [
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
+        font-size: x-small;
     }
     > .aggregateState {
         width: fit-content;

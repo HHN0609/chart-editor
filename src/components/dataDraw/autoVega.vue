@@ -4,9 +4,11 @@
 
 <script setup lang="ts">
 import { ListType, MarkType, AggregateMethod } from "@/stores/chartData";
-import { WatchStopHandle, computed, onMounted, onUnmounted, watchEffect, ref, nextTick } from "vue";
+import { WatchStopHandle, computed, onMounted, onUnmounted, watchEffect, ref, nextTick, Ref } from "vue";
 import vegaEmbed from "vega-embed";
 import useInputData from "@/stores/inputData";
+import { View } from "vega";
+import { emitter } from "@/utils";
 
 type  AxisType = ListType;
 type Legend = ListType;
@@ -38,6 +40,8 @@ const props = defineProps<{
 let stop: WatchStopHandle;
 
 let chart = ref();
+
+let vegaView: View;
 
 function generateTooltip(axis: "X_axis" | "Y_axis"): VegaEncodingConfig[] {
     return props[axis].map(({fieldName, aggregateMethod}) => {
@@ -212,43 +216,58 @@ let vegaEncoding = () => {
     }
     return spec;
 }
-// let ob: ResizeObserver;
 
 onMounted(() => {
-    // ob = new ResizeObserver(() => {
-    //     console.log("resize");
-    //     window.dispatchEvent(new Event('resize'));
-    // });
-
-    // ob.observe(container.value);
-
     stop = watchEffect(() => {
-        // nextTick(() => {
+
+            vegaView = null;
+            emitter.$off("SaveAsPng");
+            emitter.$off("SaveAsSvg");
+
             chart.value && vegaEmbed(`#chart${props.chartId}`, {
                 $schema: 'https://vega.github.io/schema/vega-lite/v5.json',
                 data: {
                     values: props.dataSource
                 },
-                // autosize: {
-                //     contains: "padding",
-                //     resize: true,
-                // },
-                // width: "container",
-                // height: "container",
                 mark: mark.value,
                 encoding: vegaEncoding() as any,
             }).then((value) => {
-    
+                vegaView = value.view;
+                emitter.$on("SaveAsPng", () => {
+                    console.log("SaveAsPng");
+                    vegaView.toCanvas(2).then((canvas) => {
+                        let data = canvas.toDataURL('image/png', 1);
+                        let filename = `gw chart ${Date.now() % 1_000_000}`.padStart(6, '0');
+                        const a = document.createElement('a');
+                        a.download = `${filename}${props.chartId}.png`;
+                        a.href = data.replace(/^data:image\/[^;]/, 'data:application/octet-stream');
+                        a.click();
+                    });
+                });
+
+                emitter.$on("SaveAsSvg", () => {
+                    console.log("SaveAsSvg");
+                    vegaView.toSVG().then(data => {
+                        let filename = `gw chart ${Date.now() % 1_000_000}`.padStart(6, '0');
+                        const file = new File([data], `${filename}${props.chartId}.svg`);
+                        const url = URL.createObjectURL(file);
+                        const a = document.createElement('a');
+                        a.download = file.name;
+                        a.href = url;
+                        a.click();
+                        requestAnimationFrame(() => {
+                            URL.revokeObjectURL(url);
+                        });
+                    });
+                });
             }).catch((reason) => {
                 console.log("render error ", reason);
             });
-        // });
     });
 })
 
 onUnmounted(() => {
     stop();
-    // ob.disconnect();
 });
 
 

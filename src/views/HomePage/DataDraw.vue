@@ -1,12 +1,10 @@
 <template>
-    <!-- <div></div> -->
     <Tabs v-model:activeKey="activeKey" type="editable-card" @edit="onEdit">  
         <TabPane 
             v-for="data of chartData.datas" 
             :key="data.id" 
             :tab="data.name" 
             :closable="!(chartData.datas.length === 1)"
-            @vnode-mounted="tabCardMounted"
         >
         </TabPane>
     </Tabs>
@@ -17,8 +15,8 @@
                 <span>标记类型:</span>
                 <Select size="small" style="width: 100px" v-model:value="activeChart.markType">
                     <SelectOption v-for="mark in markTypes" :value="mark.type" :key="mark.type">
-                        <span><Component :is="mark.icon"></Component></span>
-                        <span>-{{ mark.type }}</span>
+                        <span><img :src="mark.icon" style="width: 15px; height: 15px; overflow: hidden;"/></span>
+                        <span> {{ mark.type }}</span>
                     </SelectOption>
                 </Select>
             </div>
@@ -49,8 +47,8 @@
                         导出图片格式
                     </template>
                     <template #content>
-                        <Button :size="'small'" :type="'link'">png</Button>
-                        <Button :size="'small'" :type="'link'">svg</Button>
+                        <Button :size="'small'" :type="'link'" @click="emitter.$emit('SaveAsPng')">png</Button>
+                        <Button :size="'small'" :type="'link'" @click="emitter.$emit('SaveAsSvg')">svg</Button>
                     </template>
                     <Button size="small">
                         <template #icon>
@@ -58,22 +56,6 @@
                         </template>
                     </Button>
                 </Popover>
-            </div>
-            <div>
-                <!-- <Popover :placement="'bottom'">
-                    <template #title>
-                        数据排序
-                    </template>
-                    <template #content>
-                        <Button :size="'small'" :type="'link'">png</Button>
-                        <Button :size="'small'" :type="'link'">svg</Button>
-                    </template>
-                    <Button size="small">
-                        <template #icon>
-                            <PictureOutlined/>
-                        </template>
-                    </Button>
-                </Popover> -->
             </div>
         </Row>
         <div style="display: flex; height: 100%;">
@@ -225,7 +207,6 @@
                         >
                             <template #item="{element, index}">
                                 <FieldTag
-                                    @change="updetaChart"
                                     :index="index"
                                     :axis="'X_axis'"
                                     :fieldName="element.fieldName"
@@ -249,7 +230,6 @@
                         >
                             <template #item="{element, index}">
                                 <FieldTag
-                                    @change="updetaChart"
                                     :index="index"
                                     :axis="'Y_axis'"
                                     :fieldName="element.fieldName"
@@ -283,13 +263,7 @@
 
 <script lang="ts" setup>
 import { Row, TabPane, Tabs, Button, Checkbox, Select, SelectOption, Popover, Tooltip } from "ant-design-vue";
-import { 
-    BarChartOutlined, 
-    LineChartOutlined, 
-    AreaChartOutlined, 
-    DotChartOutlined, 
-    PieChartOutlined, 
-    FontColorsOutlined, 
+import {
     PictureOutlined, 
     RedoOutlined,
     CloseOutlined, 
@@ -297,12 +271,25 @@ import {
     VerticalAlignMiddleOutlined,
     VerticalAlignBottomOutlined 
 } from "@ant-design/icons-vue";
-import useChartData, { ChartData } from "@/stores/chartData";
+
+import Arc from "@/assets/markTypeIcons/arc.svg";
+import Area from "@/assets/markTypeIcons/area.svg";
+import Bar from "@/assets/markTypeIcons/bar.svg";
+import Boxplot from "@/assets/markTypeIcons/boxplot.svg";
+import Line from "@/assets/markTypeIcons/line.svg";
+import Point from "@/assets/markTypeIcons/point.svg";
+import Rect from "@/assets/markTypeIcons/rect.svg";
+import Scatter from "@/assets/markTypeIcons/scatter.svg";
+import Tick from "@/assets/markTypeIcons/tick.svg";
+
+import useChartData from "@/stores/chartData";
 import useInputData from "@/stores/inputData";
 import { computed, ref, watch } from "vue";
 import FieldTag from "@/components/dataDraw/fieldTag.vue";
 import Draggable from "vuedraggable";
 import vegaGrid from "@/components/dataDraw/vegaGrid.vue";
+
+import { emitter } from "@/utils";
 
 const chartData = useChartData();
 const inputData = useInputData();
@@ -362,36 +349,28 @@ const cloneData = (data) => {
     }
 };
 
-// 更新图标
-const updetaChart = () => {
-
-};
-
 const reversal = () => {
     let temp;
     temp = activeChart.value.X_axis;
     activeChart.value.X_axis = activeChart.value.Y_axis;
     activeChart.value.Y_axis = temp;
 };
-
-
-const tabCardMounted = (e) => {
-    // 监听卡片挂载，进行卡片的初始化
-};
-
     
 const aggregateMethods = [
     "sum", "mean", "median", "variance", "stdev", "count", "max", "min"
 ];
 
 const markTypes = [
-    { type: "auto", icon: FontColorsOutlined},
-    { type: "bar", icon: BarChartOutlined },
-    { type: "line", icon: LineChartOutlined },
-    { type: "area", icon: AreaChartOutlined },
-    { type: "arc", icon: PieChartOutlined },
-    { type: "point", icon: DotChartOutlined },
-];
+    { type: "bar", icon: Bar },
+    { type: "line", icon: Line },
+    { type: "area", icon: Area },
+    { type: "arc", icon: Arc },
+    { type: "point", icon: Scatter },
+    { type: "circle", icon: Point},
+    {  type: "rect", icon: Rect},
+    { type: "tick", icon: Tick },
+    { type: "boxplot", icon: Boxplot }
+]; 
 
 const stackTypes = [
     { type: null, icon: CloseOutlined },
@@ -477,9 +456,9 @@ const stackTypes = [
         margin-top: 10px;
         margin-bottom: 30px;
         padding: 10px;
-        border: 1px solid rgb(250, 8, 8);
-        height: fit-content;
-        min-width: 100%;
+        border: 1px solid rgb(0, 0, 0);
+        min-height: 100%;
+        max-width: 100%;
         overflow: auto;
     }
 }

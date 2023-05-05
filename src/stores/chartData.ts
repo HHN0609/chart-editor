@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { Ref } from "vue";
+import { View } from "vega";
 export type MarkType = "circle" | "bar" | "line" | "scatter" | "area" | "arc" | "trail";
 export type AggregateMethod = "sum" | "count" | "mean" | "min" | "max" | "median" | "variance" | "stdev" | "";
 export type ListType = {
@@ -23,6 +24,11 @@ export type ChartData = {
     dimensionLists: ListType[],
     measureLists: ListType[],
 };
+
+export type HistoryItem = {
+    
+}
+
 let chartCount = 1;
 export default defineStore("chartData", {
     state: () => {
@@ -43,9 +49,13 @@ export default defineStore("chartData", {
                     X_axis: [],
                     Y_axis: [],
                     dimensionLists: [],
-                    measureLists: [], 
+                    measureLists: [],
+                    
                 }
-            ] as ChartData[]
+            ] as ChartData[],
+            history: [
+
+            ]
         }
     },
     getters: {

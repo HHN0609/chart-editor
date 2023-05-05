@@ -1,12 +1,11 @@
 <template>
-<div class="container"
-    :style="{
+<div :style="{
         display: 'grid',
         gridTemplateColumns: `repeat(${resultInfo.colNum}, ${gridWidth}px)`,
         gridTemplateRows: `repeat(${resultInfo.rowNum}, ${gridHeight}px)` 
     }"
 >
-    <div v-for="(result, index) in resultInfo.result" style="overflow: hidden; border: 1px dashed black;">
+    <div v-for="(result, index) in resultInfo.result">
         <AutoVega
             :dataSource="props.dataSource"
             :X_axis="result.X_axis"
@@ -26,9 +25,8 @@
 
 <script setup lang="ts">
 import { ListType, MarkType } from "@/stores/chartData";
-import { computed, nextTick, ref, watch } from "vue";
+import { computed, nextTick, onMounted, ref, watch } from "vue";
 import useInputData from "@/stores/inputData";
-import useChartData from "@/stores/chartData"
 import { analysisField } from "./analysisField";
 import AutoVega from "./autoVega.vue"
 
@@ -55,13 +53,13 @@ const resultInfo = computed(() => analysisField(props.X_axis, props.Y_axis, inpu
 let gridWidth = ref<number>(200);
 let gridHeight = ref<number>(200);
 
-watch(resultInfo, () => {
+// 监听变化调整grid大小
+watch([resultInfo, props.shape, props.opacity, props.size, props.color, props.markType], () => {
     nextTick(() => {
         setTimeout(() => {
             let chart0 = document.getElementById("chart0");
             if(chart0) {
                 let {width, height} = chart0.getBoundingClientRect();
-                console.log(width, height);
                 gridHeight.value = height;
                 gridWidth.value = width;
             }
@@ -72,9 +70,9 @@ watch(resultInfo, () => {
 </script>
 
 <style scoped lang="less">
-.container {
-    > .chartGrids {
+// .container {
+//     > .chartGrids {
 
-    }
-}
+//     }
+// }
 </style>

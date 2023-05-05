@@ -1,4 +1,4 @@
-import { ChartData, ListType } from "@/stores/chartData";
+import { ListType } from "@/stores/chartData";
 type AnalysisFieldResult = {
     colNum: number,
     rowNum: number,
