@@ -253,16 +253,3 @@ onUnmounted(() => {
 
 
 </script>
-
-<style lang="less" scoped>
-// .container {
-//     width: fit-content;
-//     height: fit-content;
-//     > .chart{
-//         // width: 200px;
-//         // height: 200px;
-//         // overflow: hidden;
-//         // resize: both;
-//     }
-// }
-</style>

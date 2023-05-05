@@ -475,10 +475,11 @@ const stackTypes = [
     }
     .chartArea {
         margin-top: 10px;
-        padding: 30px;
-        border: 1px solid black;
+        margin-bottom: 30px;
+        padding: 10px;
+        border: 1px solid rgb(250, 8, 8);
         height: fit-content;
-        width: 100%;
+        min-width: 100%;
         overflow: auto;
     }
 }
