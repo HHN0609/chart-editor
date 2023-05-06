@@ -1,4 +1,8 @@
 import { defineStore } from "pinia";
+
+export type AnalyticType = 'dimension' | 'measure';
+export type SemanticType = 'quantitative' | 'nominal' | 'ordinal' | 'temporal';
+
 export default defineStore("inputData", {
     state: () => {
         return {
@@ -6,7 +10,8 @@ export default defineStore("inputData", {
             dataRowNum: 0, // 数据的总行数
             errorDataRows: 0, // 数据缺失的行数
             inputData: [], // 导入的数据
-            dataColumnsInfo: {}, // colName: type
+            fieldAnalyticTypes: {}, // 'dimension' | 'measure'
+            fieldSemanticTypes: {}, // 'nominal' | 'quantitative' | 'temporal'
             useNull: false // 是否用null填充确实的数据
         }
     },

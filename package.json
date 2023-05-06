@@ -60,6 +60,7 @@
   "dependencies": {
     "@antv/g2": "^4.2.2",
     "@ckpack/vue-color": "^1.1.9",
+    "@kanaries/web-data-loader": "^0.1.7",
     "@scena/guides": "^0.18.1",
     "ant-design-vue": "^3.2.5",
     "axios": "^0.27.2",
@@ -81,7 +82,6 @@
     "vue-router": "^4.0.15",
     "vue3-infinite-viewer": "^0.3.0",
     "vue3-moveable": "^0.4.9",
-    "vuedraggable": "^4.1.0",
-    "xlsx": "^0.17.0"
+    "vuedraggable": "^4.1.0"
   }
 }

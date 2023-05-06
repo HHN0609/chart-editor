@@ -1,33 +1,38 @@
 <template>
-    <div id="chart" ref="chart"></div>
+    <div id="headChart" ref="headChart"></div>
 </template>
 
 <script setup lang="ts">
 import { WatchStopHandle, computed, onMounted, onUnmounted, ref, watch, watchEffect } from 'vue';
-// import * as vegeLite from 'vega-lite';
 import vegaEmbed from 'vega-embed';
-let chart = ref();
+import { SemanticType } from "@/stores/inputData";
+
 let stop: WatchStopHandle;
 const props = defineProps<{
-    colName: string,
-    data: any[]
+    fieldName: string,
+    datas: any[],
+    semanticType: SemanticType
 }>();
+
+let headChart = ref();
 
 onMounted(() => {
   stop = watchEffect(() => {
-    vegaEmbed(chart.value, {
+    let mark = props.semanticType === "quantitative" ? "area" : "bar"
+    let spec = {
       $schema: 'https://vega.github.io/schema/vega-lite/v5.json',
       data: {
-        values: props.data
+        values: props.datas
       },
       height: 100,
       width: 200,
-      mark: { type: 'bar', tooltip: {content: "encoding"}},
+      mark: { type: mark, tooltip: {content: "encoding"}},
       encoding: {
-        x: {field: 'key', type: 'nominal', axis: {title: "", tickMinStep: 1, ticks: false, labels: false}},
+        x: {field: 'key', type: props.semanticType, axis: {title: "", tickMinStep: 1, ticks: false, labels: false}},
         y: {field: 'count', type: 'quantitative',  axis: {title: "", tickMinStep: 1}},
       }
-    })
+    };
+    vegaEmbed(headChart.value, spec);
   });    
 });
 
@@ -38,9 +43,8 @@ onUnmounted(() => {
 </script>
 
 <style scoped lang="less">
-#chart {
+#headChart {
   flex-grow: 1;
-  overflow: hidden;
   padding: 0;
 }
 </style>

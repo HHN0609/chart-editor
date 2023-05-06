@@ -74,6 +74,8 @@
                             <FieldTag
                                 :fieldName="element.fieldName"
                                 :isAggregation="false"
+                                :semanticType="inputData.fieldSemanticTypes[element.fieldName]"
+                                :axis="''"
                             ></FieldTag>
                         </template>
                     </Draggable>
@@ -92,6 +94,8 @@
                             <FieldTag
                                 :fieldName="element.fieldName"
                                 :isAggregation="false"
+                                :semanticType="inputData.fieldSemanticTypes[element.fieldName]"
+                                :axis="''"
                             ></FieldTag>
                         </template>
                     </Draggable>
@@ -100,14 +104,6 @@
             </div>
 
             <div class="legendList">
-                <!-- <div class="filter">
-                    <Select size="small" style="width: 100px">
-                        <SelectOption></SelectOption>
-                        <SelectOption v-for="fieldName in fieldNames" :value="fieldName" :key="fieldName">
-                            <span>{{ fieldName }}</span>
-                        </SelectOption>
-                    </Select>
-                </div> -->
                 <div class="color">
                     <div>颜色</div>
                     <Select 
@@ -123,12 +119,12 @@
                             <span>{{ fieldName ? fieldName : "Empty"}}</span>
                         </SelectOption>
                     </Select>
-                    <div v-if="activeChart.isAggregation && inputData.dataColumnsInfo[activeChart.color.fieldName] === 'measure'">聚合方法</div>
+                    <div v-if="activeChart.isAggregation && inputData.fieldAnalyticTypes[activeChart.color.fieldName] === 'measure'">聚合方法</div>
                     <Select
                         style="width: 120px" 
                         v-model:value="activeChart.color.aggregateMethod"
                         size="middle"
-                        v-if="activeChart.isAggregation && inputData.dataColumnsInfo[activeChart.color.fieldName] === 'measure'"
+                        v-if="activeChart.isAggregation && inputData.fieldAnalyticTypes[activeChart.color.fieldName] === 'measure'"
                     >
                         <SelectOption v-for="aggregateMethod of aggregateMethods" :value="aggregateMethod" :key="aggregateMethod">
                             <span>{{ aggregateMethod }}</span>
@@ -142,12 +138,12 @@
                             <span>{{ fieldName ? fieldName : "Empty"}}</span>
                         </SelectOption>
                     </Select>
-                    <div v-if="activeChart.isAggregation && inputData.dataColumnsInfo[activeChart.opacity.fieldName] === 'measure'">聚合方法</div>
+                    <div v-if="activeChart.isAggregation && inputData.fieldAnalyticTypes[activeChart.opacity.fieldName] === 'measure'">聚合方法</div>
                     <Select
                         style="width: 120px"
                         v-model:value="activeChart.opacity.aggregateMethod"
                         size="middle"
-                        v-if="activeChart.isAggregation && inputData.dataColumnsInfo[activeChart.opacity.fieldName] === 'measure'"
+                        v-if="activeChart.isAggregation && inputData.fieldAnalyticTypes[activeChart.opacity.fieldName] === 'measure'"
                     >
                         <SelectOption v-for="aggregateMethod of aggregateMethods" :value="aggregateMethod" :key="aggregateMethod">
                             <span>{{ aggregateMethod }}</span>
@@ -161,12 +157,12 @@
                             <span>{{ fieldName ? fieldName : "Empty"}}</span>
                         </SelectOption>
                     </Select>
-                    <div v-if="activeChart.isAggregation && inputData.dataColumnsInfo[activeChart.size.fieldName] === 'measure'">聚合方法</div>
+                    <div v-if="activeChart.isAggregation && inputData.fieldAnalyticTypes[activeChart.size.fieldName] === 'measure'">聚合方法</div>
                     <Select
                         style="width: 120px"
                         v-model:value="activeChart.size.aggregateMethod"
                         size="middle"
-                        v-if="activeChart.isAggregation && inputData.dataColumnsInfo[activeChart.size.fieldName] === 'measure'"
+                        v-if="activeChart.isAggregation && inputData.fieldAnalyticTypes[activeChart.size.fieldName] === 'measure'"
                     >
                         <SelectOption v-for="aggregateMethod of aggregateMethods" :value="aggregateMethod" :key="aggregateMethod">
                             <span>{{ aggregateMethod }}</span>
@@ -180,12 +176,12 @@
                             <span>{{ fieldName ? fieldName : "Empty"}}</span>
                         </SelectOption>
                     </Select>
-                    <div v-if="activeChart.isAggregation && inputData.dataColumnsInfo[activeChart.shape.fieldName] === 'measure'">聚合方法</div>
+                    <div v-if="activeChart.isAggregation && inputData.fieldAnalyticTypes[activeChart.shape.fieldName] === 'measure'">聚合方法</div>
                     <Select
                         style="width: 120px"
                         v-model:value="activeChart.shape.aggregateMethod"
                         size="middle"
-                        v-if="activeChart.isAggregation && inputData.dataColumnsInfo[activeChart.shape.fieldName] === 'measure'"
+                        v-if="activeChart.isAggregation && inputData.fieldAnalyticTypes[activeChart.shape.fieldName] === 'measure'"
                     >
                         <SelectOption v-for="aggregateMethod of aggregateMethods" :value="aggregateMethod" :key="aggregateMethod">
                             <span>{{ aggregateMethod }}</span>
@@ -210,7 +206,8 @@
                                     :index="index"
                                     :axis="'X_axis'"
                                     :fieldName="element.fieldName"
-                                    :isAggregation="activeChart.isAggregation && inputData.dataColumnsInfo[element.fieldName] === 'measure'"
+                                    :isAggregation="activeChart.isAggregation && inputData.fieldAnalyticTypes[element.fieldName] === 'measure'"
+                                    :semanticType="inputData.fieldSemanticTypes[element.fieldName]"
                                 ></FieldTag>
                             </template>
                         </Draggable>
@@ -233,7 +230,8 @@
                                     :index="index"
                                     :axis="'Y_axis'"
                                     :fieldName="element.fieldName"
-                                    :isAggregation="activeChart.isAggregation  && inputData.dataColumnsInfo[element.fieldName] === 'measure'"
+                                    :isAggregation="activeChart.isAggregation  && inputData.fieldAnalyticTypes[element.fieldName] === 'measure'"
+                                    :semanticType="inputData.fieldSemanticTypes[element.fieldName]"
                                 ></FieldTag>
                             </template>
                         </Draggable>
@@ -316,13 +314,20 @@ watch(activeKey, (currId) => {
 
 // 拿到导入数据的属性
 const fieldNames = computed(() => {
-    return Object.keys(inputData.dataColumnsInfo);
+    return Object.keys(inputData.fieldAnalyticTypes);
 });
 
 const dimensionNames = computed(() => {
     return fieldNames.value.filter((name) => {
-        return inputData.dataColumnsInfo[name] === "dimension";
+        return inputData.fieldAnalyticTypes[name] === "dimension";
     }).map((name) => {
+        if(inputData.fieldSemanticTypes[name] === "temporal") {
+            return {
+                fieldName: name,
+                aggregateMethod: "",
+                timeUnit: ""
+            }
+        }
         return {
             fieldName: name,
             aggregateMethod: ""
@@ -332,8 +337,15 @@ const dimensionNames = computed(() => {
 
 const measureNames = computed(() => {
     return fieldNames.value.filter((name) => {
-        return inputData.dataColumnsInfo[name] === "measure";
+        return inputData.fieldAnalyticTypes[name] === "measure";
     }).map((name) => {
+        // if(inputData.fieldSemanticTypes[name] === "temporal") {
+        //     return {
+        //         fieldName: name,
+        //         aggregateMethod: "",
+        //         timeUnit: ""
+        //     }
+        // }
         return {
             fieldName: name,
             aggregateMethod: "sum"

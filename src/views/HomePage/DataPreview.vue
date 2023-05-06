@@ -6,26 +6,25 @@
                 accept=".xls,.xlsx,.csv"
                 @change="readExcel($event)"
             />
-            <span> 输入数据规模: {{ data.$state.dataRowNum }}行 X {{ data.$state.dataColumnNum }}列，</span>
-            <span>部分数据缺失行数：{{ data.$state.errorDataRows }}行</span>
+            <span> 输入数据规模: {{ inputData.dataRowNum }}行 X {{ inputData.dataColumnNum }}列，</span>
+            <span>部分数据缺失行数：{{ inputData.errorDataRows }}行</span>
         </div>
         <div class="tableContainer">
             <div>
                 <Table
                     class="ant-table-striped"
-                    :data-source="data.$state.inputData" 
-                    :columns="columnsInfo"
+                    :dataSource="inputData.inputData" 
+                    :columns="columnsInfos"
                     :scroll="{ y: 700 }"
                     :pagination="false"
                     bordered
                     :row-class-name="rowColor"
                 >
                 <template #headerCell="{ column }">
-                 <tableHeadCard
-                    @change-type="(colName, newType) => {data.$state.dataColumnsInfo[colName] = newType}"
-                    :col-name="column.title"
-                    :type="data.$state.dataColumnsInfo[column.title]"
-                  ></tableHeadCard>
+                  <tableHeadCard
+                      :fieldName="column.title"
+                      :analyticType="inputData.fieldAnalyticTypes[column.title]"
+                    ></tableHeadCard>
                 </template>
                 </Table>
             </div>
@@ -37,22 +36,40 @@
 <script setup lang="ts">
 import { Table, message } from "ant-design-vue";
 import { ref, computed } from "vue";
-import XLSX from "xlsx";
 import useInputData from "@/stores/inputData";
 import tableHeadCard from "@/components/dataView/tableHeadCard.vue";
-const data = useInputData();
+import { isDateTime } from "@/utils";
+import { FileReader } from "@kanaries/web-data-loader";
+import { isNumeric } from "vega-lite";
 
-const columnsInfo = computed(() => {
+const inputData = useInputData();
+
+const columnsInfos = computed(() => {
     let ans = [];
-    if(data.$state.inputData.length === 0) return ans;
-    for(let key of Object.keys(data.$state.inputData[0])){
+    if(inputData.inputData.length === 0) return ans;
+    for(let key of Object.keys(inputData.inputData[0])){
         ans.push({
             title: key,
             dataIndex: key,
             key: key,
             width: 250
         });
-        data.$state.dataColumnsInfo[key] = typeof data.$state.inputData[0][key] === "number" ? "measure" : "dimension";
+        if(key.toLowerCase() === "year" || key.toLowerCase() === "month") {
+          inputData.fieldAnalyticTypes[key] = "dimension";
+          inputData.fieldSemanticTypes[key] = "temporal";
+          continue;      
+        } 
+        inputData.fieldAnalyticTypes[key] = typeof inputData.inputData[0][key] === "number" ? "measure" : "dimension";
+
+        if(inputData.fieldAnalyticTypes[key] === "measure") {
+            inputData.fieldSemanticTypes[key] = "quantitative";
+        } else {
+            if(isDateTime(inputData.inputData[0][key])) {
+              inputData.fieldSemanticTypes[key] = "temporal";
+            } else {
+              inputData.fieldSemanticTypes[key] = "nominal";
+            }
+        }
     }
     return ans;
 });
@@ -61,52 +78,45 @@ const columnsInfo = computed(() => {
 function rowColor(_record, index) {
   for(let key in _record) {
     if(_record[key] === null || _record[key] === undefined){
-      data.$state.errorDataRows++;
+      inputData.errorDataRows++;
       return 'table-warn';
     }
   }
   return index % 2 === 1 ? 'table-striped' : null;
 }
 
-function readExcel(e) {
-    if(e.target.files.length === 0) return;
-    clearState();
-    // 读取表格文件
-    let that = this;
-    const files = e.target.files;
-    if (files.length <= 0) {
-      return false;
-    } else if (!/\.(xls|xlsx|csv)$/.test(files[0].name.toLowerCase())) {
-        message.warn("Format error");
-      return false;
-    } else {
-      // 更新获取文件名
-      that.upload_file = files[0].name;
+function readExcel(ev) {
+  const file = (ev.target as HTMLInputElement).files[0];
+  if(ev.target.files.length === 0) return;
+  clearState();
+  if (!/\.(xls|xlsx|csv)$/.test(file.name.toLowerCase())) {
+    message.warn("Format error");
+    return;
+  }
+  FileReader.csvReader({
+    file: file,
+    config: {
+      size: 400,
+      type: "reservoirSampling"
     }
-    const fileReader = new FileReader();
-    fileReader.onload = (ev) => {
-      try {
-        const workbook = XLSX.read(ev.target.result, {
-          type: "binary"
-        });
-        const wsname = workbook.SheetNames[0]; //取第一张表
-        const ws = XLSX.utils.sheet_to_json(workbook.Sheets[wsname], {
-          defval: null
-        }); //生成json表格内容
-        
-        data.$state.inputData.push(...ws);
-        data.$state.dataRowNum = ws.length;
-        data.$state.dataColumnNum = Object.keys(ws[0]).length;
-      } catch (e) {
-        message.warn("Read error");
-        return false;
+  }).then((data: any[]) => {
+    let keys = Object.keys(data[0]);
+    
+    keys.forEach((key) => {
+      if(isNumeric(data[0][key]) === true && isDateTime(data[0][key]) === false){
+        data.forEach(d => {
+          d[key] = Number(d[key]);
+        })
       }
-    };
-    fileReader.readAsBinaryString(files[0]);
+    });
+    inputData.dataRowNum = data.length;
+    inputData.dataColumnNum = keys.length;
+    inputData.inputData.push(...data);
+  });
 }
 
 function clearState() {
-  data.$reset();
+  inputData.$reset();
 }
 
 </script>

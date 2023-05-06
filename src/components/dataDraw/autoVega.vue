@@ -7,8 +7,9 @@ import { ListType, MarkType, AggregateMethod } from "@/stores/chartData";
 import { WatchStopHandle, computed, onMounted, onUnmounted, watchEffect, ref, nextTick, Ref } from "vue";
 import vegaEmbed from "vega-embed";
 import useInputData from "@/stores/inputData";
-import { View } from "vega";
+import { TimeUnit, View } from "vega";
 import { emitter } from "@/utils";
+import { time } from "echarts";
 
 type  AxisType = ListType;
 type Legend = ListType;
@@ -18,7 +19,8 @@ type VegaEncodingConfig = {
     type: "quantitative" | "nominal",
     aggregate?: AggregateMethod | null,
     axis?: any,
-    stack?: "normalize" | "" | "zero" | "center"
+    stack?: "normalize" | "" | "zero" | "center",
+    timeUnit?: TimeUnit
 }
 type LegendTypes = "color" | "size" | "shape" | "opacity";
 
@@ -45,26 +47,34 @@ let chart = ref();
 let vegaView: View;
 
 function generateTooltip(axis: "X_axis" | "Y_axis"): VegaEncodingConfig[] {
-    return props[axis].map(({fieldName, aggregateMethod}) => {
-        if(inputData.dataColumnsInfo[fieldName] === "measure") {
+    return props[axis].map(({fieldName, aggregateMethod, timeUnit}) => {
+        if(inputData.fieldAnalyticTypes[fieldName] === "measure") {
             if(props.isAggregation) {
                 return {
                     field: fieldName,
-                    type: "quantitative",
+                    type: inputData.fieldSemanticTypes[fieldName],
                     title: `${aggregateMethod}(${fieldName})`,
                     aggregate: aggregateMethod
                 }
             } else {
                 return {
                     field: fieldName,
-                    type: "quantitative",
+                    type: inputData.fieldSemanticTypes[fieldName],
                     title: fieldName
                 }
             }
         } else {
+            if(inputData.fieldSemanticTypes[fieldName] === "temporal") {
+                return {
+                    field: fieldName,
+                    type: inputData.fieldSemanticTypes[fieldName],
+                    title: timeUnit ? `${timeUnit}(${fieldName})` : fieldName,
+                    timeUnit: timeUnit
+                }
+            }
             return {
                 field: fieldName,
-                type: "nominal",
+                type: inputData.fieldSemanticTypes[fieldName],
                 title: fieldName
             }
         }
@@ -94,19 +104,19 @@ function generateLegend(legendName: LegendTypes): VegaEncodingConfig {
     let fieldName = props[legendName].fieldName;
     let aggregateMethod = props[legendName].aggregateMethod;
     if(fieldName) {
-        if(aggregateMethod && inputData.dataColumnsInfo[fieldName] === "measure"){
+        if(aggregateMethod && inputData.fieldAnalyticTypes[fieldName] === "measure"){
             // 开了数据聚合
             return {
                 title: aggregateMethod + `(${fieldName})`,
                 field: fieldName,
-                type: "quantitative",
+                type: inputData.fieldSemanticTypes[fieldName],
                 aggregate: aggregateMethod
             }
         } else {
             return {
                 title: fieldName,
                 field: fieldName,
-                type: "nominal",
+                type: inputData.fieldSemanticTypes[fieldName],
                  
             }
         }
@@ -132,21 +142,26 @@ let shape = computed<VegaEncodingConfig>(() => {
 });
 
 
-function generateAxis(fieldName: string, aggregateMethod: AggregateMethod): VegaEncodingConfig {
-    if(inputData.dataColumnsInfo[fieldName] !== "measure") {
-        return {
+function generateAxis(fieldName: string, aggregateMethod: AggregateMethod, timeUnit: TimeUnit): VegaEncodingConfig {
+    if(inputData.fieldAnalyticTypes[fieldName] !== "measure") {
+        let t = {
             title: fieldName,
             field: fieldName,
-            type: "nominal",
+            type: inputData.fieldSemanticTypes[fieldName],
             aggregate: null,
+        };
+        if(inputData.fieldSemanticTypes[fieldName] === "temporal") {
+            t["timeUnit"] = timeUnit;
+            t["title"] = timeUnit ? `${timeUnit}(${fieldName})` : fieldName;
         }
+        return t;
     }
     if(props.isAggregation) {
         // 数据聚合
         return {
             title: aggregateMethod + `(${fieldName})`,
             field: fieldName,
-            type: "quantitative",
+            type: inputData.fieldSemanticTypes[fieldName],
             axis: { labelOverlap: true },
             aggregate: aggregateMethod
         }
@@ -155,7 +170,7 @@ function generateAxis(fieldName: string, aggregateMethod: AggregateMethod): Vega
         return {
             title: fieldName,
             field: fieldName,
-            type: "quantitative",
+            type: inputData.fieldSemanticTypes[fieldName],
             axis: { labelOverlap: true },
             stack: props.stack
         }
@@ -167,32 +182,32 @@ let x = computed<any>(() => {
     let len = props.X_axis.length;
     if(len === 0) return {};
     // X_axis的最后一个
-    let { fieldName, aggregateMethod } = props.X_axis[len - 1];
-    return generateAxis(fieldName, aggregateMethod);
+    let { fieldName, aggregateMethod, timeUnit } = props.X_axis[len - 1];
+    return generateAxis(fieldName, aggregateMethod, timeUnit);
 });
 
 let column = computed<any>(() => {
     let len = props.X_axis.length;
     if(len <= 1) return {};
     // X_axis的倒数第二个
-    let { fieldName, aggregateMethod } = props.X_axis[len - 2];
-    return generateAxis(fieldName, aggregateMethod);
+    let { fieldName, aggregateMethod, timeUnit } = props.X_axis[len - 2];
+    return generateAxis(fieldName, aggregateMethod, timeUnit);
 });
 
 let y = computed<any>(() => {
     let len = props.Y_axis.length;
     if(len === 0) return {};
     // Y_axis的最后一个
-    let { fieldName, aggregateMethod } = props.Y_axis[len - 1];
-    return generateAxis(fieldName, aggregateMethod);
+    let { fieldName, aggregateMethod, timeUnit } = props.Y_axis[len - 1];
+    return generateAxis(fieldName, aggregateMethod, timeUnit);
 });
 
 let row = computed<any>(() => {
     let len = props.Y_axis.length;
     if(len <= 1) return {};
     // Y_axis的倒数第二个
-    let { fieldName, aggregateMethod } = props.Y_axis[len - 2];
-    return generateAxis(fieldName, aggregateMethod);
+    let { fieldName, aggregateMethod, timeUnit } = props.Y_axis[len - 2];
+    return generateAxis(fieldName, aggregateMethod, timeUnit);
 });
 
 

@@ -1,17 +1,18 @@
 <template>
     <div class="container">
         <Row>
-            <Col :span="12"> <h3 :title="props.colName" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">{{ props.colName }}</h3> </Col>
+            <Col :span="12"> <h3 :title="props.fieldName" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">{{ props.fieldName }}</h3> </Col>
             <Col :span="12">
                 <Row>
-                    <Col :span="10">类型:</Col>
-                    <Col :span="14">
-                        <Select size="small" v-model:value="type" @change="changeType" button-style="solid">
-                            <SelectOption value="dimension">维度</SelectOption>
-                            <SelectOption value="measure">度量</SelectOption>
-                        </Select>
-                        <!-- {{ props.type === "dimension" ? "维度" : "度量" }} -->
-                    </Col>
+                    <select v-model="inputData.fieldSemanticTypes[props.fieldName]">
+                        <option value="nominal">类别类型</option>
+                        <option value="quantitative">数值类型</option>
+                        <option value="temporal">时序类型</option>
+                    </select>
+                    <select v-model="inputData.fieldAnalyticTypes[props.fieldName]">
+                        <option value="dimension">维度</option>
+                        <option value="measure">度量</option>
+                    </select>
                 </Row>
             </Col>
         </Row>
@@ -20,62 +21,66 @@
             <Col :span="12">
                 <Row>
                     <Col :span="12">替换为：</Col>
-                    <Col :span="12" v-if="props.type === 'measure'"><Input v-model:value.number="replaceValue" :disabled="!useNull" :type="'number'" size="small"></Input></Col>
+                    <Col :span="12" v-if="props.analyticType === 'measure'"><Input v-model:value.number="replaceValue" :disabled="!useNull" :type="'number'" size="small"></Input></Col>
                     <Col :span="12" v-else><Input v-model:value="replaceValue" :disabled="!useNull" :type="'text'" size="small"></Input></Col>
                 </Row>
                 
             </Col>
         </Row>
         <div class="chartArea">
-            <TableHeadChart :data="chartDatas" :colName="props.colName"></TableHeadChart>
+            <TableHeadChart 
+                :datas="chartDatas" 
+                :fieldName="props.fieldName"
+                :semanticType="inputData.fieldSemanticTypes[props.fieldName]"
+            ></TableHeadChart>
         </div>
-            <div v-if="props.type === 'measure'" class="info">
-                <Row> <Col :span="12">计数</Col>       <Col :span="12">{{ getValueCount }}</Col></Row>
-                <Row> <Col :span="12">唯一值数量</Col> <Col :span="12">{{ getUniqueCount }}</Col></Row>
-                <Row> <Col :span="12">最大值</Col>     <Col :span="12">{{ getMax }}</Col></Row>
-                <Row> <Col :span="12">最小值</Col>     <Col :span="12">{{ getMin }}</Col></Row>
-                <Row> <Col :span="12">平均值</Col>     <Col :span="12">{{ getAverage.toFixed(6) }}</Col></Row>
-                <Row> <Col :span="12">中位数</Col>     <Col :span="12">{{ getMidNum.toFixed(6) }}</Col></Row>
-                <Row> <Col :span="12">标准差</Col>     <Col :span="12">{{ getStandardDeviation.toFixed(6) }}</Col></Row>
-            </div>
-            <div v-if="props.type === 'dimension'" class="info">
-                <Row> <Col :span="12">计数</Col>       <Col :span="12">{{ getValueCount }}</Col></Row>
-                <Row> <Col :span="12">唯一值数量</Col> <Col :span="12">{{ getUniqueCount }}</Col></Row>
-            </div>
+
+        <div v-if="props.analyticType === 'measure'" class="info">
+            <Row> <Col :span="12">计数</Col>       <Col :span="12">{{ getValueCount }}</Col></Row>
+            <Row> <Col :span="12">唯一值数量</Col> <Col :span="12">{{ getUniqueCount }}</Col></Row>
+            <Row> <Col :span="12">最大值</Col>     <Col :span="12">{{ getMax }}</Col></Row>
+            <Row> <Col :span="12">最小值</Col>     <Col :span="12">{{ getMin }}</Col></Row>
+            <Row> <Col :span="12">平均值</Col>     <Col :span="12">{{ getAverage.toFixed(6) }}</Col></Row>
+            <Row> <Col :span="12">中位数</Col>     <Col :span="12">{{ getMidNum.toFixed(6) }}</Col></Row>
+            <Row> <Col :span="12">标准差</Col>     <Col :span="12">{{ getStandardDeviation.toFixed(6) }}</Col></Row>
+        </div>
+        <div v-if="props.analyticType === 'dimension'" class="info">
+            <Row> <Col :span="12">计数</Col>       <Col :span="12">{{ getValueCount }}</Col></Row>
+            <Row> <Col :span="12">唯一值数量</Col> <Col :span="12">{{ getUniqueCount }}</Col></Row>
+        </div>
     </div>
 </template>
 <script setup lang="ts">
 import { Row, Col, Select, SelectOption, Checkbox, Input } from "ant-design-vue";
 import { defineProps, onMounted, ref, computed } from "vue";
-import useInputData from "@/stores/inputData";
+import useInputData, { SemanticType, AnalyticType } from "@/stores/inputData";
 import TableHeadChart from "./tableHeadChart.vue";
-
 const useNull = ref(false);
-const data = useInputData();
+const inputData = useInputData();
 type dataType = "measure" | "dimension";
 // 数据字段对应的数据类型，维度or度量
 const type = ref<dataType>();
 
 const props = defineProps<{
-    type: dataType,
-    colName: string,
+    analyticType: AnalyticType,
+    fieldName: string,
 }>();
 
 // 用于替换空值的值
 const replaceValue = ref<number | string>(0);
 
-const emit = defineEmits<{
-    (event: "changeType", colName: string, newType: dataType): void
-}>();
+// const emit = defineEmits<{
+//     (event: "changeType", fieldName: string, newType: dataType): void
+// }>();
 
-function changeType() {
-    emit("changeType", props.colName, type.value);
-}
+// function changeType() {
+//     emit("changeType", props.fieldName, type.value);
+// }
 
 // 是否能够转换类型
 // 维度 => 度量 ？
 // function canChangeType() {
-//     if(props.type === "dimension") {
+//     if(props.analyticType === "dimension") {
 //         return data.$state.inputData.every((value) => {
             
 //         })
@@ -83,15 +88,15 @@ function changeType() {
 // }
 
 onMounted(() => {
-    type.value = props.type;
-    if(props.type === "dimension") replaceValue.value = 'null';
+    type.value = props.analyticType;
+    if(props.analyticType === "dimension") replaceValue.value = 'null';
     else replaceValue.value = 0;
 });
 
 const chartDatas = computed(() => {
     let map = new Map<number | string, number>();
-    for(let value of data.$state.inputData){
-        let p = value[props.colName];
+    for(let value of inputData.inputData){
+        let p = value[props.fieldName];
         if(useNull.value === true) {
             if(p === null || p === undefined){
                 p = replaceValue.value;
@@ -120,9 +125,9 @@ const chartDatas = computed(() => {
 });
 
 const getValueCount = computed(() => {
-    const key = props.colName.toString();
+    const key = props.fieldName.toString();
     let ans = 0;
-    for(let value of data.$state.inputData) {
+    for(let value of inputData.inputData) {
         if(value[key] !== null && value[key] !== undefined) {
             ans++;
         } else if (useNull.value === true) {
@@ -134,9 +139,9 @@ const getValueCount = computed(() => {
 
 const getColDatas = computed(() => {
     let ans = [];
-    for(let value of data.$state.inputData){
-        if(value[props.colName] !== null && value[props.colName] !== undefined){
-            ans.push(value[props.colName]);
+    for(let value of inputData.inputData){
+        if(value[props.fieldName] !== null && value[props.fieldName] !== undefined){
+            ans.push(value[props.fieldName]);
         } else if(useNull.value === true) {
             ans.push(replaceValue.value);
         }

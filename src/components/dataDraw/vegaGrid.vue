@@ -48,7 +48,7 @@ const props = defineProps<{
     isAggregation: boolean
 }>();
 
-const resultInfo = computed(() => analysisField(props.X_axis, props.Y_axis, inputData.dataColumnsInfo));
+const resultInfo = computed(() => analysisField(props.X_axis, props.Y_axis, inputData.fieldAnalyticTypes));
 
 let gridWidth = ref<number>(200);
 let gridHeight = ref<number>(200);

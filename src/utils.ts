@@ -178,3 +178,34 @@ export class EventEmitter {
 }
 
 export const emitter = new EventEmitter();
+
+export const COMMON_TIME_FORMAT: RegExp[] = [
+    /^\d{4}-\d{2}-\d{2}$/, // YYYY-MM-DD
+    /^\d{2}\/\d{2}\/\d{4}$/, // MM/DD/YYYY
+    /^\d{2}\/\d{2}\/\d{4}$/, // DD/MM/YYYY
+    /^\d{4}\/\d{2}\/\d{2}$/, // YYYY/MM/DD
+    /^\d{4}\.\d{2}\.\d{2}$/, // YYYY.MM.DD
+    /^\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}$/, // YYYY-MM-DD HH:MM:SS
+    /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}$/, // YYYY-MM-DDTHH:MM:SS (ISO-8601)
+];
+
+export function isDateTime(data: any): boolean {
+    for(let r of COMMON_TIME_FORMAT) {
+        if(r.test(data)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+
+export function isNumericData(data: any): boolean {
+          // Check if the item is already a number
+        if (typeof data === 'number') {
+            return true;
+        }
+
+        // Check if the item can be converted into a number
+        const number = parseFloat(data);
+        return !isNaN(number) && isFinite(data);
+}

@@ -7,9 +7,9 @@ type AnalysisFieldResult = {
         Y_axis: ListType[]
     }[]
 };
-export function analysisField(X_axis: ListType[], Y_axis: ListType[], dataColumnsInfo: object): AnalysisFieldResult {
-    let x = createCompositeAxis(X_axis, dataColumnsInfo);
-    let y = createCompositeAxis(Y_axis, dataColumnsInfo);
+export function analysisField(X_axis: ListType[], Y_axis: ListType[], fieldAnalyticTypes: object): AnalysisFieldResult {
+    let x = createCompositeAxis(X_axis, fieldAnalyticTypes);
+    let y = createCompositeAxis(Y_axis, fieldAnalyticTypes);
     if(x.length === 0 && y.length === 0) {
         return {
             rowNum: 1,
@@ -61,12 +61,12 @@ export function analysisField(X_axis: ListType[], Y_axis: ListType[], dataColumn
 
 }
 
-export function createCompositeAxis(axis: ListType[], dataColumnsInfo: object): ListType[][] {
+export function createCompositeAxis(axis: ListType[], fieldAnalyticTypes: object): ListType[][] {
     if(axis.length === 0) return [];
 
     let lastNominalIndex = -1;
     for(let i=axis.length - 1; i >= 0; i--){
-        if(dataColumnsInfo[axis[i].fieldName] === "dimension") {
+        if(fieldAnalyticTypes[axis[i].fieldName] === "dimension") {
             lastNominalIndex = i;
             break;
         }
@@ -77,7 +77,7 @@ export function createCompositeAxis(axis: ListType[], dataColumnsInfo: object): 
     } else {
         if(lastNominalIndex === axis.length - 1) {
             // 连续两个nominal的field都在最末尾
-            if(axis.length >= 2 && dataColumnsInfo[axis[lastNominalIndex - 1].fieldName] === "dimension") {
+            if(axis.length >= 2 && fieldAnalyticTypes[axis[lastNominalIndex - 1].fieldName] === "dimension") {
                 return [
                     [ axis[lastNominalIndex - 1], axis[lastNominalIndex] ]
                 ]

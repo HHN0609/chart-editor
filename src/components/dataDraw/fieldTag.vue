@@ -2,7 +2,7 @@
     <div class="tagContainer">
         <div class="fieldName" :title="props.fieldName">{{ props.fieldName }}</div>
 
-        <div class="aggregateState" v-if="props.isAggregation">
+        <div class="aggregateState" v-if="props.isAggregation === true">
             <Popover placement="bottom" @update:visible="rotate">
                 <template #title>
                     选择聚合方式
@@ -29,7 +29,32 @@
                 </div>
             </Popover>
         </div>
+        <div class="aggregateState" v-if="props.axis && props.semanticType === 'temporal'">
+            <Popover placement="bottom" @update:visible="rotate">
+                <template #title>
+                    选择TimeUnit
+                </template>
+                <template #content>
+                    <RadioGroup
+                        v-model:value="chartData.datas[chartData.activeIndex][props.axis][props.index].timeUnit"
+                        style="width: 40px;"
+                    >
+                        <Radio
+                            v-for="unit of timeUnits"
+                            :value="unit"
+                            :key="unit" 
+                        >
+                            {{ unit === '' ? "null" : unit }}
+                        </Radio>
 
+                    </RadioGroup>
+                </template>
+                <div class="chooseAggregation">
+                    {{ chartData.datas[chartData.activeIndex][props.axis][props.index].timeUnit }}
+                    <DownOutlined :rotate="angle"/>
+                </div>
+            </Popover>
+        </div>
     </div>
 </template>
 
@@ -37,7 +62,8 @@
 import { Popover, Radio, RadioGroup } from "ant-design-vue";
 import { DownOutlined } from "@ant-design/icons-vue"
 import useChartData from "@/stores/chartData";
-import { defineEmits, ref } from "vue";
+import { ref } from "vue";
+import { SemanticType } from "@/stores/inputData";
 
 // index代表该标签在X_axis or Y_axis中的下标
 // axis代表该标签那个轴
@@ -46,6 +72,7 @@ const props = defineProps<{
     index?: number,
     fieldName: string,
     isAggregation: boolean,
+    semanticType: SemanticType
 }>();
 
 const chartData = useChartData();
@@ -62,6 +89,8 @@ const rotate = () => {
 const aggregateMethods = [
     "sum", "mean", "median", "variance", "stdev", "count", "max", "min"
 ];
+
+const timeUnits = ["", "year", "quarter" , "month", "week", "day", "date", "dayofyear", "hours", "minutes", "seconds", "milliseconds"];
 </script>
 
 <style lang="less" scoped>

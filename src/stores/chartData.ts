@@ -1,12 +1,13 @@
 import { defineStore } from "pinia";
 import { Ref } from "vue";
-import { View } from "vega";
+import { TimeUnit } from "vega";
 export type MarkType = "circle" | "bar" | "line" | "scatter" | "area" | "arc" | "trail";
 export type AggregateMethod = "sum" | "count" | "mean" | "min" | "max" | "median" | "variance" | "stdev" | "";
 export type ListType = {
     fieldName: string,
     aggregateMethod?: AggregateMethod,
-    id?: string
+    id?: string,
+    timeUnit?: TimeUnit
 }
 export type ChartData = {
     id: string,
