@@ -180,13 +180,13 @@ export class EventEmitter {
 export const emitter = new EventEmitter();
 
 export const COMMON_TIME_FORMAT: RegExp[] = [
-    /^\d{4}-\d{2}-\d{2}$/, // YYYY-MM-DD
-    /^\d{2}\/\d{2}\/\d{4}$/, // MM/DD/YYYY
-    /^\d{2}\/\d{2}\/\d{4}$/, // DD/MM/YYYY
-    /^\d{4}\/\d{2}\/\d{2}$/, // YYYY/MM/DD
-    /^\d{4}\.\d{2}\.\d{2}$/, // YYYY.MM.DD
-    /^\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}$/, // YYYY-MM-DD HH:MM:SS
-    /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}$/, // YYYY-MM-DDTHH:MM:SS (ISO-8601)
+    /^\d{4}-\d{1,2}-\d{1,2}$/, // YYYY-MM-DD
+    /^\d{1,2}\/\d{1,2}\/\d{4}$/, // MM/DD/YYYY
+    /^\d{1,2}\/\d{1,2}\/\d{4}$/, // DD/MM/YYYY
+    /^\d{4}\/\d{1,2}\/\d{1,2}$/, // YYYY/MM/DD
+    /^\d{4}\.\d{1,2}\.\d{1,2}$/, // YYYY.MM.DD
+    /^\d{4}-\d{1,2}-\d{1,2}\s\d{1,2}:\d{1,2}:\d{1,2}$/, // YYYY-MM-DD HH:MM:SS
+    /^\d{4}-\d{1,2}-\d{1,2}T\d{1,2}:\d{1,2}:\d{1,2}$/, // YYYY-MM-DDTHH:MM:SS (ISO-8601)
 ];
 
 export function isDateTime(data: any): boolean {
