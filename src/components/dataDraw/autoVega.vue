@@ -46,6 +46,55 @@ let chart = ref();
 
 let vegaView: View;
 
+let mark = computed<any>(() => {
+    return {
+        type: props.markType,
+        opacity: 0.96,
+        tooltip: { content: "data"}
+    }
+});
+
+function generateLegend(legendName: LegendTypes): VegaEncodingConfig {
+    let fieldName = props[legendName].fieldName;
+    let aggregateMethod = props[legendName].aggregateMethod;
+    if(fieldName) {
+        if(props.isAggregation && aggregateMethod && inputData.fieldAnalyticTypes[fieldName] === "measure"){
+            // 开了数据聚合
+            return {
+                title: aggregateMethod + `(${fieldName})`,
+                field: fieldName,
+                type: inputData.fieldSemanticTypes[fieldName],
+                aggregate: aggregateMethod
+            }
+        } else {
+            return {
+                title: fieldName,
+                field: fieldName,
+                type: inputData.fieldSemanticTypes[fieldName],
+                 
+            }
+        }
+    } else {
+        return {} as any;
+    }
+}
+
+let color = computed<VegaEncodingConfig>(() => {
+   return generateLegend("color");
+});
+
+let size = computed<VegaEncodingConfig>(() => {
+    return generateLegend("size");
+});
+
+let opacity = computed<VegaEncodingConfig>(() => {
+   return generateLegend("opacity");
+});
+
+let shape = computed<VegaEncodingConfig>(() => {
+    return generateLegend("shape");
+});
+
 function generateTooltip(axis: "X_axis" | "Y_axis"): VegaEncodingConfig[] {
     return props[axis].map(({fieldName, aggregateMethod, timeUnit}) => {
         if(inputData.fieldAnalyticTypes[fieldName] === "measure") {
@@ -88,57 +137,12 @@ let tooltip = computed<VegaEncodingConfig[]>(() => {
 
     return [
         ...p1,
-        ...p2
+        ...p2,
+        shape.value,
+        size.value,
+        opacity.value,
+        color.value
     ];
-});
-
-let mark = computed<any>(() => {
-    return {
-        type: props.markType,
-        opacity: 0.96,
-        tooltip: { content: "data"}
-    }
-});
-
-function generateLegend(legendName: LegendTypes): VegaEncodingConfig {
-    let fieldName = props[legendName].fieldName;
-    let aggregateMethod = props[legendName].aggregateMethod;
-    if(fieldName) {
-        if(aggregateMethod && inputData.fieldAnalyticTypes[fieldName] === "measure"){
-            // 开了数据聚合
-            return {
-                title: aggregateMethod + `(${fieldName})`,
-                field: fieldName,
-                type: inputData.fieldSemanticTypes[fieldName],
-                aggregate: aggregateMethod
-            }
-        } else {
-            return {
-                title: fieldName,
-                field: fieldName,
-                type: inputData.fieldSemanticTypes[fieldName],
-                 
-            }
-        }
-    } else {
-        return {} as any;
-    }
-}
-
-let color = computed<VegaEncodingConfig>(() => {
-   return generateLegend("color");
-});
-
-let size = computed<VegaEncodingConfig>(() => {
-    return generateLegend("size");
-});
-
-let opacity = computed<VegaEncodingConfig>(() => {
-   return generateLegend("opacity");
-});
-
-let shape = computed<VegaEncodingConfig>(() => {
-    return generateLegend("shape");
 });
 
 
@@ -149,6 +153,7 @@ function generateAxis(fieldName: string, aggregateMethod: AggregateMethod, timeU
             field: fieldName,
             type: inputData.fieldSemanticTypes[fieldName],
             aggregate: null,
+            stack: props.stack
         };
         if(inputData.fieldSemanticTypes[fieldName] === "temporal") {
             t["timeUnit"] = timeUnit;
