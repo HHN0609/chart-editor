@@ -76,6 +76,7 @@
                                 :isAggregation="false"
                                 :semanticType="inputData.fieldSemanticTypes[element.fieldName]"
                                 :axis="''"
+                                :analyticType="inputData.fieldAnalyticTypes[element.fieldName]"
                             ></FieldTag>
                         </template>
                     </Draggable>
@@ -96,6 +97,7 @@
                                 :isAggregation="false"
                                 :semanticType="inputData.fieldSemanticTypes[element.fieldName]"
                                 :axis="''"
+                                :analyticType="inputData.fieldAnalyticTypes[element.fieldName]"
                             ></FieldTag>
                         </template>
                     </Draggable>
@@ -106,18 +108,18 @@
             <div class="legendList">
                 <div class="color">
                     <div>颜色</div>
-                    <Select 
-                        style="width: 120px" 
-                        v-model:value="activeChart.color.fieldName"
-                        size="middle"
-                    >
-                        <SelectOption 
-                            v-for="fieldName of ['', ...fieldNames]"
-                            :value="fieldName"
-                            :key="fieldName"
-                        >
-                            <span>{{ fieldName ? fieldName : "Empty"}}</span>
-                        </SelectOption>
+                    <Select style="width: 120px" v-model:value="activeChart.color.fieldName" size="middle">
+                        <SelectOption value="">Empty</SelectOption>
+                        <SelectOptGroup label="维度">
+                            <SelectOption v-for="{fieldName} of dimensionNames" :value="fieldName" :key="fieldName">
+                                <span>{{ fieldName }}</span>
+                            </SelectOption>
+                        </SelectOptGroup>
+                        <SelectOptGroup label="度量">
+                            <SelectOption v-for="{fieldName} of measureNames" :value="fieldName" :key="fieldName">
+                                <span>{{ fieldName }}</span>
+                            </SelectOption>
+                        </SelectOptGroup>
                     </Select>
                     <div v-if="activeChart.isAggregation && inputData.fieldAnalyticTypes[activeChart.color.fieldName] === 'measure'">聚合方法</div>
                     <Select
@@ -134,9 +136,17 @@
                 <div class="opacity">
                     <div>透明度</div>
                     <Select style="width: 120px" v-model:value="activeChart.opacity.fieldName" size="middle">
-                        <SelectOption v-for="fieldName of ['', ...fieldNames]" :value="fieldName" :key="fieldName">
-                            <span>{{ fieldName ? fieldName : "Empty"}}</span>
-                        </SelectOption>
+                        <SelectOption value="">Empty</SelectOption>
+                        <SelectOptGroup label="维度">
+                            <SelectOption v-for="{fieldName} of dimensionNames" :value="fieldName" :key="fieldName">
+                                <span>{{ fieldName }}</span>
+                            </SelectOption>
+                        </SelectOptGroup>
+                        <SelectOptGroup label="度量">
+                            <SelectOption v-for="{fieldName} of measureNames" :value="fieldName" :key="fieldName">
+                                <span>{{ fieldName }}</span>
+                            </SelectOption>
+                        </SelectOptGroup>
                     </Select>
                     <div v-if="activeChart.isAggregation && inputData.fieldAnalyticTypes[activeChart.opacity.fieldName] === 'measure'">聚合方法</div>
                     <Select
@@ -153,9 +163,17 @@
                 <div class="size">
                     <div>大小</div>
                     <Select style="width: 120px" v-model:value="activeChart.size.fieldName" size="middle">
-                        <SelectOption v-for="fieldName of ['', ...fieldNames]" :value="fieldName" :key="fieldName">
-                            <span>{{ fieldName ? fieldName : "Empty"}}</span>
-                        </SelectOption>
+                        <SelectOption value="">Empty</SelectOption>
+                        <SelectOptGroup label="维度">
+                            <SelectOption v-for="{fieldName} of dimensionNames" :value="fieldName" :key="fieldName">
+                                <span>{{ fieldName }}</span>
+                            </SelectOption>
+                        </SelectOptGroup>
+                        <SelectOptGroup label="度量">
+                            <SelectOption v-for="{fieldName} of measureNames" :value="fieldName" :key="fieldName">
+                                <span>{{ fieldName }}</span>
+                            </SelectOption>
+                        </SelectOptGroup>
                     </Select>
                     <div v-if="activeChart.isAggregation && inputData.fieldAnalyticTypes[activeChart.size.fieldName] === 'measure'">聚合方法</div>
                     <Select
@@ -172,9 +190,17 @@
                 <div class="shape">
                     <div>形状</div>
                     <Select style="width: 120px" v-model:value="activeChart.shape.fieldName" size="middle">
-                        <SelectOption v-for="fieldName of ['', ...fieldNames]" :value="fieldName" :key="fieldName">
-                            <span>{{ fieldName ? fieldName : "Empty"}}</span>
-                        </SelectOption>
+                        <SelectOption value="">Empty</SelectOption>
+                        <SelectOptGroup label="维度">
+                            <SelectOption v-for="{fieldName} of dimensionNames" :value="fieldName" :key="fieldName">
+                                <span>{{ fieldName }}</span>
+                            </SelectOption>
+                        </SelectOptGroup>
+                        <SelectOptGroup label="度量">
+                            <SelectOption v-for="{fieldName} of measureNames" :value="fieldName" :key="fieldName">
+                                <span>{{ fieldName }}</span>
+                            </SelectOption>
+                        </SelectOptGroup>
                     </Select>
                     <div v-if="activeChart.isAggregation && inputData.fieldAnalyticTypes[activeChart.shape.fieldName] === 'measure'">聚合方法</div>
                     <Select
@@ -208,6 +234,7 @@
                                     :fieldName="element.fieldName"
                                     :isAggregation="activeChart.isAggregation && inputData.fieldAnalyticTypes[element.fieldName] === 'measure'"
                                     :semanticType="inputData.fieldSemanticTypes[element.fieldName]"
+                                    :analyticType="inputData.fieldAnalyticTypes[element.fieldName]"
                                 ></FieldTag>
                             </template>
                         </Draggable>
@@ -232,6 +259,7 @@
                                     :fieldName="element.fieldName"
                                     :isAggregation="activeChart.isAggregation  && inputData.fieldAnalyticTypes[element.fieldName] === 'measure'"
                                     :semanticType="inputData.fieldSemanticTypes[element.fieldName]"
+                                    :analyticType="inputData.fieldAnalyticTypes[element.fieldName]"
                                 ></FieldTag>
                             </template>
                         </Draggable>
@@ -260,7 +288,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Row, TabPane, Tabs, Button, Checkbox, Select, SelectOption, Popover, Tooltip } from "ant-design-vue";
+import { Row, TabPane, Tabs, Button, Checkbox, Select, SelectOption, Popover, Tooltip, SelectOptGroup } from "ant-design-vue";
 import {
     PictureOutlined, 
     RedoOutlined,
@@ -339,13 +367,13 @@ const measureNames = computed(() => {
     return fieldNames.value.filter((name) => {
         return inputData.fieldAnalyticTypes[name] === "measure";
     }).map((name) => {
-        // if(inputData.fieldSemanticTypes[name] === "temporal") {
-        //     return {
-        //         fieldName: name,
-        //         aggregateMethod: "",
-        //         timeUnit: ""
-        //     }
-        // }
+        if(inputData.fieldSemanticTypes[name] === "temporal") {
+            return {
+                fieldName: name,
+                aggregateMethod: "",
+                timeUnit: ""
+            }
+        }
         return {
             fieldName: name,
             aggregateMethod: "sum"

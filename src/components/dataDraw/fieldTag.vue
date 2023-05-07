@@ -1,5 +1,8 @@
 <template>
-    <div class="tagContainer">
+    <div class="tagContainer" :style="{
+        background: props.analyticType === 'dimension' ? 'black' : 'white',
+        color: props.analyticType === 'dimension' ? 'white' : 'black'
+    }">
         <div class="fieldName" :title="props.fieldName">{{ props.fieldName }}</div>
 
         <div class="aggregateState" v-if="props.isAggregation === true">
@@ -63,7 +66,7 @@ import { Popover, Radio, RadioGroup } from "ant-design-vue";
 import { DownOutlined } from "@ant-design/icons-vue"
 import useChartData from "@/stores/chartData";
 import { ref } from "vue";
-import { SemanticType } from "@/stores/inputData";
+import { AnalyticType, SemanticType } from "@/stores/inputData";
 
 // index代表该标签在X_axis or Y_axis中的下标
 // axis代表该标签那个轴
@@ -72,7 +75,8 @@ const props = defineProps<{
     index?: number,
     fieldName: string,
     isAggregation: boolean,
-    semanticType: SemanticType
+    semanticType: SemanticType,
+    analyticType: AnalyticType
 }>();
 
 const chartData = useChartData();
@@ -115,7 +119,6 @@ const timeUnits = ["", "year", "quarter" , "month", "week", "day", "date", "dayo
     > .aggregateState {
         width: fit-content;
         .chooseAggregation {
-            color: black;
             height: fit-content;
             font-size: x-small;
         }
