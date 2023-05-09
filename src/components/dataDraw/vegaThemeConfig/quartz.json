@@ -1,0 +1,42 @@
+{
+  "background": "#f9f9f9",
+  "arc": {"fill": "#ab5787"},
+  "area": {"fill": "#ab5787"},
+  "line": {"stroke": "#ab5787"},
+  "path": {"stroke": "#ab5787"},
+  "rect": {"fill": "#ab5787"},
+  "shape": {"stroke": "#ab5787"},
+  "symbol": {"fill": "#ab5787", "size": 30},
+  "axis": {
+    "domainColor": "#979797",
+    "domainWidth": 0.5,
+    "gridWidth": 0.2,
+    "labelColor": "#979797",
+    "tickColor": "#979797",
+    "tickWidth": 0.2,
+    "titleColor": "#979797"
+  },
+  "axisBand": {"grid": false},
+  "axisX": {"grid": true, "tickSize": 10},
+  "axisY": {"domain": false, "grid": true, "tickSize": 0},
+  "legend": {
+    "labelFontSize": 11,
+    "padding": 1,
+    "symbolSize": 30,
+    "symbolType": "square"
+  },
+  "range": {
+    "category": [
+      "#ab5787",
+      "#51b2e5",
+      "#703c5c",
+      "#168dd9",
+      "#d190b6",
+      "#00609f",
+      "#d365ba",
+      "#154866",
+      "#666666",
+      "#c4c4c4"
+    ]
+  }
+}

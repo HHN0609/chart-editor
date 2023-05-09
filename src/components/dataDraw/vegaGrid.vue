@@ -18,6 +18,7 @@
             :stack="props.stack"
             :isAggregation="props.isAggregation"
             :chartId="index"
+            :theme="props.theme"
         ></AutoVega>
     </div>
 </div>
@@ -45,7 +46,8 @@ const props = defineProps<{
     size: Legend,
     markType: MarkType,
     stack?: "normalize" | "" | "zero" | "center",
-    isAggregation: boolean
+    isAggregation: boolean,
+    theme?: string
 }>();
 
 const resultInfo = computed(() => analysisField(props.X_axis, props.Y_axis, inputData.fieldAnalyticTypes));

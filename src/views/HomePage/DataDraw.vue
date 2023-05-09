@@ -12,7 +12,7 @@
         <Row class="cardHeader">
             <div style="width: fit-content;"><Checkbox v-model:checked="activeChart.isAggregation">聚合数据</Checkbox></div>
             <div>
-                <span>标记类型:</span>
+                <span>标记类型：</span>
                 <Select size="small" style="width: 100px" v-model:value="activeChart.markType">
                     <SelectOption v-for="mark in markTypes" :value="mark.type" :key="mark.type">
                         <span><img :src="mark.icon" style="width: 15px; height: 15px; overflow: hidden;"/></span>
@@ -21,7 +21,7 @@
                 </Select>
             </div>
             <div>
-                <span>堆叠类型:</span>
+                <span>堆叠类型：</span>
                 <Select size="small" style="width: 100px" v-model:value="activeChart.stack">
                     <SelectOption v-for="stack in stackTypes" :value="stack.type" :key="stack.type">
                         <span><Component :is="stack.icon"></Component></span>
@@ -56,6 +56,19 @@
                         </template>
                     </Button>
                 </Popover>
+            </div>
+            <div>
+                <span>主题类型：</span>
+                <Select size="small" v-model:value="activeChart.theme" style="width: 150px">
+                    <SelectOption v-for="theme in themes" :key="theme.name" :value="theme.name">
+                        <Popover :placement="'right'">
+                            <div>{{ theme.name }}</div>
+                            <template #content>
+                                <img :src="theme.pic" style="width: 200px;">
+                            </template>
+                        </Popover>
+                    </SelectOption>
+                </Select>
             </div>
         </Row>
         <div style="display: flex; height: 100%;">
@@ -279,6 +292,7 @@
                         :markType="activeChart.markType"
                         :stack="activeChart.stack"
                         :isAggregation="activeChart.isAggregation"
+                        :theme="activeChart.theme"
                     >
                     </vegaGrid>
                 </Row>
@@ -307,6 +321,18 @@ import Point from "@/assets/markTypeIcons/point.svg";
 import Rect from "@/assets/markTypeIcons/rect.svg";
 import Scatter from "@/assets/markTypeIcons/scatter.svg";
 import Tick from "@/assets/markTypeIcons/tick.svg";
+
+import dark from "@/assets/vegaPreview/dark.jpg";
+import de from "@/assets/vegaPreview/default.jpg";
+import excel from "@/assets/vegaPreview/excel.jpg";
+import fivethirtyeight from "@/assets/vegaPreview/fivethirtyeight.jpg";
+import ggplot2 from "@/assets/vegaPreview/ggplot2.jpg";
+import googlecharts from "@/assets/vegaPreview/googlecharts.jpg";
+import latimes from "@/assets/vegaPreview/latimes.jpg";
+import powerbi from "@/assets/vegaPreview/powerbi.jpg";
+import quartz from "@/assets/vegaPreview/quartz.jpg";
+import urbaninstitute from "@/assets/vegaPreview/urbaninstitute.jpg";
+import vox from "@/assets/vegaPreview/vox.jpg";
 
 import useChartData from "@/stores/chartData";
 import useInputData from "@/stores/inputData";
@@ -418,6 +444,20 @@ const stackTypes = [
     { type: "center", icon: VerticalAlignMiddleOutlined },
     { type: "normalize", icon: ColumnHeightOutlined },
 ];
+
+const themes = [
+    {name: "default", pic: de},
+    {name: "dark", pic: dark},
+    {name: "excel", pic: excel},
+    {name: "fivethirtyeight", pic: fivethirtyeight},
+    {name: "ggplot2", pic: ggplot2},
+    {name: "googlecharts", pic: googlecharts},
+    {name: "latimes", pic: latimes},
+    {name: "powerbi", pic: powerbi},
+    {name: "quartz", pic: quartz},
+    {name: "urbaninstitute", pic: urbaninstitute},
+    {name: "vox", pic: vox}
+]
 
 </script>
 

@@ -9,7 +9,8 @@ import vegaEmbed from "vega-embed";
 import useInputData from "@/stores/inputData";
 import { TimeUnit, View } from "vega";
 import { emitter } from "@/utils";
-import { time } from "echarts";
+import { themes } from "./vegaThemeConfig/index";
+
 
 type  AxisType = ListType;
 type Legend = ListType;
@@ -38,6 +39,7 @@ const props = defineProps<{
     isAggregation: boolean,
     chartId: number,
     stack?: "normalize" | "" | "zero" | "center",
+    theme?: string
 }>();
 
 let stop: WatchStopHandle;
@@ -247,21 +249,25 @@ let vegaEncoding = () => {
     return spec;
 }
 
-onMounted(() => {
-    stop = watchEffect(() => {
 
+
+onMounted(() => {
+    
+    stop = watchEffect(() => {
             vegaView = null;
             emitter.$off("SaveAsPng");
             emitter.$off("SaveAsSvg");
 
             chart.value && vegaEmbed(`#chart${props.chartId}`, {
                 $schema: 'https://vega.github.io/schema/vega-lite/v5.json',
+                config: themes[props.theme],
                 data: {
                     values: props.dataSource
                 },
                 mark: mark.value,
                 encoding: vegaEncoding() as any,
             }).then((value) => {
+                
                 vegaView = value.view;
                 emitter.$on("SaveAsPng", () => {
                     console.log("SaveAsPng");

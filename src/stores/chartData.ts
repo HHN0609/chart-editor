@@ -24,6 +24,7 @@ export type ChartData = {
     Y_axis: ListType[],
     dimensionLists: ListType[],
     measureLists: ListType[],
+    theme: string
 };
 
 export type HistoryItem = {
@@ -51,7 +52,7 @@ export default defineStore("chartData", {
                     Y_axis: [],
                     dimensionLists: [],
                     measureLists: [],
-                    
+                    theme: "default"
                 }
             ] as ChartData[],
             history: [
@@ -76,7 +77,8 @@ export default defineStore("chartData", {
                 X_axis: [],
                 Y_axis: [],
                 dimensionLists: [],
-                measureLists: []
+                measureLists: [],
+                theme: "default"
             }
         },
         addChart: function(activeKey: Ref<string>) {
