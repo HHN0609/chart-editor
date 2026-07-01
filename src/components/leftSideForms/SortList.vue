@@ -115,7 +115,7 @@ const showConfirm = (_uid: string) => {
     content: createVNode("div", { style: "color:red;" }, "Can't restore after deletion!"),
     onOk() {
       return new Promise((resolve, reject) => {
-        deleteUserChartDetailInfo("/user/chartDetailInfo", projectInfo.projectId, _uid).then(() => {
+        deleteUserChartDetailInfo(projectInfo.projectId, _uid).then(() => {
           deleteChart(_uid);
           resolve("");
         });

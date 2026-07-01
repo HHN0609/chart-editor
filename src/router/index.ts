@@ -1,7 +1,5 @@
 import { createRouter, createWebHashHistory } from "vue-router";
-// import userInfo from "@/stores/userInfo";
-// import pinia from "@/stores/store";
-// import { getCookie } from "@/utils";
+
 const LoginPage = () => import("@/views/LoginPage.vue");
 const DashBoard = () => import("@/views/DashBoard.vue");
 const NotFound = () => import("@/views/NotFound.vue");

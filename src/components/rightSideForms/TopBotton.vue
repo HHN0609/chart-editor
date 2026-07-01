@@ -33,9 +33,15 @@ const projectInfo = ProjectInfo();
 let saving = ref(false);
 const onSave = () => {
   saving.value = true;
-  let req = putUserProjectsBasic("/user/projectsBasic", projectInfo.projectId, projectInfo.width, projectInfo.height, projectInfo.initZoom, projectInfo.bgColor, projectInfo.viewportColor);
+  let req = putUserProjectsBasic(projectInfo.projectId, {
+    width: projectInfo.width,
+    height: projectInfo.height,
+    initZoom: projectInfo.initZoom,
+    bgColor: projectInfo.bgColor,
+    viewportColor: projectInfo.viewportColor,
+  });
   let reqArr = projectInfo.chartsDatas.map((data) => {
-    return putUserChartDetailInfo("/user/chartDetailInfo", projectInfo.projectId, data.uid, JSON.stringify(data));
+    return putUserChartDetailInfo(projectInfo.projectId, data.uid, JSON.stringify(data));
   });
   reqArr.unshift(req);
   Promise.all(reqArr).then(() => {
@@ -44,7 +50,7 @@ const onSave = () => {
     });
   }).then(() => {
     // 修改项目的最后修改时间
-    putProjectLastModify("/user/projects", projectInfo.projectId);
+    putProjectLastModify(projectInfo.projectId);
   });
 };
 

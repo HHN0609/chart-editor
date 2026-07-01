@@ -1,183 +1,113 @@
-import instance from "@/apis/config";
-import { AxiosResponse } from "axios";
+import instance from "./config";
 
-/**
- * 用户登录的api
- * @param relativeUrl 请求相对于baseUrl的地址
- * @param account 用户账号
- * @param password 用户密码
- * @returns Promise
- */
-export const postUserLogin = (relativeUrl: string, account: string, password: string): Promise<AxiosResponse<any, any>> => {
-  return instance.post(relativeUrl, { account, password });
+const URL = {
+  login: "/user/login",
+  register: "/user/info",
+  userInfo: "/user/info",
+  userProjects: "/user/projects",
+  projectsBasic: "/user/projectsBasic",
+  chartDetailInfo: "/user/chartDetailInfo",
+  adminUsersInfo: "/admin/usersInfo",
+} as const;
+
+/** 用户登录 */
+export const postUserLogin = (account: string, password: string) => {
+  return instance.post(URL.login, { account, password });
 };
 
-/**
- * 用户注册的api
- * @param relativeUrl 请求相对于baseUrl的地址
- * @param account 用户账号
- * @param name 用户名
- * @param password 用户密码
- * @returns Promise
- */
-export const postUserRegister = (relativeUrl: string, account: string, name: string, password: string): Promise<AxiosResponse<any, any>> => {
-  return instance.post(relativeUrl, { account, name, password });
+/** 用户注册 */
+export const postUserRegister = (account: string, name: string, password: string) => {
+  return instance.post(URL.register, { account, name, password });
 };
 
-/**
- * get方法获取用户信息
- * @param relativeUrl 请求相对于baseUrl的地址
- * @param account 用户账号
- * @returns Promise
- */
-export const getUserInfo = (relativeUrl: string, account: string): Promise<AxiosResponse<any, any>> => {
-  return instance.get(relativeUrl, {
-    params: {
-      account,
-    },
-  });
+/** 获取当前用户信息 */
+export const getUserInfo = (account: string) => {
+  return instance.get(URL.userInfo, { params: { account } });
 };
 
-/**
- * put方法修改用户信息
- * @param relativeUrl 请求相对于baseUrl的地址
- * @param account 用户账号
- * @param username 用户名
- * @param password 密码
- * @returns Promise
- */
-export const putUserInfo = (relativeUrl: string, account: string, username: string, password?: string): Promise<AxiosResponse<any, any>> => {
-  return instance.put(relativeUrl, {
-    account,
-    username,
-    password,
-  });
+/** 更新当前用户信息 */
+export const putUserInfo = (account: string, username: string, password?: string) => {
+  return instance.put(URL.userInfo, { account, username, password });
 };
 
-/**
- * get方法获取用的project信息
- * @param relativeUrl 请求相对于baseUrl的地址
- * @param account 用户账号
- * @returns Promise
- */
-export const getUserProjects = (relativeUrl: string, account: string): Promise<AxiosResponse<any, any>> => {
-  return instance.get(relativeUrl, {
-    params: {
-      account,
-    },
-  });
+/** 获取某账号下的项目列表 */
+export const getUserProjects = (account: string) => {
+  return instance.get(URL.userProjects, { params: { account } });
 };
 
-/**
- * post方法创建一个project
- * @param relativeUrl 请求相对于baseUrl的地址
- * @param account 用户账号
- * @param projectName 项目名称
- * @returns Promise
- */
-export const postUserProjects = (relativeUrl: string, account: string, initInfo: object) => {
-  return instance.post(relativeUrl, {
-    account,
-    ...initInfo,
-  });
+/** 新建一个项目 */
+export const postUserProjects = (account: string, initInfo: Record<string, unknown>) => {
+  return instance.post(URL.userProjects, { account, ...initInfo });
 };
 
-/**
- * delete方法删除一个project
- * @param relativeUrl 请求相对于baseUrl的地址
- * @param projectId 项目id
- * @param account 账号
- * @returns Promise
- */
-export const deleteUserProjects = (relativeUrl: string, projectId: string, account: string) => {
-  return instance.delete(relativeUrl, {
-    params: {
-      projectId,
-      account,
-    },
-  });
+/** 删除一个项目 */
+export const deleteUserProjects = (projectId: string, account: string) => {
+  return instance.delete(URL.userProjects, { params: { projectId, account } });
 };
 
-/**
-* 修改project的last-modify时间
-* @param relativeUrl 请求相对于baseUrl的地址
-* @param projectId 项目id
-* @param account 账号
-* @returns Promise
-*/
-export const putProjectLastModify = (relativeUrl: string, projectId: string) => {
-  return instance.put(relativeUrl, {
-    projectId
-  })
-}
-
-export const getAllUsersInfo = (relativeUrl: string) => {
-  return instance.get(relativeUrl);
+/** 更新项目最后修改时间 */
+export const putProjectLastModify = (projectId: string) => {
+  return instance.put(URL.userProjects, { projectId });
 };
 
-export const deleteUserInfo = (relativeUrl: string, account: string) => {
-  return instance.delete(relativeUrl, {
-    params: {
-      account,
-    },
-  });
+/** 获取项目画布基础信息（宽高、缩放、背景色等） */
+export const getUserProjectsBasic = (projectId: string) => {
+  return instance.get(URL.projectsBasic, { params: { projectId } });
 };
 
-export const putUserAuth = (relativeUrl: string, account: string, newAuth: number) => {
-  return instance.put(relativeUrl, {
-    account,
-    newAuth,
-  });
+/** 更新项目画布基础信息 */
+export const putUserProjectsBasic = (
+  projectId: string,
+  payload: {
+    width: number;
+    height: number;
+    initZoom: number;
+    bgColor: string;
+    viewportColor: string;
+  }
+) => {
+  return instance.put(URL.projectsBasic, { projectId, ...payload });
 };
 
-export const getUserProjectsBasic = (relativeUrl: string, projectId: string) => {
-  return instance.get(relativeUrl, {
-    params: {
-      projectId,
-    },
-  });
+/** 新增一个图表详情 */
+export const postUserChartDetailInfo = (
+  projectId: string,
+  chartId: string,
+  chartDetail: unknown
+) => {
+  return instance.post(URL.chartDetailInfo, { projectId, chartId, chartDetail });
 };
 
-export const putUserProjectsBasic = (relativeUrl: string, projectId: string, width: number, height: number, initZoom: number, bgColor: string, viewportColor: string) => {
-  return instance.put(relativeUrl, {
-    projectId,
-    width,
-    height,
-    initZoom,
-    bgColor,
-    viewportColor,
-  });
+/** 删除一个图表详情 */
+export const deleteUserChartDetailInfo = (projectId: string, chartId: string) => {
+  return instance.delete(URL.chartDetailInfo, { params: { projectId, chartId } });
 };
 
-export const postUserChartDetailInfo = (relativeUrl: string, projectId: string, chartId: string, chartDetail: any) => {
-  return instance.post(relativeUrl, {
-    projectId,
-    chartId,
-    chartDetail,
-  });
+/** 获取项目下所有图表详情 */
+export const getUserChartDetailInfo = (projectId: string) => {
+  return instance.get(URL.chartDetailInfo, { params: { projectId } });
 };
 
-export const deleteUserChartDetailInfo = (relativeUrl: string, projectId: string, chartId: string) => {
-  return instance.delete(relativeUrl, {
-    params: {
-      projectId,
-      chartId,
-    },
-  });
+/** 更新一个图表详情 */
+export const putUserChartDetailInfo = (
+  projectId: string,
+  chartId: string,
+  chartDetail: unknown
+) => {
+  return instance.put(URL.chartDetailInfo, { projectId, chartId, chartDetail });
 };
 
-export const getUserChartDetailInfo = (relativeUrl: string, projectId: string) => {
-  return instance.get(relativeUrl, {
-    params: {
-      projectId,
-    },
-  });
+/** 管理员：拉取所有用户 */
+export const getAllUsersInfo = () => {
+  return instance.get(URL.adminUsersInfo);
 };
 
-export const putUserChartDetailInfo = (relativeUrl: string, projectId: string, chartId: string, chartDetail: any) => {
-  return instance.put(relativeUrl, {
-    chartId,
-    projectId,
-    chartDetail,
-  });
+/** 管理员：删除一个用户 */
+export const deleteUserInfo = (account: string) => {
+  return instance.delete(URL.adminUsersInfo, { params: { account } });
+};
+
+/** 管理员：调整用户权限 */
+export const putUserAuth = (account: string, newAuth: number) => {
+  return instance.put(URL.adminUsersInfo, { account, newAuth });
 };

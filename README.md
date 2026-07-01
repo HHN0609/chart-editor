@@ -18,39 +18,39 @@ You can use it draw various charts easily.
 
 # Some runtime Pictures 
 ### DashBoard Page
-![DashBoard](./exemples/DashBoard.png "DashBoard") 
+![DashBoard](./examples/DashBoard.png "DashBoard") 
 ### Home Page
-![projectPage](./exemples/projectPage.png "projectPage")  
+![projectPage](./examples/projectPage.png "projectPage")  
 ### Export Image
-![exportImg](./exemples/exportImg.png "exportImg") 
+![exportImg](./examples/exportImg.png "exportImg") 
 
 # Chart Examples 
 ### Bar chart 
-![barChart](./exemples//barChart.png "barChart") 
+![barChart](./examples/barChart.png "barChart") 
 
 ### Line chart 
-![lineChart](./exemples//lineChart.png "lineChart") 
+![lineChart](./examples/lineChart.png "lineChart") 
 
 ### Line chart with area  
-![lineChartWithArea](./exemples//lineChartWithArea.png "lineChartWithArea") 
+![lineChartWithArea](./examples/lineChartWithArea.png "lineChartWithArea") 
 
 ### Pie chart   
-![pieChart](./exemples//pieChart.png "pieChart") 
+![pieChart](./examples/pieChart.png "pieChart") 
 
 ### Rose chart  
-![roseChart](./exemples//roseChart.png "roseChart") 
+![roseChart](./examples/roseChart.png "roseChart") 
 
 ### Donut chart  
-![donutChart](./exemples//donutChart.png "donutChart") 
+![donutChart](./examples/donutChart.png "donutChart") 
 
 ### Radar chart  
-![radarChart](./exemples//radarChart.png "radarChart") 
+![radarChart](./examples/radarChart.png "radarChart") 
 
 ### Radar chart with area  
-![radarChartWithArea](./exemples//radarChartWithArea.png "radarChartWithArea")
+![radarChartWithArea](./examples/radarChartWithArea.png "radarChartWithArea")
 
 ### Scatter chart 
-![scatterChart](./exemples//scatter.png "scatterChart") 
+![scatterChart](./examples/scatter.png "scatterChart") 
 
 ### Gague chart 
-![gagueChart](./exemples/gague.png "gagueChart")
+![gagueChart](./examples/gauge.png "gagueChart")

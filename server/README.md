@@ -62,4 +62,4 @@ This folder is the same as the [chart-editor-backend](https://github.com/HHN0609
     ```
 
 # Api provided 
-……（You can see `./routers` temporarily, I will provide api description when I have spare time.）
+……（You can see `./routes` temporarily, I will provide api description when I have spare time.）

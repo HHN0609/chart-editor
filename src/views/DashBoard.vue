@@ -225,7 +225,7 @@ function onRotateEnd({ lastEvent }: OnRotateEnd) {
 // 获取数据
 onBeforeMount(() => {
   // 获取project的信息
-  getUserProjectsBasic("/user/projectsBasic", router.currentRoute.value.params.projectId as string)
+  getUserProjectsBasic(router.currentRoute.value.params.projectId as string)
     .then(({ data }) => {
       projectInfo.$patch({
         width: data.message.width,
@@ -243,7 +243,7 @@ onBeforeMount(() => {
       });
     })
     .then(() => {
-      getUserChartDetailInfo("/user/chartDetailInfo", projectInfo.projectId).then(({ data }) => {
+      getUserChartDetailInfo(projectInfo.projectId).then(({ data }) => {
         if (data.message && data.message.length) {
           let arr = data.message.map(({ chart_detail }) => {
             return JSON.parse(chart_detail);
