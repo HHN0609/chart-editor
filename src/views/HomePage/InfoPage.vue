@@ -66,7 +66,7 @@ const validatePassword = async (_rule: Rule, value: string) => {
 
 const onFinish = () => {
   // 调用修改用户信息的接口
-  putUserInfo("/user/info", store.account, formState.user.userName, formState.user.newPassword).then(async (value) => {
+  putUserInfo(store.account, formState.user.userName, formState.user.newPassword).then(async (value) => {
     // 修改了密码要重新登陆
     if (formState.user.newPassword) {
       localStorage.removeItem("token");
@@ -77,7 +77,7 @@ const onFinish = () => {
       });
       return;
     }
-    let { account, name, is_admin } = (await getUserInfo("/user/info", store.account)).data;
+    let { account, name, is_admin } = (await getUserInfo(store.account)).data;
     store.$patch({
       account: account,
       userName: name,

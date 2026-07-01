@@ -1,92 +1,49 @@
-import BarPng from "@/assets/chartExamples/Bar.png";
-import BubblePng from "@/assets/chartExamples/Bubble.png";
-import GaugePng from "@/assets/chartExamples/Gauge.png";
-import LinePng from "@/assets/chartExamples/Line.png";
-import PiePng from "@/assets/chartExamples/Pie.png";
-import RadarPng from "@/assets/chartExamples/Radar.png";
-import ScatterPng from "@/assets/chartExamples/Scatter.png";
+/**
+ * 图表相关常量：基于 manifest.ts 派生。
+ * 下方导出的 5 个变量与旧版 API 保持完全一致，调用方无需改动。
+ */
 
+import { CHART_MANIFESTS, type ChartManifest } from "./manifest";
 
-import Bar from "@/charts/bar/Bar.vue";
-import Line from "@/charts/line/Line.vue";
-import Pie from "@/charts/pie/pie.vue";
-import Bubble from "@/charts/bubble/Bubble.vue";
-import BasicScatter from "@/charts/BasicScatter/BasicScatter.vue";
-import Radar from "@/charts/Radar/Radar.vue";
-import Gauge from "@/charts/Gauge/Gauge.vue";
+/** 组件 map：name -> Vue component */
+export const CHARTS: Record<string, ChartManifest["component"]> = CHART_MANIFESTS.reduce(
+  (acc, m) => ({ ...acc, [m.name]: m.component }),
+  {} as Record<string, ChartManifest["component"]>
+);
 
-import { BarDefaultOptionsData, BarDefaultSourceData } from "@/charts/bar/defaultData";
-import { LineDefaultOptionsData, LineDefaultSourceData } from "@/charts/line/defaultData";
-import { PieDefaultOptionsData, PieDefaultSourceData } from "@/charts/pie/defaultData";
-import { BubbleDefaultOptionsData, BubbleDefaultSourceData } from "@/charts/bubble/defaultData";
-import { BasicScatterDefaultOptionsData, BasicScatterDefaultSourceData } from "@/charts/basicscatter/defaultData";
-import { RadarDefaultOptionsData, RadarDefaultSourceData } from "@/charts/radar/defaultData";
-import { GaugeDefaultOptionsData, GaugeDefaultSourceData } from "@/charts/Gauge/defaultData";
+/** 默认 source data map */
+export const DEFAULTSOURCEDATA: Record<string, any[]> = CHART_MANIFESTS.reduce(
+  (acc, m) => ({ ...acc, [m.name]: m.defaultSource }),
+  {} as Record<string, any[]>
+);
 
-import BarConfigTree from "@/charts/bar/config";
-import LineConfigTree from "@/charts/line/config";
-import PieConfigTree from "@/charts/pie/config";
-import BubbleConfigTree from "@/charts/bubble/config";
-import BasicScatterConfigTree from "@/charts/basicscatter/config";
-import RadarConfigTree from "@/charts/Radar/config";
-import GaugeConfigTree from "@/charts/Gauge/config";
+/** 默认 options data map */
+export const DEFAULTOPTIONSDATA: Record<string, any> = CHART_MANIFESTS.reduce(
+  (acc, m) => ({ ...acc, [m.name]: m.defaultOptions }),
+  {} as Record<string, any>
+);
 
-// export const CHARTTYPES = [
-//     "Bar",
-//     "Line",
-//     "Pie",
-//     "Bubble",
-//     "BasicScatter",
-//     "Radar",
-//     "Gauge"
-// ];
+/** 配置表单 schema map */
+export const CONFIGTREES: Record<string, unknown> = CHART_MANIFESTS.reduce(
+  (acc, m) => ({ ...acc, [m.name]: m.config }),
+  {} as Record<string, unknown>
+);
 
-export const CHARTTYPES: [string, any[]][] = [
-    ["Bar", [ ["Bar", BarPng] ]],
-    ["Line", [ ["Line", LinePng] ]],
-    ["Pie", [ ["Pie", PiePng] ]],
-    ["Dot", [ ["BasicScatter", ScatterPng], ["Bubble", BubblePng] ]],
-    ["Radar", [ ["Radar", RadarPng] ]],
-    ["Gauge", [ ["Gauge", GaugePng] ]],
-];
+/**
+ * 左侧菜单渲染用的元数据。按 group 聚合：
+ *   ["Bar",   [["Bar", icon]]]
+ *   ["Dot",   [["BasicScatter", icon], ["Bubble", icon]]]
+ */
+export const CHARTTYPES: [string, [string, string][]][] = (() => {
+  const groups = new Map<string, [string, string][]>();
+  for (const m of CHART_MANIFESTS) {
+    const item: [string, string] = [m.displayName, m.icon];
+    const list = groups.get(m.group);
+    if (list) list.push(item);
+    else groups.set(m.group, [item]);
+  }
+  return Array.from(groups.entries());
+})();
 
-export const CHARTS = {
-    Bar,
-    Line,
-    Pie,
-    Bubble,
-    BasicScatter,
-    Radar,
-    Gauge,
-};
-
-export const DEFAULTSOURCEDATA = {
-    "Bar": BarDefaultSourceData,
-    "Line": LineDefaultSourceData,
-    "Pie": PieDefaultSourceData,
-    "Bubble": BubbleDefaultSourceData,
-    "BasicScatter": BasicScatterDefaultSourceData,
-    "Radar": RadarDefaultSourceData,
-    "Gauge": GaugeDefaultSourceData,
-};
-
-export const DEFAULTOPTIONSDATA = {
-    "Bar": BarDefaultOptionsData,
-    "Line": LineDefaultOptionsData,
-    "Pie": PieDefaultOptionsData,
-    "Bubble": BubbleDefaultOptionsData,
-    "BasicScatter": BasicScatterDefaultOptionsData,
-    "Radar": RadarDefaultOptionsData,
-    "Gauge": GaugeDefaultOptionsData,
-};
-
-export const CONFIGTREES = {
-    "Bar": BarConfigTree,
-    "Line": LineConfigTree,
-    "Pie": PieConfigTree,
-    "Bubble": BubbleConfigTree,
-    "BasicScatter": BasicScatterConfigTree,
-    "Radar": RadarConfigTree,
-    "Gauge": GaugeConfigTree,
-};
-
+export type { ChartManifest };
+export { CHART_MANIFESTS };

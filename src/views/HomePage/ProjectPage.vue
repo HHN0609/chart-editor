@@ -87,7 +87,7 @@ const goDashboard = (project_Id: string) => {
 }
 
 const deleteProject = (project_id: string, ) => {
-  deleteUserProjects("/user/projects", project_id, store.account)
+  deleteUserProjects(project_id, store.account)
     .then(({ data }) => {
       message.success(data.message, 1);
       getProjectsData();
@@ -100,7 +100,7 @@ const closeModal = () => {
 }
 
 const createProject = () => {
-  postUserProjects("/user/projects", store.account, {...newProjectState})
+  postUserProjects(store.account, {...newProjectState})
     .then(({data}) => {
       message.success(data.message, 0.2);
       closeModal();
@@ -113,7 +113,7 @@ onMounted(() => {
 });
 
 function getProjectsData() {
-  getUserProjects("/user/projects", store.account || getCookie("account")).then(({ data }) => {
+  getUserProjects(store.account || getCookie("account")).then(({ data }) => {
     projectInfoArr.splice(0);
     projectInfoArr.push(...data);
     spinning.value = false;

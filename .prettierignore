@@ -1,0 +1,8 @@
+node_modules
+dist
+build
+dll
+package-lock.json
+*.min.js
+*.min.css
+src/types/global.d.ts

@@ -101,7 +101,7 @@ const cancelChange = () => {
 
 const saveChange = (account: string) => {
   const newAuth = authMap.indexOf(selectedAuth.value);
-  putUserAuth("/admin/usersInfo", account, newAuth)
+  putUserAuth(account, newAuth)
     .then(({data}) => {
       message.success(data.message, 0.5);
       for(let data of datasource){
@@ -122,7 +122,7 @@ const getIndex = (account: string): number => {
 
 const deleteUser = ({ account }) => {
   return new Promise((resolve, reject) => {
-    deleteUserInfo("/admin/usersInfo", account)
+    deleteUserInfo(account)
       .then((value) => {
         resolve(value);
         datasource.splice(getIndex(account), 1);
@@ -143,7 +143,7 @@ const canDelete = (record_admin: number): boolean => {
 };
 
 onMounted(() => {
-  getAllUsersInfo("/admin/usersInfo")
+  getAllUsersInfo()
    .then(({ data }) => {
       datasource.splice(0);
       datasource.push(...data);

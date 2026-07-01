@@ -62,7 +62,7 @@ const createNewChart = (e: PointerEvent) => {
     optionsData: JSON.parse(JSON.stringify(DEFAULTOPTIONSDATA[key])),
   };
   // 写到数据库里面
-  postUserChartDetailInfo("/user/chartDetailInfo", projectInfo.projectId, newObj.uid, JSON.stringify(newObj)).then(({ data }) => {
+  postUserChartDetailInfo(projectInfo.projectId, newObj.uid, JSON.stringify(newObj)).then(({ data }) => {
     message.success(data.message, 1);
     projectInfo.chartsDatas.push(newObj);
   });

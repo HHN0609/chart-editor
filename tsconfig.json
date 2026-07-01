@@ -19,8 +19,6 @@
         "moduleResolution": "Node",
         "esModuleInterop": true,
         "allowSyntheticDefaultImports": true,
-        "typeRoots": [
-            "./globalDeclare"
-        ]
+        "types": ["node"]
     }
 }

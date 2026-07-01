@@ -110,7 +110,7 @@ const formState = reactive<FormState>({
 // 登录按钮点击后触发
 const submitForm = () => {
   // 向后端发送请求
-  postUserLogin("/user/login", formState.account, formState.password).then(({ data }) => {
+  postUserLogin(formState.account, formState.password).then(({ data }) => {
     message.success(data.message, 0.5).then(() => {
       router.push({ name: "MyProject" });
     });
@@ -128,7 +128,7 @@ const validatePassword = async (_rule: Rule, value: string) => {
 
 // 注册部分
 const submitRegister = () => {
-  postUserRegister("/user/info", formState.account, formState.name, formState.password).then(({ data }) => {
+  postUserRegister(formState.account, formState.name, formState.password).then(({ data }) => {
     message.success(data.message, 0.5);
     // 切换到登录框
     activeKey.value = "1";
